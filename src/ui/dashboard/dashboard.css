@@ -1,0 +1,1973 @@
+/* =========================================================================
+   GACKS P.A DASHBOARD — REFERENCE-DRIVEN REFINED DESIGN SYSTEM
+   Visual Reference Target: media_1789450001805.png
+   Palette: #18181A Dark Charcoal, 1px Neutral Borders, Electric Cyan (#00A3FF),
+            Vivid Red/Orange (#FF453A), Soft White Typography (#EDEDEF)
+   ========================================================================= */
+
+:root {
+  /* Surface System — Pure Dark Charcoal SaaS Palette */
+  --gacks-bg-base: #121214;
+  --gacks-bg-panel: #18181A;
+  --gacks-bg-panel-hover: #1E1E22;
+  --gacks-bg-elevated: #202024;
+  --gacks-bg-elevated-hover: #26262B;
+  --gacks-bg-chip: #222227;
+
+  /* Borders — 1px Low-Contrast Neutral Grays */
+  --gacks-border-dim: rgba(255, 255, 255, 0.07);
+  --gacks-border-subtle: rgba(255, 255, 255, 0.04);
+  --gacks-border-medium: rgba(255, 255, 255, 0.12);
+  --gacks-border-bright: rgba(255, 255, 255, 0.22);
+  --gacks-border-cyan: #00A3FF;
+  --gacks-border-red: #FF453A;
+
+  /* Accents — Restrained & Purposeful */
+  --gacks-cyan: #00A3FF;
+  --gacks-cyan-glow: rgba(0, 163, 255, 0.25);
+  --gacks-cyan-subtle: rgba(0, 163, 255, 0.08);
+  --gacks-red: #FF453A;
+  --gacks-red-subtle: rgba(255, 69, 58, 0.12);
+  --gacks-orange: #FF5A36;
+  --gacks-amber: #F59E0B;
+  --gacks-emerald: #10B981;
+
+  /* Typography Hierarchy */
+  --gacks-text-white: #EDEDEF;
+  --gacks-text-primary: #EDEDEF;
+  --gacks-text-muted: #A1A1A6;
+  --gacks-text-dim: #71717A;
+  --gacks-font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Chakra Petch', sans-serif;
+  --gacks-font-mono: 'JetBrains Mono', monospace;
+
+  /* Geometry & Shadows */
+  --gacks-radius-sm: 8px;
+  --gacks-radius-md: 12px;
+  --gacks-radius-lg: 16px;
+  --gacks-radius-pill: 9999px;
+  --gacks-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --gacks-shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* -------------------------------------------------------------------------
+   1. MASTER CONTAINER & BACKGROUND
+   ------------------------------------------------------------------------- */
+.gacks-dashboard-root {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-color: var(--gacks-bg-base);
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(0, 163, 255, 0.035) 0%, transparent 65%),
+    linear-gradient(rgba(255, 255, 255, 0.016) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.016) 1px, transparent 1px);
+  background-size: 100% 100%, 32px 32px, 32px 32px;
+  color: var(--gacks-text-primary);
+  font-family: var(--gacks-font-primary);
+  overflow: hidden;
+  z-index: 10;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+.gacks-dashboard-root *,
+.gacks-dashboard-root *::before,
+.gacks-dashboard-root *::after {
+  box-sizing: border-box;
+}
+
+/* -------------------------------------------------------------------------
+   2. SIDEBAR
+   ------------------------------------------------------------------------- */
+.gacks-sidebar {
+  width: 240px;
+  min-width: 240px;
+  height: 100%;
+  background: #141416;
+  border-right: 1px solid var(--gacks-border-dim);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px 12px;
+  z-index: 30;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.gacks-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 8px 16px 8px;
+  cursor: pointer;
+}
+
+.gacks-brand-logo-wrap {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1A1A1E;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-sm);
+}
+
+.gacks-brand-logo-img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 4px rgba(0, 163, 255, 0.4));
+}
+
+.gacks-brand-logo-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--gacks-radius-sm);
+  background: radial-gradient(circle, rgba(0, 163, 255, 0.15) 0%, transparent 80%);
+  pointer-events: none;
+}
+
+.gacks-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.gacks-brand-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.gacks-brand-subtitle {
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--gacks-cyan);
+  opacity: 0.9;
+}
+
+.gacks-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 8px;
+  flex: 1;
+}
+
+.gacks-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--gacks-radius-sm);
+  color: var(--gacks-text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.gacks-nav-item:hover {
+  background: var(--gacks-bg-elevated);
+  color: var(--gacks-text-primary);
+  border-color: var(--gacks-border-subtle);
+}
+
+.gacks-nav-item-active {
+  background: #202024;
+  border-color: rgba(0, 163, 255, 0.28);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.gacks-nav-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.gacks-nav-icon {
+  width: 17px;
+  height: 17px;
+  color: inherit;
+  transition: color 0.15s ease;
+}
+
+.gacks-nav-item-active .gacks-nav-icon {
+  color: var(--gacks-cyan);
+}
+
+.gacks-nav-label {
+  flex: 1;
+}
+
+.gacks-nav-active-pill {
+  width: 4px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--gacks-cyan);
+  box-shadow: 0 0 8px var(--gacks-cyan);
+}
+
+.gacks-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gacks-border-subtle);
+}
+
+.gacks-tech-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  opacity: 0.35;
+}
+
+.gacks-tech-line {
+  height: 1px;
+  background: linear-gradient(90deg, var(--gacks-cyan) 0%, transparent 75%);
+}
+
+.gacks-tech-line-1 { width: 75%; }
+.gacks-tech-line-2 { width: 40%; }
+
+.gacks-motto-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.gacks-motto-words {
+  display: flex;
+  flex-direction: column;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-sig-wrap {
+  width: 60px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gacks-sig-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 4px rgba(0, 163, 255, 0.4));
+}
+
+.gacks-status-pill {
+  background: #18181A;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-sm);
+  padding: 8px 10px;
+}
+
+.gacks-status-pill-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gacks-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gacks-status-dot-online {
+  background: var(--gacks-cyan);
+  box-shadow: 0 0 6px var(--gacks-cyan);
+  animation: gacks-pulse 2s infinite ease-in-out;
+}
+
+.gacks-status-dot-standby {
+  background: var(--gacks-amber);
+  box-shadow: 0 0 6px var(--gacks-amber);
+}
+
+.gacks-status-pill-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.gacks-status-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gacks-text-white);
+}
+
+.gacks-status-desc {
+  font-size: 9px;
+  color: var(--gacks-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   3. TOPBAR COMMAND BAR
+   ------------------------------------------------------------------------- */
+.gacks-main-viewport {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gacks-topbar {
+  height: 56px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--gacks-border-dim);
+  background: #141416;
+  z-index: 20;
+}
+
+.gacks-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  max-width: 440px;
+}
+
+.gacks-mobile-menu-btn {
+  display: none;
+  background: #1E1E22;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: 6px;
+  padding: 6px;
+  color: var(--gacks-text-white);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.gacks-command-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: #18181A;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-sm);
+  padding: 6px 12px;
+  transition: all 0.16s ease;
+}
+
+.gacks-command-form:focus-within {
+  border-color: var(--gacks-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 163, 255, 0.2);
+  background: #1D1D21;
+}
+
+.gacks-command-icon {
+  width: 15px;
+  height: 15px;
+  color: var(--gacks-text-muted);
+  flex-shrink: 0;
+}
+
+.gacks-command-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--gacks-text-white);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.gacks-command-input::placeholder {
+  color: var(--gacks-text-dim);
+  font-size: 12px;
+}
+
+.gacks-command-shortcut {
+  font-family: var(--gacks-font-mono);
+  font-size: 9px;
+  background: #222226;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: var(--gacks-text-muted);
+}
+
+.gacks-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.gacks-clock-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.15;
+}
+
+.gacks-clock-time {
+  font-family: var(--gacks-font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gacks-text-white);
+  letter-spacing: 0.02em;
+}
+
+.gacks-clock-date {
+  font-size: 10px;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-weather-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #1A1A1E;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-sm);
+  padding: 5px 10px;
+}
+
+.gacks-weather-icon-wrap {
+  color: var(--gacks-amber);
+  display: flex;
+  align-items: center;
+}
+
+.gacks-weather-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.gacks-weather-details {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.gacks-weather-location {
+  font-size: 9px;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-weather-temp {
+  display: flex;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gacks-text-white);
+}
+
+.gacks-weather-desc {
+  color: var(--gacks-text-muted);
+  font-size: 10px;
+}
+
+.gacks-profile-pill-wrap {
+  position: relative;
+}
+
+.gacks-profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #18181A;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-sm);
+  padding: 4px 8px 4px 5px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.gacks-profile-pill:hover {
+  border-color: var(--gacks-border-medium);
+  background: #202024;
+}
+
+.gacks-profile-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #242429;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.gacks-profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+}
+
+.gacks-profile-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gacks-text-white);
+}
+
+.gacks-profile-sub {
+  font-size: 9px;
+  color: var(--gacks-cyan);
+  letter-spacing: 0.02em;
+}
+
+.gacks-profile-chevron {
+  width: 13px;
+  height: 13px;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 200px;
+  background: #18181A;
+  border: 1px solid var(--gacks-border-medium);
+  border-radius: var(--gacks-radius-md);
+  padding: 8px;
+  box-shadow: var(--gacks-shadow-elevated);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gacks-dropdown-header {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 6px;
+}
+
+.gacks-dropdown-divider {
+  height: 1px;
+  background: var(--gacks-border-dim);
+  margin: 4px 0;
+}
+
+.gacks-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  background: transparent;
+  border: none;
+  border-radius: var(--gacks-radius-sm);
+  color: var(--gacks-text-white);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.14s ease;
+  text-align: left;
+}
+
+.gacks-dropdown-item:hover {
+  background: var(--gacks-bg-elevated);
+  color: #ffffff;
+}
+
+/* -------------------------------------------------------------------------
+   4. DASHBOARD GRID & COMMON CARDS
+   ------------------------------------------------------------------------- */
+.gacks-dashboard-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 22px 80px 22px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) rgba(18, 18, 20, 0.6);
+}
+
+.gacks-dashboard-content::-webkit-scrollbar {
+  width: 6px;
+}
+.gacks-dashboard-content::-webkit-scrollbar-track {
+  background: rgba(18, 18, 20, 0.6);
+}
+.gacks-dashboard-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.gacks-card {
+  background-color: var(--gacks-bg-panel);
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 24px 24px;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-lg);
+  box-shadow: var(--gacks-shadow-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.gacks-card:hover {
+  border-color: var(--gacks-border-medium);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.45);
+}
+
+.gacks-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--gacks-border-subtle);
+}
+
+.gacks-card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gacks-card-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gacks-text-white);
+  margin: 0;
+}
+
+.gacks-card-header-link {
+  font-size: 10px;
+  font-family: var(--gacks-font-mono);
+  color: var(--gacks-cyan);
+  background: var(--gacks-cyan-subtle);
+  border: 1px solid rgba(0, 163, 255, 0.2);
+  border-radius: 4px;
+  padding: 2px 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gacks-card-header-link:hover {
+  background: rgba(0, 163, 255, 0.18);
+  border-color: var(--gacks-cyan);
+  color: #ffffff;
+}
+
+.gacks-orange-bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gacks-cyan);
+  box-shadow: 0 0 5px var(--gacks-cyan);
+  display: inline-block;
+}
+
+/* Grid Rows */
+.gacks-grid-top-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.gacks-grid-middle-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.2fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.gacks-grid-bottom-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.gacks-hero-col,
+.gacks-system-col,
+.gacks-quickactions-col,
+.gacks-activity-col,
+.gacks-schedule-col,
+.gacks-market-col,
+.gacks-stats-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* -------------------------------------------------------------------------
+   5. HERO ASSISTANT PANEL
+   ------------------------------------------------------------------------- */
+.gacks-hero-panel {
+  background-color: var(--gacks-bg-panel);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(0, 163, 255, 0.04) 0%, transparent 50%),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 24px 24px, 24px 24px;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-lg);
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  box-shadow: var(--gacks-shadow-card);
+}
+
+.gacks-hero-visual {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gacks-hero-avatar-glow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 163, 255, 0.18) 0%, transparent 75%);
+}
+
+.gacks-hero-avatar-container {
+  position: relative;
+  width: 114px;
+  height: 114px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 163, 255, 0.4);
+  overflow: hidden;
+  box-shadow: 0 0 18px rgba(0, 163, 255, 0.2);
+  background: #18181A;
+}
+
+.gacks-hero-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  transform: scale(1.04);
+  transition: transform 0.25s ease;
+}
+
+.gacks-hero-avatar-container:hover .gacks-hero-avatar-img {
+  transform: scale(1.08);
+}
+
+.gacks-hero-hud-arcs {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 163, 255, 0.2);
+  pointer-events: none;
+}
+
+.gacks-hero-pulse-indicator {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background: #18181A;
+  border: 1px solid var(--gacks-cyan);
+  border-radius: 50%;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(0, 163, 255, 0.35);
+}
+
+.gacks-hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gacks-hero-header {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.gacks-hero-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.gacks-hero-tagline {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--gacks-text-white);
+  margin: 2px 0 0 0;
+}
+
+.gacks-hero-description {
+  font-size: 11.5px;
+  color: var(--gacks-text-muted);
+  margin: 2px 0 0 0;
+}
+
+.gacks-hero-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #202024;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-sm);
+  padding: 6px 12px;
+  width: fit-content;
+}
+
+.gacks-hero-status-dot-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.gacks-hero-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gacks-cyan);
+  box-shadow: 0 0 6px var(--gacks-cyan);
+}
+
+.gacks-hero-greeting-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.gacks-hero-greeting-line {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.gacks-hero-subline {
+  font-size: 9.5px;
+  color: var(--gacks-text-muted);
+}
+
+/* Quick Mode Buttons (Styled like Reference Node Cards: planning, my scenario, dataset) */
+.gacks-hero-modes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.gacks-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #202024;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: var(--gacks-text-white);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gacks-mode-btn:hover {
+  background: #28282E;
+  border-color: rgba(0, 163, 255, 0.35);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.gacks-mode-icon {
+  width: 13px;
+  height: 13px;
+  color: var(--gacks-cyan);
+}
+
+/* -------------------------------------------------------------------------
+   6. SYSTEM STATUS CARD (Circular Gauges)
+   ------------------------------------------------------------------------- */
+.gacks-system-card {
+  padding-bottom: 8px;
+}
+
+.gacks-system-banner {
+  font-size: 10px;
+  color: var(--gacks-text-muted);
+}
+
+.gacks-system-operational {
+  color: var(--gacks-cyan);
+}
+
+.gacks-system-attention {
+  color: var(--gacks-red);
+}
+
+.gacks-system-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 12px 14px;
+}
+
+.gacks-system-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+/* Central circular dial face modeled after reference's Tasks Scheduler circular gauge */
+.gacks-gauge-wrap {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1E1E22;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.gacks-gauge-svg {
+  position: absolute;
+  inset: -3px;
+  width: calc(100% + 6px);
+  height: calc(100% + 6px);
+  transform: rotate(-90deg);
+}
+
+.gacks-gauge-bg {
+  fill: none;
+  stroke: #27272A;
+  stroke-width: 3.5;
+}
+
+.gacks-gauge-fill {
+  fill: none;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gacks-gauge-center {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gacks-system-val {
+  font-family: var(--gacks-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gacks-text-white);
+}
+
+.gacks-system-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gacks-text-muted);
+}
+
+.gacks-system-tile-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.15;
+}
+
+/* -------------------------------------------------------------------------
+   7. QUICK ACTIONS & RECENT ACTIVITY
+   ------------------------------------------------------------------------- */
+.gacks-quickactions-card {
+  padding-bottom: 6px;
+}
+
+.gacks-quickactions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px 14px;
+}
+
+.gacks-action-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 6px;
+  background: #202024;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: 10px;
+  color: var(--gacks-text-white);
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  text-align: center;
+}
+
+.gacks-action-tile:hover {
+  background: #28282E;
+  border-color: rgba(0, 163, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.gacks-action-icon-wrap {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--gacks-radius-sm);
+  background: #18181A;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gacks-action-icon {
+  width: 15px;
+  height: 15px;
+  color: var(--gacks-cyan);
+}
+
+.gacks-action-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gacks-action-title {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--gacks-text-white);
+}
+
+.gacks-action-desc {
+  font-size: 8.5px;
+  color: var(--gacks-text-dim);
+}
+
+/* Activity Feed */
+.gacks-activity-card {
+  padding-bottom: 6px;
+}
+
+.gacks-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+}
+
+.gacks-activity-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: var(--gacks-radius-sm);
+  background: #202024;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.gacks-activity-icon-col {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Activity Dots — Matching Reference Indicator Dot System */
+.gacks-act-orange { background: var(--gacks-cyan); box-shadow: 0 0 5px var(--gacks-cyan); }
+.gacks-act-cyan { background: var(--gacks-cyan); box-shadow: 0 0 5px var(--gacks-cyan); }
+.gacks-act-green { background: #FFFFFF; box-shadow: 0 0 4px rgba(255, 255, 255, 0.6); }
+.gacks-act-blue { background: var(--gacks-cyan); box-shadow: 0 0 5px var(--gacks-cyan); }
+.gacks-act-indigo { background: var(--gacks-red); box-shadow: 0 0 5px var(--gacks-red); }
+
+.gacks-activity-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.gacks-activity-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gacks-text-white);
+}
+
+.gacks-activity-subtitle {
+  font-size: 9px;
+  color: var(--gacks-text-muted);
+}
+
+.gacks-activity-time {
+  font-family: var(--gacks-font-mono);
+  font-size: 9px;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-activity-badge {
+  font-size: 8px;
+  font-family: var(--gacks-font-mono);
+  color: var(--gacks-cyan);
+  background: var(--gacks-cyan-subtle);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 163, 255, 0.2);
+}
+
+/* -------------------------------------------------------------------------
+   8. TODAY'S FOCUS & CALENDAR
+   ------------------------------------------------------------------------- */
+.gacks-focus-card {
+  padding-bottom: 6px;
+}
+
+.gacks-focus-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px 6px 14px;
+}
+
+.gacks-focus-text {
+  font-size: 11px;
+  color: var(--gacks-text-white);
+  transition: opacity 0.15s ease;
+}
+
+.gacks-focus-add-trigger {
+  padding: 6px 14px 10px 14px;
+}
+
+.gacks-add-task-form {
+  display: flex;
+  gap: 6px;
+}
+
+.gacks-add-task-input {
+  flex: 1;
+  background: #161618;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: 6px;
+  padding: 5px 8px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.gacks-add-task-input:focus {
+  outline: none;
+  border-color: var(--gacks-cyan);
+}
+
+.gacks-add-task-btn {
+  background: var(--gacks-cyan-subtle);
+  border: 1px solid var(--gacks-cyan);
+  border-radius: 6px;
+  padding: 5px 10px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.gacks-add-task-btn:hover {
+  background: var(--gacks-cyan);
+  color: #000;
+}
+
+/* Calendar Card */
+.gacks-calendar-card {
+  padding-bottom: 6px;
+}
+
+.gacks-calendar-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gacks-date-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gacks-border-subtle);
+}
+
+.gacks-date-day-num {
+  font-family: var(--gacks-font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.gacks-date-month {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gacks-cyan);
+}
+
+.gacks-date-day-name {
+  font-size: 11px;
+  color: var(--gacks-text-muted);
+}
+
+.gacks-calendar-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gacks-timeline-events {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gacks-timeline-event {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #202024;
+  border-left: 2px solid var(--gacks-cyan);
+}
+
+.gacks-timeline-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gacks-cyan);
+}
+
+.gacks-event-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.gacks-event-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.gacks-event-time {
+  font-family: var(--gacks-font-mono);
+  font-size: 9px;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-timeline-kicker {
+  font-size: 9px;
+  color: var(--gacks-text-dim);
+  text-align: center;
+  padding-top: 4px;
+}
+
+/* -------------------------------------------------------------------------
+   9. MARKET OVERVIEW CARD
+   ------------------------------------------------------------------------- */
+.gacks-market-card {
+  padding-bottom: 8px;
+}
+
+.gacks-market-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--gacks-border-subtle);
+}
+
+.gacks-market-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  padding: 12px 14px;
+}
+
+.gacks-market-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  background: #202024;
+  border: 1px solid var(--gacks-border-subtle);
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.gacks-market-tile:hover {
+  border-color: rgba(0, 163, 255, 0.3);
+  background: #28282E;
+}
+
+.gacks-market-tile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gacks-market-symbol {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+}
+
+.gacks-market-tile-body {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.gacks-market-price {
+  font-family: var(--gacks-font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.gacks-market-sparkline-wrap {
+  width: 50px;
+  height: 16px;
+}
+
+.gacks-sparkline-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* -------------------------------------------------------------------------
+   10. QUOTE, STATS & BADGE CLUSTER
+   ------------------------------------------------------------------------- */
+.gacks-bottom-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gacks-quote-card {
+  padding-bottom: 6px;
+}
+
+.gacks-quote-body {
+  padding: 12px 14px 6px 14px;
+}
+
+.gacks-quote-text {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--gacks-text-white);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.gacks-quote-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 14px 10px 14px;
+}
+
+.gacks-quote-author {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gacks-cyan);
+}
+
+.gacks-carousel-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gacks-carousel-btn {
+  background: transparent;
+  border: none;
+  color: var(--gacks-text-muted);
+  cursor: pointer;
+  padding: 2px;
+}
+
+.gacks-carousel-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.gacks-stats-card {
+  padding-bottom: 6px;
+}
+
+.gacks-stats-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.gacks-stat-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gacks-stat-val {
+  font-family: var(--gacks-font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.gacks-stat-label {
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gacks-text-muted);
+}
+
+.gacks-stat-meta {
+  font-size: 7.5px;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-badge-card {
+  padding: 8px 12px;
+}
+
+.gacks-badge-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.gacks-badge-stripes {
+  display: flex;
+  gap: 2px;
+}
+
+.gacks-badge-stripe {
+  width: 14px;
+  height: 2px;
+  background: var(--gacks-cyan);
+  opacity: 0.5;
+}
+
+.gacks-badge-title {
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-badge-motto {
+  font-size: 7.5px;
+  letter-spacing: 0.15em;
+  color: var(--gacks-cyan);
+}
+
+/* -------------------------------------------------------------------------
+   11. INTERACTIVE VIEWS MODALS
+   ------------------------------------------------------------------------- */
+.gacks-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+  padding: 20px;
+  animation: gacks-fadein 0.18s ease;
+}
+
+.gacks-modal-container {
+  width: 100%;
+  max-width: 820px;
+  max-height: 85vh;
+  background: #18181A;
+  border: 1px solid var(--gacks-border-medium);
+  border-radius: var(--gacks-radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 163, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: gacks-scalein 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gacks-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--gacks-border-subtle);
+  background: #141416;
+}
+
+.gacks-modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gacks-modal-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+}
+
+.gacks-modal-close-btn {
+  background: transparent;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: 6px;
+  padding: 4px;
+  color: var(--gacks-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.gacks-modal-close-btn:hover {
+  color: #ffffff;
+  border-color: var(--gacks-border-bright);
+}
+
+.gacks-modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px 20px;
+}
+
+/* Chat View */
+.gacks-chat-view {
+  display: flex;
+  flex-direction: column;
+  height: 520px;
+}
+
+.gacks-chat-turns {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 6px;
+}
+
+.gacks-chat-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--gacks-text-muted);
+  gap: 8px;
+}
+
+.gacks-bubble-role {
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-bubble-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gacks-text-white);
+}
+
+.gacks-chat-input-row {
+  display: flex;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gacks-border-subtle);
+}
+
+.gacks-chat-input {
+  flex: 1;
+  background: #141416;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-sm);
+  padding: 8px 12px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.gacks-chat-input:focus {
+  outline: none;
+  border-color: var(--gacks-cyan);
+}
+
+/* Signature Reference Pill CTA for Primary Actions */
+.gacks-chat-send-btn,
+.gacks-add-task-btn-full,
+.gacks-settings-save-btn {
+  background: var(--gacks-cyan-subtle);
+  border: 1px solid var(--gacks-cyan);
+  border-radius: var(--gacks-radius-pill);
+  padding: 8px 20px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(0, 163, 255, 0.2);
+  transition: all 0.18s ease;
+}
+
+.gacks-chat-send-btn:hover,
+.gacks-add-task-btn-full:hover,
+.gacks-settings-save-btn:hover {
+  background: rgba(0, 163, 255, 0.2);
+  box-shadow: 0 0 16px rgba(0, 163, 255, 0.4);
+}
+
+/* Tasks View */
+.gacks-tasks-view,
+.gacks-files-view,
+.gacks-calendar-view,
+.gacks-search-view,
+.gacks-system-view,
+.gacks-settings-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gacks-add-task-full {
+  display: flex;
+  gap: 8px;
+}
+
+.gacks-task-input-full {
+  flex: 1;
+  background: #141416;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-sm);
+  padding: 8px 12px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.gacks-task-list-full {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gacks-task-full-text {
+  flex: 1;
+  font-size: 13px;
+}
+
+.gacks-task-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--gacks-text-dim);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.gacks-task-delete-btn:hover {
+  color: var(--gacks-red);
+}
+
+/* Files View */
+.gacks-file-browser {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gacks-file-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #202024;
+  border: 1px solid var(--gacks-border-subtle);
+  border-radius: var(--gacks-radius-sm);
+}
+
+/* Settings View */
+.gacks-settings-group {
+  background: #202024;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gacks-settings-input {
+  background: #161618;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  width: 100%;
+}
+
+.gacks-settings-input:focus {
+  outline: none;
+  border-color: var(--gacks-cyan);
+}
+
+/* -------------------------------------------------------------------------
+   12. FLOATING VOICE MIC FAB & CAPTIONS
+   ------------------------------------------------------------------------- */
+.gacks-floating-mic-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 28px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #18181A;
+  border: 1px solid var(--gacks-cyan);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 14px rgba(0, 163, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 40;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--gacks-cyan);
+}
+
+.gacks-floating-mic-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 163, 255, 0.45);
+}
+
+.gacks-mic-pulse-listening {
+  background: rgba(0, 163, 255, 0.2);
+  border-color: var(--gacks-cyan);
+  box-shadow: 0 0 20px var(--gacks-cyan);
+  animation: gacks-pulse-fab 1.2s infinite;
+}
+
+.gacks-mic-pulse-thinking {
+  border-color: var(--gacks-cyan);
+  box-shadow: 0 0 20px var(--gacks-cyan);
+  animation: gacks-pulse-fab 1.5s infinite;
+}
+
+.gacks-mic-pulse-speaking {
+  border-color: #FFFFFF;
+  color: #FFFFFF;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.5);
+  animation: gacks-pulse-fab 0.9s infinite;
+}
+
+.gacks-floating-caption {
+  position: fixed;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #18181A;
+  border: 1px solid var(--gacks-border-medium);
+  border-radius: var(--gacks-radius-pill);
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  z-index: 40;
+  max-width: 80vw;
+}
+
+.gacks-caption-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gacks-cyan);
+  animation: gacks-pulse 1s infinite;
+}
+
+.gacks-caption-text {
+  margin: 0;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+/* -------------------------------------------------------------------------
+   13. ANIMATIONS
+   ------------------------------------------------------------------------- */
+@keyframes gacks-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+@keyframes gacks-pulse-fab {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes gacks-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes gacks-scalein {
+  from { transform: scale(0.97); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* -------------------------------------------------------------------------
+   14. RESPONSIVENESS (Desktop, Laptop, Tablet, Mobile)
+   ------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+  .gacks-grid-top-row {
+    grid-template-columns: 1fr;
+  }
+  .gacks-grid-middle-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .gacks-grid-bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .gacks-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.85);
+    z-index: 90;
+  }
+  .gacks-sidebar-open-mobile {
+    transform: translateX(0);
+  }
+  .gacks-mobile-menu-btn {
+    display: flex;
+  }
+  .gacks-topbar {
+    padding: 0 16px;
+  }
+  .gacks-dashboard-content {
+    padding: 14px 16px 80px 16px;
+  }
+  .gacks-grid-middle-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .gacks-topbar-right .gacks-clock-widget,
+  .gacks-topbar-right .gacks-weather-pill {
+    display: none;
+  }
+  .gacks-hero-panel {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+  }
+  .gacks-hero-status-pill {
+    margin: 0 auto;
+  }
+  .gacks-hero-modes {
+    justify-content: center;
+  }
+  .gacks-system-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .gacks-quickactions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .gacks-command-shortcut {
+    display: none;
+  }
+  .gacks-hero-avatar-container {
+    width: 98px;
+    height: 98px;
+  }
+  .gacks-hero-visual {
+    width: 104px;
+    height: 104px;
+  }
+  .gacks-market-grid {
+    grid-template-columns: 1fr;
+  }
+}
