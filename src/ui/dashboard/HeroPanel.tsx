@@ -1,5 +1,5 @@
-import React from 'react'
-import { MessageSquare, Compass, PenTool, Cpu, Mic, Volume2 } from 'lucide-react'
+import React, { useState } from 'react'
+import { MessageSquare, Compass, PenTool, Cpu, Mic, Volume2, X, Image as ImageIcon } from 'lucide-react'
 import { useStore, type Phase } from '../../store'
 import insightLogo from '../../assets/insight-logo.jpeg'
 
@@ -17,6 +17,21 @@ export const HeroPanel: React.FC<HeroPanelProps> = ({
   const submitQuery = useStore((s) => s.submitQuery)
   const caption = useStore((s) => s.caption)
   const activeTool = useStore((s) => s.activeTool)
+
+  const [showAvatar, setShowAvatar] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('gacks_hero_avatar_visible') !== 'false'
+    } catch {
+      return true
+    }
+  })
+
+  const toggleAvatarVisibility = (visible: boolean) => {
+    setShowAvatar(visible)
+    try {
+      localStorage.setItem('gacks_hero_avatar_visible', visible ? 'true' : 'false')
+    } catch {}
+  }
 
   // Compute real time of day greeting
   const hour = new Date().getHours()
@@ -50,30 +65,60 @@ export const HeroPanel: React.FC<HeroPanelProps> = ({
 
   return (
     <section className="gacks-hero-panel" aria-label="Insight Business Suite">
-      {/* Visual Left: Official Insight Business Suite Logo */}
-      <div className="gacks-hero-visual" onClick={onToggleVoice} title="Click to activate voice assistant">
-        <div className="gacks-hero-avatar-glow" />
-        <div className="gacks-hero-avatar-container">
-          <img
-            src={userProfile.avatar || insightLogo}
-            alt="Insight Business Suite"
-            className="gacks-hero-avatar-img"
-            style={{ objectFit: 'contain', padding: '4px' }}
-          />
-          {/* Subtle glowing visor & HUD overlay effect */}
-          <div className="gacks-hero-hud-arcs" />
-          {phase === 'listening' && (
-            <div className="gacks-hero-pulse-indicator">
-              <Mic className="w-5 h-5 text-orange-400 animate-pulse" />
+      {/* Visual Left: Official Insight Business Suite Scalable Logo / Avatar */}
+      {showAvatar ? (
+        <div className="gacks-hero-visual-wrapper">
+          <div
+            className="gacks-hero-visual"
+            onClick={onToggleVoice}
+            title="Click to activate voice assistant"
+          >
+            <div className="gacks-hero-avatar-glow" />
+            <div className="gacks-hero-avatar-container">
+              <img
+                src={userProfile.avatar || insightLogo}
+                alt="Insight Business Suite"
+                className="gacks-hero-avatar-img"
+              />
+              {/* Subtle glowing visor & HUD overlay effect */}
+              <div className="gacks-hero-hud-arcs" />
+              {phase === 'listening' && (
+                <div className="gacks-hero-pulse-indicator">
+                  <Mic className="w-4 h-4 text-orange-400 animate-pulse" />
+                </div>
+              )}
+              {phase === 'speaking' && (
+                <div className="gacks-hero-pulse-indicator">
+                  <Volume2 className="w-4 h-4 text-emerald-400 animate-pulse" />
+                </div>
+              )}
             </div>
-          )}
-          {phase === 'speaking' && (
-            <div className="gacks-hero-pulse-indicator">
-              <Volume2 className="w-5 h-5 text-emerald-400 animate-pulse" />
-            </div>
-          )}
+          </div>
+          <button
+            type="button"
+            className="gacks-hero-avatar-hide-btn"
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleAvatarVisibility(false)
+            }}
+            title="Remove hero visual image"
+            aria-label="Remove hero visual image"
+          >
+            <X className="w-3 h-3" />
+          </button>
         </div>
-      </div>
+      ) : (
+        <button
+          type="button"
+          className="gacks-hero-avatar-restore-btn"
+          onClick={() => toggleAvatarVisibility(true)}
+          title="Restore hero visual image"
+          aria-label="Restore hero visual image"
+        >
+          <ImageIcon className="w-3.5 h-3.5" />
+          <span>Show Visual</span>
+        </button>
+      )}
 
       {/* Content Right: Brand, Headline, Greeting, Mode Buttons */}
       <div className="gacks-hero-content">

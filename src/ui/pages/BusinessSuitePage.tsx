@@ -107,6 +107,20 @@ type SuiteTab = 'briefing' | 'approvals' | 'crm' | 'forex' | 'marketing' | 'meta
 export const BusinessSuitePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SuiteTab>('briefing')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [showSuiteLogo, setShowSuiteLogo] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('gacks_suite_logo_visible') !== 'false'
+    } catch {
+      return true
+    }
+  })
+
+  const toggleSuiteLogo = (visible: boolean) => {
+    setShowSuiteLogo(visible)
+    try {
+      localStorage.setItem('gacks_suite_logo_visible', visible ? 'true' : 'false')
+    } catch {}
+  }
   const [briefing, setBriefing] = useState<MorningBriefingData | null>(null)
   const [approvals, setApprovals] = useState<ApprovalItem[]>([])
   const [customers, setCustomers] = useState<CustomerItem[]>([])
@@ -287,14 +301,40 @@ export const BusinessSuitePage: React.FC = () => {
       {/* 1. Header & Executive Greeting */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-gray-800/80">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-gray-900 border border-cyan-500/30 p-1 flex items-center justify-center shadow-lg shadow-cyan-950/40">
-            <img
-              src={insightLogo}
-              alt="Insight Business Suite"
-              className="w-full h-full rounded-lg"
-              style={{ objectFit: 'contain' }}
-            />
-          </div>
+          {showSuiteLogo ? (
+            <div className="relative group shrink-0">
+              <div
+                className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gray-900 border border-cyan-500/30 p-1 flex items-center justify-center shadow-lg shadow-cyan-950/40 shrink-0"
+                style={{ width: '40px', height: '40px', maxWidth: '40px', maxHeight: '40px', overflow: 'hidden' }}
+              >
+                <img
+                  src={insightLogo}
+                  alt="Insight Business Suite"
+                  className="w-full h-full rounded-lg object-contain max-w-full max-h-full"
+                  style={{ width: '100%', height: '100%', maxWidth: '40px', maxHeight: '40px', objectFit: 'contain' }}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => toggleSuiteLogo(false)}
+                className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-gray-900/95 hover:bg-red-600 border border-gray-700 hover:border-red-500 text-gray-400 hover:text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-[9px] shadow"
+                title="Remove logo"
+                aria-label="Remove logo"
+              >
+                <X className="w-2.5 h-2.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => toggleSuiteLogo(true)}
+              className="text-[10px] text-cyan-400/80 hover:text-cyan-300 border border-dashed border-cyan-500/30 hover:border-cyan-500/50 rounded-md px-2 py-1 flex items-center gap-1 transition shrink-0"
+              title="Restore suite logo"
+              aria-label="Restore suite logo"
+            >
+              <span>+ Logo</span>
+            </button>
+          )}
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-white">Insight Business Suite</h1>
@@ -491,12 +531,15 @@ export const BusinessSuitePage: React.FC = () => {
               {/* Drawer Header */}
               <div className="flex items-center justify-between pb-4 border-b border-gray-800">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-gray-900 border border-cyan-500/30 p-0.5 flex items-center justify-center">
+                  <div
+                    className="w-8 h-8 rounded-lg bg-gray-900 border border-cyan-500/30 p-0.5 flex items-center justify-center"
+                    style={{ width: '32px', height: '32px', maxWidth: '32px', maxHeight: '32px', overflow: 'hidden' }}
+                  >
                     <img
                       src={insightLogo}
                       alt="Insight"
                       className="w-full h-full rounded"
-                      style={{ objectFit: 'contain' }}
+                      style={{ width: '100%', height: '100%', maxWidth: '32px', maxHeight: '32px', objectFit: 'contain' }}
                     />
                   </div>
                   <div>

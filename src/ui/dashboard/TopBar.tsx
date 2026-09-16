@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Search, Sun, Cloud, CloudRain, Menu } from 'lucide-react'
 import { useStore } from '../../store'
-import insightLogo from '../../assets/insight-logo.jpeg'
 
 interface TopBarProps {
   onOpenMobileMenu?: () => void
@@ -173,30 +172,34 @@ export const TopBar: React.FC<TopBarProps> = ({
           </div>
         </div>
 
-        {/* Branded Profile & Account Control */}
-        <button
-          type="button"
-          className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-gray-900/60 border border-gray-800/80 hover:border-cyan-500/50 hover:bg-gray-800/80 transition-all text-left shrink-0"
-          onClick={onOpenSettings}
-          title="Account & Suite Preferences"
-          aria-label="User Account and Preferences"
-        >
-          <div className="w-7 h-7 rounded-full overflow-hidden border border-cyan-500/40 bg-gray-950 flex items-center justify-center shrink-0">
-            <img
-              src={userProfile.avatar || insightLogo}
-              alt="Insight Profile"
-              className="w-full h-full object-contain p-0.5"
-            />
-          </div>
-          <div className="hidden sm:flex flex-col">
-            <span className="text-xs font-semibold text-gray-200 leading-tight">
-              {userProfile.name}
-            </span>
-            <span className="text-[10px] text-cyan-400 font-mono leading-tight">
-              Insight Suite
-            </span>
-          </div>
-        </button>
+        {/* Executive Profile & Account Control */}
+        <div className="gacks-profile-pill-wrap">
+          <button
+            type="button"
+            className="gacks-profile-pill"
+            onClick={onOpenSettings}
+            title="Account & Suite Preferences"
+            aria-label="User Account and Preferences"
+          >
+            <div className="gacks-profile-avatar">
+              {userProfile.avatar ? (
+                <img
+                  src={userProfile.avatar}
+                  alt={userProfile.name}
+                  className="gacks-profile-avatar-img"
+                />
+              ) : (
+                <span className="gacks-profile-initial">
+                  {userProfile.name ? userProfile.name.charAt(0).toUpperCase() : 'G'}
+                </span>
+              )}
+            </div>
+            <div className="gacks-profile-info">
+              <span className="gacks-profile-name">{userProfile.name}</span>
+              <span className="gacks-profile-sub">Insight Suite</span>
+            </div>
+          </button>
+        </div>
       </div>
     </header>
   )

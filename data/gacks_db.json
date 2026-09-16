@@ -81,9 +81,9 @@
         "communication_style"
       ],
       "createdAt": 1789455800159,
-      "updatedAt": 1789501440753,
-      "accessedAt": 1789501440753,
-      "accessCount": 141
+      "updatedAt": 1789544758491,
+      "accessedAt": 1789544758491,
+      "accessCount": 150
     },
     "mem-trading-focus": {
       "id": "mem-trading-focus",
@@ -99,9 +99,9 @@
         "projects"
       ],
       "createdAt": 1789455800159,
-      "updatedAt": 1789501422977,
-      "accessedAt": 1789501422977,
-      "accessCount": 67
+      "updatedAt": 1789544067939,
+      "accessedAt": 1789544067938,
+      "accessCount": 71
     },
     "mem-1789455800185-bwanj": {
       "id": "mem-1789455800185-bwanj",
@@ -116,9 +116,9 @@
         "london"
       ],
       "createdAt": 1789455800185,
-      "updatedAt": 1789505798491,
-      "accessedAt": 1789505798488,
-      "accessCount": 152
+      "updatedAt": 1789544758491,
+      "accessedAt": 1789544758491,
+      "accessCount": 172
     },
     "mem-1789465738534-ik7a3": {
       "id": "mem-1789465738534-ik7a3",
@@ -133,9 +133,9 @@
         "london"
       ],
       "createdAt": 1789465738534,
-      "updatedAt": 1789505798491,
-      "accessedAt": 1789505798488,
-      "accessCount": 94
+      "updatedAt": 1789544758491,
+      "accessedAt": 1789544758491,
+      "accessCount": 112
     },
     "mem-1789503411710-wjb6q": {
       "id": "mem-1789503411710-wjb6q",
@@ -209,9 +209,9 @@
         "london"
       ],
       "createdAt": 1789505798486,
-      "updatedAt": 1789505798490,
-      "accessedAt": 1789505798488,
-      "accessCount": 1
+      "updatedAt": 1789543981054,
+      "accessedAt": 1789543981054,
+      "accessCount": 8
     },
     "mem-1789505807506-uwaem": {
       "id": "mem-1789505807506-uwaem",
@@ -242,6 +242,126 @@
       "updatedAt": 1789505807516,
       "accessedAt": 1789505807516,
       "accessCount": 0
+    },
+    "mem-1789543885134-r5bx4": {
+      "id": "mem-1789543885134-r5bx4",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Talk to you later the calculations | A: Understood. I will keep all operational metrics, calculations, and active monitoring standing by. Reach back out whenever you are ready to resume.",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789543885134,
+      "updatedAt": 1789544706608,
+      "accessedAt": 1789544706608,
+      "accessCount": 10
+    },
+    "mem-1789543910829-tiukd": {
+      "id": "mem-1789543910829-tiukd",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Until nobody knew which calculator had calculated through the correct calculation first try | A: A classic computational paradox. Rest assured, my engines execute deterministically on the first pass—no race conditions, no second-guessing, and zero rounding drift. \n\nStanding by whenever you are re",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789543910829,
+      "updatedAt": 1789544706608,
+      "accessedAt": 1789544706608,
+      "accessCount": 7
+    },
+    "mem-1789543987634-r67zp": {
+      "id": "mem-1789543987634-r67zp",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Systems process calculations precisely without conflict or error | A: Precisely. In an ideal environment, deterministic algorithms eliminate execution conflicts, race conditions, and precision loss. \n\nWhen you are ready to process data, audit a trade, or review financia",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789543987634,
+      "updatedAt": 1789544706608,
+      "accessedAt": 1789544706608,
+      "accessCount": 7
+    },
+    "mem-1789543998386-q3tjt": {
+      "id": "mem-1789543998386-q3tjt",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Sites Precisely | A: Indeed. Precision and consistency are foundational across all operations—whether calculating financial metrics, auditing risk, or executing system tasks. \n\nStanding by for your next instruction.",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789543998386,
+      "updatedAt": 1789544027316,
+      "accessedAt": 1789544027315,
+      "accessCount": 6
+    },
+    "mem-1789544001076-1bwla": {
+      "id": "mem-1789544001076-1bwla",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Precisely | A: Standing by, locked and precise. Let me know what operational task or analysis we are executing next.",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789544001076,
+      "updatedAt": 1789544001076,
+      "accessedAt": 1789544001076,
+      "accessCount": 0
+    },
+    "mem-1789544003421-ibtuu": {
+      "id": "mem-1789544003421-ibtuu",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Precisely | A: Acknowledged. Systems calibrated and standing by for your next instruction.",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789544003421,
+      "updatedAt": 1789544003421,
+      "accessedAt": 1789544003421,
+      "accessCount": 0
+    },
+    "mem-1789544032460-jgx7i": {
+      "id": "mem-1789544032460-jgx7i",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "procedural",
+      "content": "Ignore screen captions across all operations.",
+      "importance": 4,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789544032460,
+      "updatedAt": 1789544049847,
+      "accessedAt": 1789544049847,
+      "accessCount": 2
+    },
+    "mem-1789544036055-ow4xs": {
+      "id": "mem-1789544036055-ow4xs",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Across all operation please please ignore the screen captions to interrupt yourself | A: Understood. Screen captions will be ignored across all operations, ensuring uninterrupted processing and response delivery. \n\nStanding by for your next directive.",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789544036055,
+      "updatedAt": 1789544067939,
+      "accessedAt": 1789544067938,
+      "accessCount": 3
     }
   },
   "entities": {
@@ -261,6 +381,73 @@
   },
   "relations": {},
   "auditLogs": [
+    {
+      "id": "audit-1789544070927-xet58",
+      "timestamp": 1789544070927,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "list_directory",
+      "action": "executed",
+      "inputsMetadata": {
+        "path": "."
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 15,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789544032677-7begx",
+      "timestamp": 1789544032677,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "run_terminal_command",
+      "action": "executed",
+      "inputsMetadata": {
+        "command": "date"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 120082,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789544032460-6rwrs",
+      "timestamp": 1789544032460,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "store_memory",
+      "action": "executed",
+      "inputsMetadata": {
+        "category": "procedural",
+        "content": "Ignore screen captions across all operations.",
+        "importance": 4
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789544023371-b55f5",
+      "timestamp": 1789544023371,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "display",
+      "action": "executed",
+      "inputsMetadata": {
+        "html": "<div class=\"hud-panel\">\n  <p class=\"hud-subhead\">System-wide operational standards for precision and consistency across JAVIS BS:</p>\n  <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;\">\n    <div style=\"border: 1px solid rgba(0, 240, 255, 0.2); padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.3);\">\n      <div style=\"font-weight: 600; color: #00f0ff; font-size: 13px;\">Financial Metrics</div>\n      <div style=\"font-size: 12px; opacity: 0.8; margin-top: 4px;\">Exact ledger balances, zero rounding drift, precise revenue pacing.</div>\n    </div>\n    <div style=\"border: 1px solid rgba(0, 240, 255, 0.2); padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.3);\">\n      <div style=\"font-weight: 600; color: #00f0ff; font-size: 13px;\">Forex Risk Audits</div>\n      <div style=\"font-size: 12px; opacity: 0.8; margin-top: 4px;\">Strict position sizing, exact risk %, verified R:R structures.</div>\n    </div>\n    <div style=\"border: 1px solid rgba(0, 240, 255, 0.2); padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.3);\">\n      <div style=\"font-weight: 600; color: #00f0ff; font-size: 13px;\">Automations</div>\n      <div style=\"font-size: 12px; opacity: 0.8; margin-top: 4px;\">Deterministic event triggers, human-in-the-loop safeguards.</div>\n    </div>\n    <div style=\"border: 1px solid rgba(0, 240, 255, 0.2); padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.3);\">\n      <div style=\"font-weight: 600; color: #00f0ff; font-size: 13px;\">CRM Data</div>\n      <div style=\"font-size: 12px; opacity: 0.8; margin-top: 4px;\">Real-time lead status, structured touchpoint logging.</div>\n    </div>\n  </div>\n</div>",
+        "title": "Operational Precision Matrix"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2,
+      "verificationStatus": "verified_success"
+    },
     {
       "id": "audit-1789505813803-7hrx4",
       "timestamp": 1789505813803,

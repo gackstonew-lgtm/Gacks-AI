@@ -5,7 +5,6 @@ import { GacksDashboard } from './ui/GacksDashboard'
 import { Boot } from './ui/Boot'
 import { Ignition } from './ui/Ignition'
 import { Diagnostics } from './ui/Diagnostics'
-import { IntroSequence } from './ui/IntroSequence'
 import { GacksVoiceVisualization } from './ui/voice/GacksVoiceVisualization'
 import { useStore } from './store'
 import { startVoice, type Voice, type VoiceMode } from './lib/voice'
@@ -94,13 +93,7 @@ export default function App() {
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const voicePoll = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // Intro Sequence lifecycle state (plays on fresh load / refresh)
-  const [introActive, setIntroActive] = useState(true)
-  const [dashboardReady, setDashboardReady] = useState(false)
-  const introActiveRef = useRef(true)
-  introActiveRef.current = introActive
   const backgroundServicesStarted = useRef(false)
-  const fullyBooted = useRef(false)
 
   // -- helpers --------------------------------------------------------------
 
@@ -451,47 +444,15 @@ export default function App() {
     }
   }
 
-  const handleIntroUserGesture = () => {
-    void sfx.unlockAudio().catch(() => {})
-    startBackgroundServices()
-    void probeCapabilities().catch(() => {})
-  }
-
-  const handleIntroComplete = async () => {
-    setIntroActive(false)
-    setDashboardReady(true)
-
-    if (fullyBooted.current) return
-    fullyBooted.current = true
-    booting.current = true
-
+  // Immediate background services, connectivity and voice engine startup
+  useEffect(() => {
     startBackgroundServices()
     store.getState().setConnected(connectedLabels())
     store.getState().setVoice(currentVoiceName())
-
-    try {
-      await startAnalyser()
-    } catch {
-      // Optional mic pulse stream
-    }
-
-    await probeCapabilities()
-
-    try {
-      voice.current = await startVoice({
-        mode,
-        onWake,
-        onSpeechStart,
-        onPartial,
-        onUtterance,
-        onError: onVoiceError,
-      })
-      store.getState().setPhase('dormant')
-    } catch (err) {
-      console.warn('[GACKS P.A] Voice loop deferred:', err)
-      store.getState().setPhase('dormant')
-    }
-  }
+    store.getState().setPhase('dormant')
+    void probeCapabilities().catch(() => {})
+    void startAnalyser().catch(() => {})
+  }, [])
 
   // -- power on -------------------------------------------------------------
 
@@ -755,7 +716,6 @@ export default function App() {
     pump()
 
     const onKey = (e: KeyboardEvent) => {
-      if (introActiveRef.current) return
       const tag = (e.target as HTMLElement)?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
 
@@ -899,7 +859,7 @@ export default function App() {
 
   const handleToggleVoice = () => {
     const currentPhase = store.getState().phase
-    if (currentPhase === 'offline') {
+    if (currentPhase === 'offline' || !voice.current) {
       void powerOn()
     } else if (
       currentPhase === 'thinking' ||
@@ -917,65 +877,20 @@ export default function App() {
 
   return (
     <>
-      {introActive && (
-        <IntroSequence
-          onComplete={() => void handleIntroComplete()}
-          onUserGesture={handleIntroUserGesture}
-        />
-      )}
-      {dashboardReady && (
+      <Scene />
+      {viewMode === 'dashboard' ? (
         <>
-          <Scene />
-          {viewMode === 'dashboard' ? (
-            <>
-              <GacksDashboard onToggleVoice={handleToggleVoice} />
-              <GacksVoiceVisualization />
-            </>
-          ) : (
-            <>
-              <Hud />
-              <Ignition onStart={() => void powerOn()} />
-            </>
-          )}
-          <Boot />
-          <Diagnostics />
-          {viewMode === 'dashboard' && phase === 'offline' && (
-            <div
-              style={{
-                position: 'fixed',
-                top: '70px',
-                right: '24px',
-                background: 'rgba(255, 102, 0, 0.15)',
-                border: '1px solid rgba(255, 102, 0, 0.4)',
-                borderRadius: '8px',
-                padding: '8px 14px',
-                zIndex: 60,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                backdropFilter: 'blur(10px)',
-                cursor: 'pointer',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-              }}
-              onClick={() => void powerOn()}
-              title="Click to initialize voice & audio"
-            >
-              <span
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  background: '#ff6600',
-                  boxShadow: '0 0 8px #ff6600',
-                }}
-              />
-              <span style={{ fontSize: '11px', fontWeight: 600, color: '#ffffff' }}>
-                Click to Initialise Voice Core
-              </span>
-            </div>
-          )}
+          <GacksDashboard onToggleVoice={handleToggleVoice} />
+          <GacksVoiceVisualization />
+        </>
+      ) : (
+        <>
+          <Hud />
+          <Ignition onStart={() => void powerOn()} />
         </>
       )}
+      <Boot />
+      <Diagnostics />
     </>
   )
 }

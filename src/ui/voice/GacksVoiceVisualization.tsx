@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react'
 import { useStore, type Phase } from '../../store'
-import { Mic, Volume2, Sparkles } from 'lucide-react'
+import { Mic, Volume2, Sparkles, X } from 'lucide-react'
 
 // Active phases where the voice visualization should be visible
 const ACTIVE_PHASES: Phase[] = ['waking', 'listening', 'thinking', 'tooling', 'speaking']
@@ -30,6 +30,18 @@ export const GacksVoiceVisualization: React.FC = () => {
   const isActive = ACTIVE_PHASES.includes(phase)
   const [shouldRender, setShouldRender] = useState(isActive)
   const [transitionProgress, setTransitionProgress] = useState(isActive ? 1 : 0)
+  const [dismissed, setDismissed] = useState(false)
+
+  // Reset dismissed state whenever a new active voice interaction begins
+  const prevPhaseRef = useRef(phase)
+  useEffect(() => {
+    if (phase !== prevPhaseRef.current) {
+      if (ACTIVE_PHASES.includes(phase) && !ACTIVE_PHASES.includes(prevPhaseRef.current)) {
+        setDismissed(false)
+      }
+      prevPhaseRef.current = phase
+    }
+  }, [phase])
 
   // High-frequency animation values stored in refs to avoid React re-renders
   const animRef = useRef({
@@ -67,11 +79,11 @@ export const GacksVoiceVisualization: React.FC = () => {
     let animationFrameId = 0
     let lastTime = performance.now()
 
-    // Determine canvas dimensions based on screen width
+    // Determine canvas dimensions based on screen width (scalable & non-obtrusive)
     const updateCanvasSize = () => {
       const isMobile = window.innerWidth < 640
       const isTablet = window.innerWidth < 1024
-      const displaySize = isMobile ? 310 : isTablet ? 420 : 520
+      const displaySize = isMobile ? 180 : isTablet ? 220 : 260
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
 
       canvas.width = displaySize * dpr
@@ -329,7 +341,7 @@ export const GacksVoiceVisualization: React.FC = () => {
     }
   }, [shouldRender, reducedMotion])
 
-  if (!shouldRender) return null
+  if (!shouldRender || dismissed) return null
 
   // State Subtitle Label
   const stateLabel =
@@ -397,6 +409,20 @@ export const GacksVoiceVisualization: React.FC = () => {
             />
           </div>
         )}
+
+        {/* Dismiss / Close Overlay Button */}
+        <button
+          type="button"
+          className="gacks-voice-dismiss-btn"
+          onClick={(e) => {
+            e.stopPropagation()
+            setDismissed(true)
+          }}
+          title="Dismiss voice overlay"
+          aria-label="Dismiss voice overlay"
+        >
+          <X className="w-3 h-3 text-gray-400 hover:text-white" />
+        </button>
       </div>
 
       {/* Spoken phrase subtitle display */}

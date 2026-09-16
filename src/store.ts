@@ -679,7 +679,10 @@ export const useStore = create<State>((set) => ({
   tasks: (() => {
     try {
       const saved = localStorage.getItem('gacks_tasks')
-      if (saved) return JSON.parse(saved)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed)) return parsed
+      }
     } catch {}
     return [
       { id: 'task-1', text: 'Analyze XAUUSD price action', completed: true },
@@ -739,15 +742,21 @@ export const useStore = create<State>((set) => ({
       return { activities: [newAct, ...s.activities.slice(0, 19)] }
     }),
   userProfile: (() => {
-    try {
-      const saved = localStorage.getItem('gacks_user_profile')
-      if (saved) return JSON.parse(saved)
-    } catch {}
-    return {
+    const defaultProfile = {
       name: 'Gackstone',
       subtitle: 'Always Forward',
       avatar: '',
     }
+    try {
+      const saved = localStorage.getItem('gacks_user_profile')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          return { ...defaultProfile, ...parsed }
+        }
+      }
+    } catch {}
+    return defaultProfile
   })(),
   setUserProfile: (patch) =>
     set((s) => {
