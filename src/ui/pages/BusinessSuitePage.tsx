@@ -24,6 +24,7 @@ import {
   Cpu,
   Settings,
   Lock,
+  Bot,
 } from 'lucide-react'
 import { useStore, type NavRoute } from '../../store'
 import { apiClient } from '../../lib/api-client'
@@ -275,7 +276,7 @@ export const BusinessSuitePage: React.FC = () => {
     }
   }
 
-  const suiteNavItems: { id: SuiteTab; label: string; icon: React.ComponentType<{ className?: string }>; badge?: number }[] = [
+  const suiteNavItems: { id: SuiteTab; label: string; icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; badge?: number }[] = [
     { id: 'briefing', label: 'Executive Briefing', icon: TrendingUp },
     { id: 'approvals', label: 'Approval Center', icon: ShieldCheck, badge: approvals.length },
     { id: 'crm', label: 'CRM & Customer Care', icon: Users, badge: customers.length },
@@ -285,7 +286,7 @@ export const BusinessSuitePage: React.FC = () => {
     { id: 'automations', label: 'Automations & Rules', icon: Sliders },
   ]
 
-  const workspaceShortcuts: { id: NavRoute; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  const workspaceShortcuts: { id: NavRoute; label: string; icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }> }[] = [
     { id: 'dashboard', label: 'Main Dashboard', icon: LayoutDashboard },
     { id: 'chat', label: 'AI Chat Command', icon: MessageSquare },
     { id: 'tasks', label: 'Tasks & Sprints', icon: CheckSquare },
@@ -297,29 +298,23 @@ export const BusinessSuitePage: React.FC = () => {
   ]
 
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6 text-gray-200">
-      {/* 1. Header & Executive Greeting */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-gray-800/80">
-        <div className="flex items-center gap-3">
+    <div className="bs-container">
+      {/* 1. Header & Executive Command Center Greeting */}
+      <header className="bs-header">
+        <div className="bs-brand">
           {showSuiteLogo ? (
-            <div className="relative group shrink-0">
-              <div
-                className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gray-900 border border-cyan-500/30 p-1 flex items-center justify-center shadow-lg shadow-cyan-950/40 shrink-0"
-                style={{ width: '40px', height: '40px', maxWidth: '40px', maxHeight: '40px', overflow: 'hidden' }}
-              >
-                <img
-                  src={insightLogo}
-                  alt="Insight Business Suite"
-                  className="w-full h-full rounded-lg object-contain max-w-full max-h-full"
-                  style={{ width: '100%', height: '100%', maxWidth: '40px', maxHeight: '40px', objectFit: 'contain' }}
-                />
-              </div>
+            <div className="bs-brand-logo-wrap">
+              <img
+                src={insightLogo}
+                alt="Insight Business Suite"
+                className="bs-brand-logo-img"
+              />
               <button
                 type="button"
                 onClick={() => toggleSuiteLogo(false)}
-                className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-gray-900/95 hover:bg-red-600 border border-gray-700 hover:border-red-500 text-gray-400 hover:text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-[9px] shadow"
-                title="Remove logo"
-                aria-label="Remove logo"
+                className="bs-brand-logo-remove"
+                title="Remove suite logo"
+                aria-label="Remove suite logo"
               >
                 <X className="w-2.5 h-2.5" />
               </button>
@@ -328,39 +323,37 @@ export const BusinessSuitePage: React.FC = () => {
             <button
               type="button"
               onClick={() => toggleSuiteLogo(true)}
-              className="text-[10px] text-cyan-400/80 hover:text-cyan-300 border border-dashed border-cyan-500/30 hover:border-cyan-500/50 rounded-md px-2 py-1 flex items-center gap-1 transition shrink-0"
+              className="bs-brand-restore-btn"
               title="Restore suite logo"
               aria-label="Restore suite logo"
             >
               <span>+ Logo</span>
             </button>
           )}
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-white">Insight Business Suite</h1>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                PRO
-              </span>
+          <div className="bs-brand-headings">
+            <div className="bs-title-row">
+              <h1 className="bs-title">Insight Business Suite</h1>
+              <span className="bs-pro-badge">PRO</span>
             </div>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <p className="bs-subtitle">
               Executive Command Center · Business Growth, CRM, Marketing & Market Operations
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 self-end sm:self-auto">
+        <div className="bs-toolbar">
           {/* Suite Menu Button */}
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
-            className="px-3.5 py-1.5 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-semibold flex items-center gap-2 shadow-sm transition"
+            className="bs-btn-menu"
             aria-label="Open Suite Menu"
             aria-expanded={menuOpen}
           >
             <Menu className="w-4 h-4 text-cyan-400" />
             <span>Suite Menu</span>
             {approvals.length > 0 && (
-              <span className="w-4 h-4 rounded-full bg-amber-500 text-black text-[10px] font-bold flex items-center justify-center">
+              <span className="bs-menu-counter">
                 {approvals.length}
               </span>
             )}
@@ -371,48 +364,51 @@ export const BusinessSuitePage: React.FC = () => {
             type="button"
             onClick={fetchAllData}
             disabled={loading}
-            className="px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs text-gray-300 flex items-center gap-1.5 border border-gray-700 transition"
+            className="bs-btn-sync"
             title="Sync all business data"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            <span className="hidden sm:inline">Sync</span>
+            <span>Sync</span>
           </button>
 
-          <div className="px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-[11px] text-emerald-300 font-mono flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="hidden sm:inline">OPERATIONAL</span>
+          <div className="bs-status-badge">
+            <div className="bs-status-dot" />
+            <span>OPERATIONAL</span>
           </div>
         </div>
-      </div>
+      </header>
 
       {statusMsg && (
-        <div className="p-3 bg-cyan-950/40 border border-cyan-500/30 rounded-lg text-xs text-cyan-300 flex items-center justify-between">
+        <div className="bs-alert-banner">
           <span>{statusMsg}</span>
-          <button type="button" onClick={() => setStatusMsg(null)} className="text-gray-400 hover:text-white">✕</button>
+          <button type="button" onClick={() => setStatusMsg(null)} className="bs-alert-close">✕</button>
         </div>
       )}
 
       {/* 2. Top Executive KPI Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+      <section className="bs-kpi-grid" aria-label="Executive Key Performance Indicators">
         {/* MRR Pacing */}
         <div
           onClick={() => setActiveTab('briefing')}
-          className="cursor-pointer p-4 rounded-xl bg-gray-900/70 border border-gray-800 hover:border-cyan-500/40 transition group"
+          className="bs-kpi-card"
+          tabIndex={0}
+          role="button"
+          onKeyDown={(e) => e.key === 'Enter' && setActiveTab('briefing')}
         >
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+          <div className="bs-kpi-top">
             <span>MRR Pacing</span>
-            <TrendingUp className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition" />
+            <TrendingUp className="w-4 h-4 bs-kpi-icon" />
           </div>
-          <div className="text-lg sm:text-xl font-bold font-mono text-emerald-400">
+          <div className="bs-kpi-value bs-kpi-value-emerald">
             ${briefing?.revenuePacing.mrrUsd.toLocaleString() || '34,500'}
           </div>
-          <div className="text-[11px] text-gray-400 mt-1 flex items-center justify-between">
+          <div className="bs-kpi-meta">
             <span>Target: ${briefing?.revenuePacing.targetUsd.toLocaleString() || '50,000'}</span>
-            <span className="text-emerald-400 font-semibold">{briefing?.revenuePacing.pacingPercent || 69}%</span>
+            <span style={{ color: '#34D399', fontWeight: 600 }}>{briefing?.revenuePacing.pacingPercent || 69}%</span>
           </div>
-          <div className="w-full bg-gray-800 h-1.5 rounded-full mt-2 overflow-hidden">
+          <div className="bs-kpi-progress-bar">
             <div
-              className="bg-emerald-500 h-full rounded-full transition-all"
+              className="bs-kpi-progress-fill"
               style={{ width: `${briefing?.revenuePacing.pacingPercent || 69}%` }}
             />
           </div>
@@ -421,73 +417,82 @@ export const BusinessSuitePage: React.FC = () => {
         {/* Active Accounts */}
         <div
           onClick={() => setActiveTab('crm')}
-          className="cursor-pointer p-4 rounded-xl bg-gray-900/70 border border-gray-800 hover:border-cyan-500/40 transition group"
+          className="bs-kpi-card"
+          tabIndex={0}
+          role="button"
+          onKeyDown={(e) => e.key === 'Enter' && setActiveTab('crm')}
         >
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+          <div className="bs-kpi-top">
             <span>Active Clients</span>
-            <Users className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition" />
+            <Users className="w-4 h-4 bs-kpi-icon" />
           </div>
-          <div className="text-lg sm:text-xl font-bold font-mono text-white">
+          <div className="bs-kpi-value">
             {customers.length || 8}
           </div>
-          <p className="text-[11px] text-gray-400 mt-1">
+          <div className="bs-kpi-meta">
             {customers.filter((c) => c.status === 'churn_risk').length > 0 ? (
-              <span className="text-amber-400">
+              <span style={{ color: '#FBBF24' }}>
                 {customers.filter((c) => c.status === 'churn_risk').length} at churn risk
               </span>
             ) : (
-              <span className="text-emerald-400">Pipeline healthy</span>
+              <span style={{ color: '#34D399' }}>Pipeline healthy</span>
             )}
-          </p>
+          </div>
         </div>
 
         {/* Pending Approvals */}
         <div
           onClick={() => setActiveTab('approvals')}
-          className="cursor-pointer p-4 rounded-xl bg-gray-900/70 border border-gray-800 hover:border-amber-500/40 transition group"
+          className="bs-kpi-card"
+          tabIndex={0}
+          role="button"
+          onKeyDown={(e) => e.key === 'Enter' && setActiveTab('approvals')}
         >
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+          <div className="bs-kpi-top">
             <span>Pending Approvals</span>
-            <ShieldCheck className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition" />
+            <ShieldCheck className="w-4 h-4 bs-kpi-icon" style={{ color: '#F59E0B' }} />
           </div>
-          <div className="text-lg sm:text-xl font-bold font-mono text-amber-400">
+          <div className="bs-kpi-value bs-kpi-value-amber">
             {approvals.length}
           </div>
-          <p className="text-[11px] text-gray-400 mt-1">
+          <div className="bs-kpi-meta">
             {approvals.length === 0 ? 'All actions clear' : 'Human-in-the-Loop review required'}
-          </p>
+          </div>
         </div>
 
         {/* Meta Ads Status */}
         <div
           onClick={() => setActiveTab('meta_ads')}
-          className="cursor-pointer p-4 rounded-xl bg-gray-900/70 border border-gray-800 hover:border-cyan-500/40 transition group"
+          className="bs-kpi-card"
+          tabIndex={0}
+          role="button"
+          onKeyDown={(e) => e.key === 'Enter' && setActiveTab('meta_ads')}
         >
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+          <div className="bs-kpi-top">
             <span>Meta Ads Status</span>
-            <Layers className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition" />
+            <Layers className="w-4 h-4 bs-kpi-icon" />
           </div>
-          <div className="text-lg sm:text-xl font-bold font-mono text-white flex items-center gap-2">
+          <div className="bs-kpi-value">
             {metaConnected ? (
-              <span className="text-emerald-400">Connected</span>
+              <span style={{ color: '#34D399' }}>Connected</span>
             ) : metaConnected === false ? (
-              <span className="text-gray-400 text-sm font-sans">Not Connected</span>
+              <span style={{ color: 'var(--gacks-text-muted, #A1A1A6)', fontSize: '15px' }}>Not Connected</span>
             ) : (
-              <span className="text-gray-500 text-sm font-sans">Checking...</span>
+              <span style={{ color: 'var(--gacks-text-dim, #71717A)', fontSize: '15px' }}>Checking...</span>
             )}
           </div>
-          <p className="text-[11px] text-gray-400 mt-1">
+          <div className="bs-kpi-meta">
             {metaConnected ? (
               metaCampaign ? `$${metaCampaign.spendUsd} 30d spend` : '1 active ad account'
             ) : (
               'Authentication required'
             )}
-          </p>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* 3. Quick Navigation Strip (Horizontal Switcher) */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin border-b border-gray-800/80">
+      <nav className="bs-nav-strip" aria-label="Business Suite Modules Navigation">
         {suiteNavItems.map((item) => {
           const Icon = item.icon
           const isActive = activeTab === item.id
@@ -496,62 +501,52 @@ export const BusinessSuitePage: React.FC = () => {
               key={item.id}
               type="button"
               onClick={() => setActiveTab(item.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 whitespace-nowrap transition ${
-                isActive
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-sm'
-                  : 'bg-gray-900/50 hover:bg-gray-850 text-gray-400 hover:text-gray-200 border border-transparent'
-              }`}
+              className={`bs-nav-tab ${isActive ? 'bs-nav-tab-active' : ''}`}
             >
-              <Icon className="w-3.5 h-3.5" />
+              <Icon className="w-4 h-4" />
               <span>{item.label}</span>
               {typeof item.badge === 'number' && item.badge > 0 && (
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                  isActive ? 'bg-cyan-400 text-black' : 'bg-gray-800 text-gray-300'
-                }`}>
+                <span className={`bs-tab-badge ${isActive ? 'bs-tab-badge-active' : ''}`}>
                   {item.badge}
                 </span>
               )}
             </button>
           )
         })}
-      </div>
+      </nav>
 
-      {/* 4. Slide-Over Menu Drawer */}
+      {/* 4. Slide-Over Suite Menu Drawer / Modal */}
       {menuOpen && (
-        <div className="fixed inset-0 z-50 flex" role="dialog" aria-modal="true">
+        <div className="bs-drawer-root" role="dialog" aria-modal="true" aria-label="Suite Menu">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+            className="bs-drawer-backdrop"
             onClick={() => setMenuOpen(false)}
           />
 
           {/* Drawer Panel */}
-          <div className="relative ml-auto w-full max-w-sm sm:max-w-md bg-gray-950 border-l border-gray-800 shadow-2xl p-6 flex flex-col justify-between overflow-y-auto z-10 animate-in slide-in-from-right duration-200">
+          <div className="bs-drawer-panel">
             <div>
               {/* Drawer Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-gray-800">
-                <div className="flex items-center gap-2.5">
-                  <div
-                    className="w-8 h-8 rounded-lg bg-gray-900 border border-cyan-500/30 p-0.5 flex items-center justify-center"
-                    style={{ width: '32px', height: '32px', maxWidth: '32px', maxHeight: '32px', overflow: 'hidden' }}
-                  >
+              <div className="bs-drawer-header">
+                <div className="bs-drawer-title-group">
+                  <div className="bs-drawer-logo-wrap">
                     <img
                       src={insightLogo}
                       alt="Insight"
-                      className="w-full h-full rounded"
-                      style={{ width: '100%', height: '100%', maxWidth: '32px', maxHeight: '32px', objectFit: 'contain' }}
+                      className="bs-brand-logo-img"
                     />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-white tracking-wide">INSIGHT BUSINESS SUITE</h2>
-                    <p className="text-[11px] text-gray-400">Navigation & Workspace Menu</p>
+                    <h2 className="bs-drawer-title">INSIGHT BUSINESS SUITE</h2>
+                    <p className="bs-drawer-sub">Executive Command & Workspace Navigation</p>
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setMenuOpen(false)}
-                  className="p-1.5 rounded-lg bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-white border border-gray-800 transition"
+                  className="bs-drawer-close-btn"
                   aria-label="Close menu"
                 >
                   <X className="w-4 h-4" />
@@ -559,74 +554,68 @@ export const BusinessSuitePage: React.FC = () => {
               </div>
 
               {/* Suite Modules */}
-              <div className="mt-6">
-                <h3 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2 px-1">
-                  Business Modules
-                </h3>
-                <div className="space-y-1">
-                  {suiteNavItems.map((item) => {
-                    const Icon = item.icon
-                    const isActive = activeTab === item.id
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => {
-                          setActiveTab(item.id)
-                          setMenuOpen(false)
-                        }}
-                        className={`w-full px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between transition ${
-                          isActive
-                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                            : 'hover:bg-gray-900 text-gray-300 border border-transparent'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-gray-400'}`} />
-                          <span>{item.label}</span>
-                        </div>
-                        {typeof item.badge === 'number' && item.badge > 0 && (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                            {item.badge}
-                          </span>
-                        )}
-                      </button>
-                    )
-                  })}
-                </div>
+              <div className="bs-drawer-section-title">
+                Business Suite Modules
+              </div>
+              <div className="bs-drawer-menu-list">
+                {suiteNavItems.map((item) => {
+                  const Icon = item.icon
+                  const isActive = activeTab === item.id
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveTab(item.id)
+                        setMenuOpen(false)
+                      }}
+                      className={`bs-drawer-item ${isActive ? 'bs-drawer-item-active' : ''}`}
+                    >
+                      <div className="bs-drawer-item-left">
+                        <Icon className="w-4 h-4" />
+                        <span>{item.label}</span>
+                      </div>
+                      {typeof item.badge === 'number' && item.badge > 0 && (
+                        <span className="bs-tab-badge">
+                          {item.badge}
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
               </div>
 
               {/* Workspace Shortcuts */}
-              <div className="mt-6 pt-6 border-t border-gray-800/80">
-                <h3 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2 px-1">
-                  Workspace Shortcuts
-                </h3>
-                <div className="grid grid-cols-2 gap-1">
-                  {workspaceShortcuts.map((sc) => {
-                    const Icon = sc.icon
-                    return (
-                      <button
-                        key={sc.id}
-                        type="button"
-                        onClick={() => {
-                          setActiveNav(sc.id)
-                          setMenuOpen(false)
-                        }}
-                        className="px-2.5 py-2 rounded-lg text-xs text-gray-400 hover:text-gray-200 hover:bg-gray-900 flex items-center gap-2 transition text-left"
-                      >
-                        <Icon className="w-3.5 h-3.5 text-gray-500" />
-                        <span className="truncate">{sc.label}</span>
-                      </button>
-                    )
-                  })}
-                </div>
+              <div className="bs-drawer-section-title" style={{ marginTop: '24px' }}>
+                Gacks AI Workspace Navigation
+              </div>
+              <div className="bs-drawer-menu-list">
+                {workspaceShortcuts.map((sc) => {
+                  const Icon = sc.icon
+                  return (
+                    <button
+                      key={sc.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveNav(sc.id)
+                        setMenuOpen(false)
+                      }}
+                      className="bs-drawer-item"
+                    >
+                      <div className="bs-drawer-item-left">
+                        <Icon className="w-4 h-4" style={{ color: 'var(--gacks-cyan, #00A3FF)' }} />
+                        <span>{sc.label}</span>
+                      </div>
+                    </button>
+                  )
+                })}
               </div>
             </div>
 
             {/* Drawer Footer */}
-            <div className="pt-6 border-t border-gray-800 text-xs text-gray-400 flex items-center justify-between">
+            <div className="bs-drawer-footer">
               <span>Insight Business Suite v2.4</span>
-              <span className="text-[10px] text-cyan-400 font-mono">Press Esc to close</span>
+              <span style={{ color: 'var(--gacks-cyan, #00A3FF)', fontFamily: 'var(--gacks-font-mono)' }}>Esc to close</span>
             </div>
           </div>
         </div>
@@ -636,25 +625,33 @@ export const BusinessSuitePage: React.FC = () => {
       {/* VIEW 1: Executive Briefing & Growth */}
       {/* ========================================================================= */}
       {activeTab === 'briefing' && briefing && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Column 1 & 2: Main Briefing & Priorities */}
-          <div className="md:col-span-2 space-y-6">
-            <div className="p-5 rounded-xl bg-gray-900/60 border border-gray-800">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-semibold text-white flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-cyan-400" />
+        <div className="bs-two-col-layout">
+          {/* Column 1 & 2: Main Briefing, Copilot & Priorities */}
+          <div className="bs-stacked-list">
+            <div className="bs-card">
+              <div className="bs-card-header">
+                <h2 className="bs-card-title">
+                  <Sparkles className="w-4 h-4" style={{ color: 'var(--gacks-cyan, #00A3FF)' }} />
                   <span>Morning Executive Briefing</span>
                 </h2>
-                <span className="text-xs text-gray-400">{briefing.date}</span>
+                <span className="bs-card-meta">{briefing.date}</span>
               </div>
-              <div className="p-4 rounded-lg bg-gray-950/70 border border-gray-800/80 text-sm text-gray-200 leading-relaxed font-sans">
+              <div style={{
+                padding: '14px 16px',
+                borderRadius: '8px',
+                background: 'rgba(16, 16, 18, 0.75)',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                fontSize: '13px',
+                lineHeight: 1.6,
+                color: '#EDEDEF'
+              }}>
                 {briefing.briefingText}
               </div>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 <button
                   type="button"
                   onClick={() => submitQuery('Read me my morning briefing out loud.')}
-                  className="px-3.5 py-1.5 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/40 border border-cyan-500/40 text-xs text-cyan-200 flex items-center gap-1.5 transition"
+                  className="bs-btn-primary"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
                   <span>Ask Insight to Voice Briefing</span>
@@ -662,22 +659,92 @@ export const BusinessSuitePage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => submitQuery('Analyze today’s business priorities and draft an execution agenda.')}
-                  className="px-3.5 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 text-xs text-gray-300 flex items-center gap-1.5 transition"
+                  className="bs-btn-secondary"
                 >
-                  <Activity className="w-3.5 h-3.5 text-gray-400" />
+                  <Activity className="w-3.5 h-3.5" style={{ color: 'var(--gacks-text-muted)' }} />
                   <span>Generate Agenda</span>
                 </button>
               </div>
             </div>
 
+            {/* AI Business Assistant / Copilot Control (Section 10) */}
+            <div className="bs-copilot-card">
+              <div className="bs-copilot-header">
+                <Bot className="w-4 h-4 bs-copilot-icon" />
+                <h3 className="bs-copilot-title">Gacks Copilot · Business AI Assistant</h3>
+                <span className="bs-copilot-sub">One-click execution</span>
+              </div>
+              <p style={{ margin: '4px 0 0', fontSize: '11px', color: '#94A3B8', lineHeight: 1.4 }}>
+                Direct conversational interface for enterprise research, performance audits, and pipeline synthesis.
+              </p>
+              <div className="bs-copilot-chips">
+                <button
+                  type="button"
+                  onClick={() => submitQuery('Analyze business performance and revenue pacing metrics.')}
+                  className="bs-copilot-chip"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  <span>Analyze business performance</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => submitQuery('Summarize sales activity and customer pipeline status.')}
+                  className="bs-copilot-chip"
+                >
+                  <Users className="w-3 h-3" />
+                  <span>Summarize sales activity</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => submitQuery('Review pending approvals and highlight urgent items.')}
+                  className="bs-copilot-chip"
+                >
+                  <ShieldCheck className="w-3 h-3" />
+                  <span>Review pending approvals</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => submitQuery('Analyze marketing campaign performance and recommend target spend.')}
+                  className="bs-copilot-chip"
+                >
+                  <TrendingUp className="w-3 h-3" />
+                  <span>Analyze marketing performance</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => submitQuery('Generate a full business status report for today.')}
+                  className="bs-copilot-chip"
+                >
+                  <BarChart3 className="w-3 h-3" />
+                  <span>Generate business report</span>
+                </button>
+              </div>
+            </div>
+
             {/* Daily Priorities */}
-            <div className="p-5 rounded-xl bg-gray-900/60 border border-gray-800">
-              <h3 className="text-sm font-semibold text-white mb-3">Today’s Highest-Leverage Focus</h3>
-              <ul className="space-y-2 text-xs">
+            <div className="bs-card">
+              <div className="bs-card-header">
+                <h3 className="bs-card-title">Today’s Highest-Leverage Focus</h3>
+                <span className="bs-card-meta">{briefing.todaysPriorities.length} key priorities</span>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {briefing.todaysPriorities.map((p, i) => (
-                  <li key={i} className="p-3 rounded-lg bg-gray-950/40 border border-gray-800/60 flex items-start gap-2.5">
-                    <span className="text-cyan-400 font-bold">{i + 1}.</span>
-                    <span className="text-gray-300">{p}</span>
+                  <li
+                    key={i}
+                    style={{
+                      padding: '12px 14px',
+                      borderRadius: '8px',
+                      background: 'rgba(16, 16, 18, 0.5)',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '10px',
+                      fontSize: '12px',
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    <span style={{ color: 'var(--gacks-cyan, #00A3FF)', fontWeight: 700, fontFamily: 'var(--gacks-font-mono)' }}>{i + 1}.</span>
+                    <span style={{ color: '#D4D4D8' }}>{p}</span>
                   </li>
                 ))}
               </ul>
@@ -685,84 +752,97 @@ export const BusinessSuitePage: React.FC = () => {
           </div>
 
           {/* Column 3: Pacing & Market Overview */}
-          <div className="space-y-6">
+          <div className="bs-stacked-list">
             {/* Revenue Pacing Card */}
-            <div className="p-5 rounded-xl bg-gray-900/60 border border-gray-800">
-              <h3 className="text-sm font-semibold text-white mb-2">Monthly Revenue Pacing</h3>
-              <div className="text-2xl font-bold text-emerald-400 font-mono">
+            <div className="bs-card">
+              <div className="bs-card-header">
+                <h3 className="bs-card-title">Monthly Revenue Pacing</h3>
+                <span className="bs-card-meta">Live Target</span>
+              </div>
+              <div style={{ fontSize: '28px', fontWeight: 700, color: '#34D399', fontFamily: 'var(--gacks-font-mono)' }}>
                 ${briefing.revenuePacing.mrrUsd.toLocaleString()}
               </div>
-              <p className="text-xs text-gray-400 mt-1">
+              <p style={{ margin: '6px 0 0', fontSize: '12px', color: 'var(--gacks-text-muted, #A1A1A6)' }}>
                 Target: ${briefing.revenuePacing.targetUsd.toLocaleString()} ({briefing.revenuePacing.pacingPercent}% achieved)
               </p>
-              <div className="w-full bg-gray-800 h-2 rounded-full mt-3 overflow-hidden">
+              <div className="bs-kpi-progress-bar" style={{ marginTop: '14px' }}>
                 <div
-                  className="bg-emerald-500 h-full rounded-full"
+                  className="bs-kpi-progress-fill"
                   style={{ width: `${briefing.revenuePacing.pacingPercent}%` }}
                 />
               </div>
             </div>
 
             {/* Market Context Card */}
-            <div className="p-5 rounded-xl bg-gray-900/60 border border-gray-800">
-              <h3 className="text-sm font-semibold text-white mb-2">Market & Macro Context</h3>
-              <p className="text-xs text-gray-300 leading-relaxed">{briefing.marketSummary}</p>
+            <div className="bs-card">
+              <div className="bs-card-header">
+                <h3 className="bs-card-title">Market & Macro Context</h3>
+                <span className="bs-card-meta">Global Desk</span>
+              </div>
+              <p style={{ margin: 0, fontSize: '12px', color: '#D4D4D8', lineHeight: 1.6 }}>{briefing.marketSummary}</p>
             </div>
           </div>
         </div>
       )}
 
       {/* ========================================================================= */}
+      {/* ========================================================================= */}
       {/* VIEW 2: Human-in-the-Loop Approval Center */}
       {/* ========================================================================= */}
       {activeTab === 'approvals' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-white">Pending Executive Authorizations</h2>
-            <span className="text-xs text-gray-400">
+        <div className="bs-stacked-list">
+          <div className="bs-card-header">
+            <h2 className="bs-card-title">Pending Executive Authorizations</h2>
+            <span className="bs-card-meta">
               {approvals.length} action(s) require explicit Human-in-the-Loop approval
             </span>
           </div>
 
           {approvals.length === 0 ? (
-            <div className="p-10 rounded-xl bg-gray-900/40 border border-gray-800 text-center text-gray-400 text-sm">
-              <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2 opacity-80" />
-              All operations clear. Zero pending actions awaiting approval.
+            <div className="bs-card" style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--gacks-text-muted)' }}>
+              <CheckCircle className="w-10 h-10 text-emerald-400" style={{ margin: '0 auto 12px', display: 'block', opacity: 0.85 }} />
+              <p style={{ margin: 0, fontSize: '14px', color: '#EDEDEF', fontWeight: 500 }}>All operations clear</p>
+              <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--gacks-text-dim)' }}>Zero pending actions awaiting executive authorization.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4">
+            <div className="bs-stacked-list">
               {approvals.map((req) => (
-                <div
-                  key={req.id}
-                  className="p-4 rounded-xl bg-gray-900/80 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg shadow-black/30"
-                >
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                <div key={req.id} className="bs-approval-card">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className={`bs-badge-impact ${
+                        req.potentialImpact === 'critical'
+                          ? 'bs-badge-impact-critical'
+                          : req.potentialImpact === 'high'
+                          ? 'bs-badge-impact-high'
+                          : req.potentialImpact === 'medium'
+                          ? 'bs-badge-impact-medium'
+                          : 'bs-badge-impact-low'
+                      }`}>
                         {req.potentialImpact}
                       </span>
-                      <h4 className="text-sm font-bold text-white">{req.action}</h4>
+                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{req.action}</h4>
                     </div>
-                    <p className="text-xs text-gray-300">{req.reason}</p>
-                    <div className="text-[11px] text-gray-400 flex flex-wrap gap-3">
-                      <span>Provider: <b className="text-gray-200">{req.provider}</b></span>
-                      <span>Target: <b className="text-gray-200">{req.target}</b></span>
-                      {req.costUsd ? <span>Est. Cost: <b className="text-emerald-400">${req.costUsd}</b></span> : null}
+                    <p style={{ margin: 0, fontSize: '12px', color: '#D4D4D8' }}>{req.reason}</p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', fontSize: '11px', color: 'var(--gacks-text-muted)', marginTop: '2px' }}>
+                      <span>Provider: <b style={{ color: '#EDEDEF' }}>{req.provider}</b></span>
+                      <span>Target: <b style={{ color: '#EDEDEF' }}>{req.target}</b></span>
+                      {req.costUsd ? <span>Est. Cost: <b style={{ color: '#34D399' }}>${req.costUsd}</b></span> : null}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 w-full md:w-auto">
+                  <div className="bs-approval-actions">
                     <button
                       type="button"
                       onClick={() => handleResolveApproval(req.id, 'approved')}
-                      className="flex-1 md:flex-none px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition"
+                      className="bs-btn-primary"
                     >
                       Approve Action
                     </button>
                     <button
                       type="button"
                       onClick={() => handleResolveApproval(req.id, 'rejected')}
-                      className="flex-1 md:flex-none px-4 py-1.5 rounded-lg bg-gray-800 hover:bg-red-950/60 text-red-300 border border-red-500/30 text-xs font-semibold transition"
+                      className="bs-btn-danger"
                     >
                       Reject
                     </button>
@@ -778,45 +858,50 @@ export const BusinessSuitePage: React.FC = () => {
       {/* VIEW 3: CRM & Customer Care */}
       {/* ========================================================================= */}
       {activeTab === 'crm' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-white">Client Accounts & Inbound Pipeline</h2>
+        <div className="bs-stacked-list">
+          <div className="bs-card-header">
+            <h2 className="bs-card-title">Client Accounts & Inbound Pipeline</h2>
             <button
               type="button"
               onClick={() => submitQuery('Analyze our customer list and show urgent followups.')}
-              className="text-xs text-cyan-400 hover:text-cyan-300 underline"
+              className="bs-btn-secondary"
+              style={{ padding: '6px 12px', fontSize: '11px' }}
             >
               Analyze with Insight
             </button>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-gray-800 bg-gray-900/60">
-            <table className="w-full text-left text-xs text-gray-300">
-              <thead className="bg-gray-950 text-gray-400 border-b border-gray-800">
+          <div className="bs-table-wrap">
+            <table className="bs-table">
+              <thead>
                 <tr>
-                  <th className="p-3">Client / Company</th>
-                  <th className="p-3">Channel</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Sentiment</th>
-                  <th className="p-3">LTV (USD)</th>
-                  <th className="p-3">Last Note</th>
+                  <th>Client / Company</th>
+                  <th>Channel</th>
+                  <th>Status</th>
+                  <th>Sentiment</th>
+                  <th>LTV (USD)</th>
+                  <th>Last Note</th>
                 </tr>
               </thead>
-              <tbody className="divide-y border-gray-800">
+              <tbody>
                 {customers.map((c) => (
-                  <tr key={c.id} className="hover:bg-gray-800/40 transition">
-                    <td className="p-3 font-semibold text-white">{c.name}</td>
-                    <td className="p-3 capitalize text-cyan-300">{c.channel || 'email'}</td>
-                    <td className="p-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        c.status === 'churn_risk' ? 'bg-red-500/20 text-red-300' : 'bg-emerald-500/20 text-emerald-300'
+                  <tr key={c.id}>
+                    <td style={{ fontWeight: 600, color: '#ffffff' }}>{c.name}</td>
+                    <td style={{ textTransform: 'capitalize', color: 'var(--gacks-cyan, #00A3FF)' }}>{c.channel || 'email'}</td>
+                    <td>
+                      <span className={`bs-badge-impact ${
+                        c.status === 'churn_risk' ? 'bs-badge-impact-critical' : 'bs-badge-impact-low'
                       }`}>
                         {c.status.replace('_', ' ').toUpperCase()}
                       </span>
                     </td>
-                    <td className="p-3 capitalize">{c.sentiment}</td>
-                    <td className="p-3 font-mono text-emerald-400">${c.ltvUsd.toLocaleString()}</td>
-                    <td className="p-3 text-gray-400 max-w-xs truncate">{c.notes[c.notes.length - 1] || 'No notes'}</td>
+                    <td style={{ textTransform: 'capitalize' }}>{c.sentiment}</td>
+                    <td style={{ fontFamily: 'var(--gacks-font-mono)', fontWeight: 600, color: '#34D399' }}>
+                      ${c.ltvUsd.toLocaleString()}
+                    </td>
+                    <td style={{ color: 'var(--gacks-text-muted)', maxWidth: '260px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {c.notes[c.notes.length - 1] || 'No notes'}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -828,35 +913,37 @@ export const BusinessSuitePage: React.FC = () => {
       {/* ========================================================================= */}
       {/* VIEW 4: Meta Ads Manager (First-Class Module) */}
       {/* ========================================================================= */}
+      {/* VIEW 4: Meta Ads Manager (First-Class Module) */}
+      {/* ========================================================================= */}
       {activeTab === 'meta_ads' && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-gray-800">
+        <div className="bs-stacked-list">
+          <div className="bs-meta-header">
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <Layers className="w-5 h-5 text-cyan-400" />
+              <h2 className="bs-card-title">
+                <Layers className="bs-kpi-icon" style={{ width: '20px', height: '20px' }} />
                 <span>Meta Ads Manager</span>
               </h2>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className="bs-card-meta" style={{ marginTop: '4px' }}>
                 Direct integration with Meta Graph API v21.0 for Facebook & Instagram campaigns
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
               <button
                 type="button"
                 onClick={fetchMetaStatus}
                 disabled={metaLoading}
-                className="px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs text-gray-300 flex items-center gap-1.5 border border-gray-700 transition"
+                className="bs-btn-secondary"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${metaLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw style={{ width: '14px', height: '14px' }} className={metaLoading ? 'animate-spin' : ''} />
                 <span>Refresh Status</span>
               </button>
               <button
                 type="button"
                 onClick={() => setActiveNav('settings')}
-                className="px-3 py-1.5 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/40 border border-cyan-500/40 text-xs text-cyan-200 flex items-center gap-1.5 transition"
+                className="bs-btn-primary"
               >
-                <Settings className="w-3.5 h-3.5" />
+                <Settings style={{ width: '14px', height: '14px' }} />
                 <span>API Settings</span>
               </button>
             </div>
@@ -864,89 +951,92 @@ export const BusinessSuitePage: React.FC = () => {
 
           {/* Authentic Connection State Machine */}
           {metaLoading ? (
-            <div className="p-12 rounded-xl bg-gray-900/40 border border-gray-800 text-center space-y-3">
-              <RefreshCw className="w-8 h-8 text-cyan-400 animate-spin mx-auto" />
-              <p className="text-sm text-gray-300">Checking Meta Graph API connectivity and credentials...</p>
+            <div className="bs-card" style={{ padding: '48px 24px', textAlign: 'center' }}>
+              <RefreshCw style={{ width: '28px', height: '28px', color: 'var(--gacks-cyan)', margin: '0 auto 12px' }} className="animate-spin" />
+              <p style={{ fontSize: '13px', color: 'var(--gacks-text-muted)' }}>Checking Meta Graph API connectivity and credentials...</p>
             </div>
           ) : metaError ? (
-            <div className="p-6 rounded-xl bg-red-950/20 border border-red-500/40 space-y-3">
-              <div className="flex items-center gap-2 text-red-400 font-semibold text-sm">
-                <AlertTriangle className="w-4 h-4" />
+            <div className="bs-card" style={{ border: '1px solid rgba(255, 69, 58, 0.4)', background: 'rgba(255, 69, 58, 0.08)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FFA29C', fontWeight: 600, fontSize: '13px' }}>
+                <AlertTriangle style={{ width: '16px', height: '16px' }} />
                 <span>API Gateway Error</span>
               </div>
-              <p className="text-xs text-red-300">{metaError}</p>
+              <p style={{ fontSize: '12px', color: '#FFA29C', margin: '8px 0 12px' }}>{metaError}</p>
               <button
                 type="button"
                 onClick={fetchMetaStatus}
-                className="px-3 py-1.5 bg-red-900/40 hover:bg-red-900/60 border border-red-500/40 text-xs text-red-200 rounded transition"
+                className="bs-btn-danger"
               >
                 Retry Connection
               </button>
             </div>
           ) : !metaConnected ? (
             /* Disconnected / Authentication Required State */
-            <div className="p-8 rounded-xl bg-gray-900/60 border border-gray-800 space-y-6">
-              <div className="max-w-xl mx-auto text-center space-y-3">
-                <div className="w-12 h-12 rounded-xl bg-cyan-950/60 border border-cyan-500/30 flex items-center justify-center mx-auto text-cyan-400">
-                  <Lock className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-white">Meta Business & Ads Suite Not Connected</h3>
-                <p className="text-xs text-gray-400 leading-relaxed">
+            <div className="bs-locked-box">
+              <div className="bs-locked-icon-wrap">
+                <Lock style={{ width: '24px', height: '24px' }} />
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>Meta Business & Ads Suite Not Connected</h3>
+                <p style={{ margin: '6px auto 0', maxWidth: '520px', fontSize: '12px', color: 'var(--gacks-text-muted)', lineHeight: 1.5 }}>
                   To manage Facebook Pages, Instagram Professional ad campaigns, and pull real-time audience metrics, connect your Meta Graph API credentials in Settings.
                 </p>
               </div>
 
-              <div className="max-w-lg mx-auto p-4 rounded-lg bg-gray-950 border border-gray-800 space-y-3 text-xs">
-                <h4 className="font-semibold text-gray-300">Required OAuth Scopes & Permissions:</h4>
-                <ul className="space-y-1.5 text-gray-400 list-disc list-inside">
-                  <li><code className="text-cyan-300">ads_management</code> — Create and manage campaigns</li>
-                  <li><code className="text-cyan-300">ads_read</code> — Read campaign performance & insights</li>
-                  <li><code className="text-cyan-300">business_management</code> — Manage connected business assets</li>
+              <div className="bs-scope-list">
+                <h4 style={{ margin: '0 0 8px', fontSize: '12px', fontWeight: 600, color: '#EDEDEF' }}>Required OAuth Scopes & Permissions:</h4>
+                <ul style={{ margin: 0, paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '4px', color: 'var(--gacks-text-muted)', fontSize: '11px' }}>
+                  <li><code>ads_management</code> — Create and manage campaigns</li>
+                  <li><code>ads_read</code> — Read campaign performance & insights</li>
+                  <li><code>business_management</code> — Manage connected business assets</li>
                 </ul>
               </div>
 
-              <div className="flex justify-center gap-3">
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <button
                   type="button"
                   onClick={() => setActiveNav('settings')}
-                  className="px-5 py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold flex items-center gap-2 transition"
+                  className="bs-btn-primary"
                 >
-                  <Settings className="w-4 h-4" />
+                  <Settings style={{ width: '14px', height: '14px' }} />
                   <span>Configure Meta Credentials in Settings</span>
                 </button>
                 <a
                   href="https://developers.facebook.com/apps/"
                   target="_blank"
                   rel="noreferrer"
-                  className="px-4 py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold flex items-center gap-2 border border-gray-700 transition"
+                  className="bs-btn-secondary"
+                  style={{ textDecoration: 'none' }}
                 >
                   <span>Meta Developers</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <ExternalLink style={{ width: '13px', height: '13px' }} />
                 </a>
               </div>
             </div>
           ) : (
             /* Connected State: Authentic Campaign Insights & Controls */
-            <div className="space-y-6">
+            <div className="bs-stacked-list">
               {/* Account Header */}
-              <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="bs-meta-account-bar">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                    <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Connected</span>
-                    <span className="text-xs text-gray-500">·</span>
-                    <span className="text-xs text-gray-300 font-mono">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="bs-status-dot" />
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#34D399', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Connected</span>
+                    <span style={{ color: 'var(--gacks-text-dim)' }}>·</span>
+                    <span style={{ fontSize: '12px', color: '#EDEDEF', fontFamily: 'var(--gacks-font-mono)' }}>
                       {metaAccounts[0]?.name || 'Insight BS Main Ad Account'} ({metaAccounts[0]?.id || 'act_1020304050'})
                     </span>
                   </div>
-                  <p className="text-[11px] text-gray-400 mt-1">Currency: {metaAccounts[0]?.currency || 'USD'} · Graph API v21.0</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '11px', color: 'var(--gacks-text-muted)' }}>
+                    Currency: {metaAccounts[0]?.currency || 'USD'} · Graph API v21.0
+                  </p>
                 </div>
 
-                <div className="flex gap-2">
+                <div style={{ display: 'flex', gap: '8px' }}>
                   <button
                     type="button"
                     onClick={() => submitQuery('Draft a high-converting Meta ad copy variation for Insight Business Suite.')}
-                    className="px-3 py-1.5 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/40 border border-cyan-500/40 text-xs text-cyan-200 transition"
+                    className="bs-btn-primary"
                   >
                     Draft Ad with Insight
                   </button>
@@ -956,73 +1046,94 @@ export const BusinessSuitePage: React.FC = () => {
               {/* Live Metrics Grid */}
               {metaCampaign ? (
                 <>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
-                      <span className="text-xs text-gray-400">Total Spend (30d)</span>
-                      <div className="text-xl font-bold font-mono text-white mt-1">
+                  <div className="bs-kpi-grid">
+                    <div className="bs-kpi-card">
+                      <div className="bs-kpi-top">
+                        <span>Total Spend (30d)</span>
+                        <DollarSign className="bs-kpi-icon" style={{ width: '16px', height: '16px' }} />
+                      </div>
+                      <div className="bs-kpi-value">
                         ${metaCampaign.spendUsd.toLocaleString()}
                       </div>
-                      <span className="text-[10px] text-gray-500">Live Meta spend</span>
+                      <div className="bs-kpi-meta">
+                        <span>Live Meta spend</span>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
-                      <span className="text-xs text-gray-400">Impressions</span>
-                      <div className="text-xl font-bold font-mono text-cyan-400 mt-1">
+                    <div className="bs-kpi-card">
+                      <div className="bs-kpi-top">
+                        <span>Impressions</span>
+                        <Users className="bs-kpi-icon" style={{ width: '16px', height: '16px' }} />
+                      </div>
+                      <div className="bs-kpi-value" style={{ color: 'var(--gacks-cyan)' }}>
                         {metaCampaign.impressions.toLocaleString()}
                       </div>
-                      <span className="text-[10px] text-gray-500">{metaCampaign.clicks.toLocaleString()} clicks</span>
+                      <div className="bs-kpi-meta">
+                        <span>{metaCampaign.clicks.toLocaleString()} clicks</span>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
-                      <span className="text-xs text-gray-400">Click-Through Rate</span>
-                      <div className="text-xl font-bold font-mono text-emerald-400 mt-1">
+                    <div className="bs-kpi-card">
+                      <div className="bs-kpi-top">
+                        <span>Click-Through Rate</span>
+                        <TrendingUp className="bs-kpi-icon" style={{ width: '16px', height: '16px' }} />
+                      </div>
+                      <div className="bs-kpi-value bs-kpi-value-emerald">
                         {metaCampaign.ctrPercent}%
                       </div>
-                      <span className="text-[10px] text-gray-500">CPC: ${metaCampaign.cpcUsd}</span>
+                      <div className="bs-kpi-meta">
+                        <span>CPC: ${metaCampaign.cpcUsd}</span>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
-                      <span className="text-xs text-gray-400">Return on Ad Spend (ROAS)</span>
-                      <div className="text-xl font-bold font-mono text-emerald-400 mt-1">
+                    <div className="bs-kpi-card">
+                      <div className="bs-kpi-top">
+                        <span>Return on Ad Spend</span>
+                        <Layers className="bs-kpi-icon" style={{ width: '16px', height: '16px' }} />
+                      </div>
+                      <div className="bs-kpi-value bs-kpi-value-emerald">
                         {metaCampaign.roas}x
                       </div>
-                      <span className="text-[10px] text-gray-500">{metaCampaign.conversions} conversions</span>
+                      <div className="bs-kpi-meta">
+                        <span>{metaCampaign.conversions} conversions</span>
+                      </div>
                     </div>
                   </div>
 
                   {/* Active Campaigns Table */}
-                  <div className="rounded-xl border border-gray-800 bg-gray-900/60 overflow-hidden">
-                    <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-white">Active Ad Campaigns</h3>
-                      <span className="text-xs text-gray-400">1 Active Campaign</span>
+                  <div className="bs-table-wrap">
+                    <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--gacks-border-dim)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <h3 className="bs-card-title">Active Ad Campaigns</h3>
+                      <span className="bs-card-meta">1 Active Campaign</span>
                     </div>
-                    <table className="w-full text-left text-xs text-gray-300">
-                      <thead className="bg-gray-950 text-gray-400 border-b border-gray-800">
+                    <table className="bs-table">
+                      <thead>
                         <tr>
-                          <th className="p-3">Campaign Name</th>
-                          <th className="p-3">Status</th>
-                          <th className="p-3">Spend</th>
-                          <th className="p-3">CTR</th>
-                          <th className="p-3">Conversions</th>
-                          <th className="p-3 text-right">Actions</th>
+                          <th>Campaign Name</th>
+                          <th>Status</th>
+                          <th>Spend</th>
+                          <th>CTR</th>
+                          <th>Conversions</th>
+                          <th style={{ textAlign: 'right' }}>Actions</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y border-gray-800">
-                        <tr className="hover:bg-gray-800/40 transition">
-                          <td className="p-3 font-semibold text-white">{metaCampaign.campaignName}</td>
-                          <td className="p-3">
-                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">
+                      <tbody>
+                        <tr>
+                          <td style={{ fontWeight: 600, color: '#ffffff' }}>{metaCampaign.campaignName}</td>
+                          <td>
+                            <span className="bs-badge-impact bs-badge-impact-low" style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#34D399', borderColor: 'rgba(16, 185, 129, 0.4)' }}>
                               {metaCampaign.status}
                             </span>
                           </td>
-                          <td className="p-3 font-mono text-white">${metaCampaign.spendUsd}</td>
-                          <td className="p-3 font-mono text-emerald-400">{metaCampaign.ctrPercent}%</td>
-                          <td className="p-3 font-mono text-white">{metaCampaign.conversions}</td>
-                          <td className="p-3 text-right space-x-2">
+                          <td style={{ fontFamily: 'var(--gacks-font-mono)', color: '#ffffff' }}>${metaCampaign.spendUsd}</td>
+                          <td style={{ fontFamily: 'var(--gacks-font-mono)', color: '#34D399' }}>{metaCampaign.ctrPercent}%</td>
+                          <td style={{ fontFamily: 'var(--gacks-font-mono)', color: '#ffffff' }}>{metaCampaign.conversions}</td>
+                          <td style={{ textAlign: 'right' }}>
                             <button
                               type="button"
                               onClick={() => submitQuery(`Update budget for campaign ${metaCampaign.campaignId} to $50/day`)}
-                              className="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-[11px] text-gray-300 transition"
+                              className="bs-btn-secondary"
+                              style={{ padding: '4px 10px', fontSize: '11px' }}
                             >
                               Adjust Budget
                             </button>
@@ -1033,7 +1144,7 @@ export const BusinessSuitePage: React.FC = () => {
                   </div>
                 </>
               ) : (
-                <div className="p-8 rounded-xl bg-gray-900/40 border border-gray-800 text-center text-gray-400 text-sm">
+                <div className="bs-card" style={{ padding: '36px 20px', textAlign: 'center', color: 'var(--gacks-text-muted)' }}>
                   Connected to Meta Ad Account. No active campaigns found.
                 </div>
               )}
@@ -1045,43 +1156,71 @@ export const BusinessSuitePage: React.FC = () => {
       {/* ========================================================================= */}
       {/* VIEW 5: Marketing & Campaigns */}
       {/* ========================================================================= */}
+      {/* ========================================================================= */}
+      {/* VIEW 5: Marketing & Campaigns */}
+      {/* ========================================================================= */}
       {activeTab === 'marketing' && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
-              <span className="text-xs text-gray-400">Marketing Pipeline</span>
-              <div className="text-xl font-bold font-mono text-white mt-1">Multi-Channel</div>
-              <span className="text-[10px] text-gray-500">Meta, Email, SEO</span>
+        <div className="bs-stacked-list">
+          <div className="bs-kpi-grid">
+            <div className="bs-kpi-card">
+              <div className="bs-kpi-top">
+                <span>Marketing Pipeline</span>
+                <Layers className="bs-kpi-icon" style={{ width: '16px', height: '16px' }} />
+              </div>
+              <div className="bs-kpi-value" style={{ fontSize: '20px' }}>Multi-Channel</div>
+              <div className="bs-kpi-meta">
+                <span>Meta, Email, SEO</span>
+              </div>
             </div>
-            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
-              <span className="text-xs text-gray-400">Active Audience Reach</span>
-              <div className="text-xl font-bold font-mono text-cyan-400 mt-1">48,200</div>
-              <span className="text-[10px] text-gray-500">Total 30d impressions</span>
+            <div className="bs-kpi-card">
+              <div className="bs-kpi-top">
+                <span>Active Audience Reach</span>
+                <Users className="bs-kpi-icon" style={{ width: '16px', height: '16px' }} />
+              </div>
+              <div className="bs-kpi-value" style={{ color: 'var(--gacks-cyan)' }}>48,200</div>
+              <div className="bs-kpi-meta">
+                <span>Total 30d impressions</span>
+              </div>
             </div>
-            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
-              <span className="text-xs text-gray-400">Target CAC</span>
-              <div className="text-xl font-bold font-mono text-emerald-400 mt-1">$10.85</div>
-              <span className="text-[10px] text-gray-500">Within target threshold</span>
+            <div className="bs-kpi-card">
+              <div className="bs-kpi-top">
+                <span>Target CAC</span>
+                <DollarSign className="bs-kpi-icon" style={{ width: '16px', height: '16px' }} />
+              </div>
+              <div className="bs-kpi-value bs-kpi-value-emerald">$10.85</div>
+              <div className="bs-kpi-meta">
+                <span>Within target threshold</span>
+              </div>
             </div>
-            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800">
-              <span className="text-xs text-gray-400">Ad Guardrail Policy</span>
-              <div className="text-xl font-bold font-mono text-amber-400 mt-1">Active</div>
-              <span className="text-[10px] text-gray-500">Approval Center gating enabled</span>
+            <div className="bs-kpi-card">
+              <div className="bs-kpi-top">
+                <span>Ad Guardrail Policy</span>
+                <ShieldCheck className="bs-kpi-icon" style={{ width: '16px', height: '16px' }} />
+              </div>
+              <div className="bs-kpi-value bs-kpi-value-amber">Active</div>
+              <div className="bs-kpi-meta">
+                <span>Approval Center gating enabled</span>
+              </div>
             </div>
           </div>
 
-          <div className="p-5 rounded-xl bg-gray-900/60 border border-gray-800 space-y-3">
-            <h3 className="text-sm font-semibold text-white">Draft New Campaign with Insight Marketing Agent</h3>
-            <p className="text-xs text-gray-400 leading-relaxed">
+          <div className="bs-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h3 className="bs-card-title">
+              <Sparkles className="bs-kpi-icon" style={{ width: '18px', height: '18px' }} />
+              <span>Draft New Campaign with Insight Marketing Agent</span>
+            </h3>
+            <p className="bs-card-meta" style={{ lineHeight: 1.5 }}>
               Insight prepares campaign positioning, target audience segments, ad copy variations, and queues financial authorization requests in the Approval Center before any ad spend occurs.
             </p>
-            <button
-              type="button"
-              onClick={() => submitQuery('Draft a high-converting Meta Ad campaign for our AI business suite.')}
-              className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-xs font-bold text-white transition"
-            >
-              Ask Insight to Draft Campaign
-            </button>
+            <div>
+              <button
+                type="button"
+                onClick={() => submitQuery('Draft a high-converting Meta Ad campaign for our AI business suite.')}
+                className="bs-btn-primary"
+              >
+                Ask Insight to Draft Campaign
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1090,26 +1229,29 @@ export const BusinessSuitePage: React.FC = () => {
       {/* VIEW 6: Forex Analysis Auditor */}
       {/* ========================================================================= */}
       {activeTab === 'forex' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <form onSubmit={handleRunForexAudit} className="p-5 rounded-xl bg-gray-900/60 border border-gray-800 space-y-4">
-            <h3 className="text-sm font-semibold text-white">Audit Proposed Trade Plan</h3>
-            <div className="space-y-3 text-xs">
-              <div>
-                <label className="block text-gray-400 mb-1">Currency Pair / Asset</label>
+        <div className="bs-forex-grid">
+          <form onSubmit={handleRunForexAudit} className="bs-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h3 className="bs-card-title">
+              <TrendingUp className="bs-kpi-icon" style={{ width: '18px', height: '18px' }} />
+              <span>Audit Proposed Trade Plan</span>
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div className="bs-form-group">
+                <label className="bs-label">Currency Pair / Asset</label>
                 <input
                   type="text"
                   value={forexPair}
                   onChange={(e) => setForexPair(e.target.value)}
-                  className="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"
+                  className="bs-input"
                 />
               </div>
 
-              <div className="flex gap-2">
+              <div className="bs-direction-toggle">
                 <button
                   type="button"
                   onClick={() => setForexDirection('LONG')}
-                  className={`flex-1 py-1.5 rounded-lg font-bold transition ${
-                    forexDirection === 'LONG' ? 'bg-emerald-600 text-white' : 'bg-gray-800 text-gray-400'
+                  className={`bs-direction-btn ${
+                    forexDirection === 'LONG' ? 'bs-direction-btn-long-active' : 'bs-direction-btn-inactive'
                   }`}
                 >
                   LONG
@@ -1117,90 +1259,91 @@ export const BusinessSuitePage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setForexDirection('SHORT')}
-                  className={`flex-1 py-1.5 rounded-lg font-bold transition ${
-                    forexDirection === 'SHORT' ? 'bg-red-600 text-white' : 'bg-gray-800 text-gray-400'
+                  className={`bs-direction-btn ${
+                    forexDirection === 'SHORT' ? 'bs-direction-btn-short-active' : 'bs-direction-btn-inactive'
                   }`}
                 >
                   SHORT
                 </button>
               </div>
 
-              <div>
-                <label className="block text-gray-400 mb-1">Entry Price</label>
+              <div className="bs-form-group">
+                <label className="bs-label">Entry Price</label>
                 <input
                   type="number"
                   step="any"
                   value={forexEntry}
                   onChange={(e) => setForexEntry(Number(e.target.value))}
-                  className="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"
+                  className="bs-input"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-gray-400 mb-1">Stop Loss</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div className="bs-form-group">
+                  <label className="bs-label">Stop Loss</label>
                   <input
                     type="number"
                     step="any"
                     value={forexStop}
                     onChange={(e) => setForexStop(Number(e.target.value))}
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"
+                    className="bs-input"
                   />
                 </div>
-                <div>
-                  <label className="block text-gray-400 mb-1">Take Profit</label>
+                <div className="bs-form-group">
+                  <label className="bs-label">Take Profit</label>
                   <input
                     type="number"
                     step="any"
                     value={forexTp}
                     onChange={(e) => setForexTp(Number(e.target.value))}
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"
+                    className="bs-input"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-gray-400 mb-1">Risk % (Max 2%)</label>
+              <div className="bs-form-group">
+                <label className="bs-label">Risk % (Max 2%)</label>
                 <input
                   type="number"
                   step="0.1"
                   value={forexRisk}
                   onChange={(e) => setForexRisk(Number(e.target.value))}
-                  className="w-full bg-gray-950 border border-gray-800 rounded-lg p-2 text-white"
+                  className="bs-input"
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-xs font-bold text-white transition"
+              className="bs-btn-primary"
+              style={{ width: '100%', marginTop: '4px' }}
             >
               Run Audit Analysis
             </button>
           </form>
 
           {/* Audit Result Display */}
-          <div className="md:col-span-2 space-y-4">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {forexResult ? (
-              <div className="p-5 rounded-xl bg-gray-900/60 border border-gray-800 space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-gray-800">
+              <div className="bs-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid var(--gacks-border-dim)', flexWrap: 'wrap', gap: '10px' }}>
                   <div>
-                    <h4 className="text-base font-bold text-white">
+                    <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#ffffff' }}>
                       Audit Report: {forexResult.pair} ({forexResult.direction})
                     </h4>
-                    <p className="text-xs text-gray-400">Position Size: {forexResult.positionSizeLots} standard lots</p>
+                    <p style={{ margin: '4px 0 0', fontSize: '11px', color: 'var(--gacks-text-muted)' }}>Position Size: {forexResult.positionSizeLots} standard lots</p>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-mono font-bold text-emerald-400">
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '14px', fontFamily: 'var(--gacks-font-mono)', fontWeight: 700, color: '#34D399' }}>
                       R:R = 1:{forexResult.riskRewardRatio}
                     </div>
-                    <div className="text-[11px] text-gray-400">Risk Allocation: {forexResult.riskPercent}%</div>
+                    <div style={{ fontSize: '11px', color: 'var(--gacks-text-muted)' }}>Risk Allocation: {forexResult.riskPercent}%</div>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <h5 className="text-xs font-bold text-emerald-400">Validated Strengths:</h5>
-                  <ul className="text-xs text-gray-300 list-disc list-inside">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <h5 style={{ margin: 0, fontSize: '12px', fontWeight: 700, color: '#34D399' }}>Validated Strengths:</h5>
+                  <ul style={{ margin: 0, paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: '#EDEDEF' }}>
                     {forexResult.strengths.map((s, i) => (
                       <li key={i}>{s}</li>
                     ))}
@@ -1208,9 +1351,9 @@ export const BusinessSuitePage: React.FC = () => {
                 </div>
 
                 {forexResult.riskFlags.length > 0 && (
-                  <div className="space-y-2">
-                    <h5 className="text-xs font-bold text-amber-400">Identified Risk Flags:</h5>
-                    <ul className="text-xs text-gray-300 list-disc list-inside">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <h5 style={{ margin: 0, fontSize: '12px', fontWeight: 700, color: '#FCD34D' }}>Identified Risk Flags:</h5>
+                    <ul style={{ margin: 0, paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: '#EDEDEF' }}>
                       {forexResult.riskFlags.map((r, i) => (
                         <li key={i}>{r}</li>
                       ))}
@@ -1218,12 +1361,12 @@ export const BusinessSuitePage: React.FC = () => {
                   </div>
                 )}
 
-                <div className="p-3 bg-amber-950/20 border border-amber-500/30 rounded-lg text-[11px] text-amber-300">
+                <div className="bs-forex-disclaimer">
                   {forexResult.safetyDisclaimer}
                 </div>
               </div>
             ) : (
-              <div className="p-12 rounded-xl bg-gray-900/40 border border-gray-800 text-center text-gray-400 text-sm">
+              <div className="bs-card" style={{ padding: '48px 24px', textAlign: 'center', color: 'var(--gacks-text-muted)', fontSize: '13px' }}>
                 Enter trade parameters to audit risk-to-reward alignment, position sizing, and invalidation rules.
               </div>
             )}
@@ -1235,51 +1378,55 @@ export const BusinessSuitePage: React.FC = () => {
       {/* VIEW 7: Automations & Workflow Rules */}
       {/* ========================================================================= */}
       {activeTab === 'automations' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-white">Active Business Automations</h2>
+        <div className="bs-stacked-list">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+            <h2 className="bs-card-title">
+              <Activity className="bs-kpi-icon" style={{ width: '18px', height: '18px' }} />
+              <span>Active Business Automations</span>
+            </h2>
             <button
               type="button"
               onClick={() => submitQuery('Show me our automated business workflow status.')}
-              className="text-xs text-cyan-400 hover:text-cyan-300 underline"
+              className="bs-btn-secondary"
+              style={{ padding: '6px 12px', fontSize: '11px' }}
             >
               Consult Insight
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 space-y-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-white">Daily Operations Briefing</h4>
-                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300">
+          <div className="bs-automations-grid">
+            <div className="bs-card" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h4 style={{ margin: 0, fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>Daily Operations Briefing</h4>
+                <span className="bs-badge-impact bs-badge-impact-low" style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#34D399', borderColor: 'rgba(16, 185, 129, 0.4)' }}>
                   SCHEDULED
                 </span>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
+              <p className="bs-card-meta" style={{ lineHeight: 1.5 }}>
                 Generates morning executive briefing with MRR pacing and priority tasks at 08:00 UTC daily.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 space-y-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-white">Ad Spend Guardrail Gate</h4>
-                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-cyan-500/20 text-cyan-300">
+            <div className="bs-card" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h4 style={{ margin: 0, fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>Ad Spend Guardrail Gate</h4>
+                <span className="bs-badge-impact bs-badge-impact-low" style={{ background: 'rgba(0, 163, 255, 0.2)', color: '#7DD3FC', borderColor: 'rgba(0, 163, 255, 0.4)' }}>
                   GUARDRAIL
                 </span>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
+              <p className="bs-card-meta" style={{ lineHeight: 1.5 }}>
                 Automatically routes any Meta ad campaign or budget change over $100 to the Human-in-the-Loop Approval Center.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 space-y-2">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-white">Customer Churn Sentinel</h4>
-                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/20 text-amber-300">
+            <div className="bs-card" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h4 style={{ margin: 0, fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>Customer Churn Sentinel</h4>
+                <span className="bs-badge-impact bs-badge-impact-medium">
                   SENTINEL
                 </span>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
+              <p className="bs-card-meta" style={{ lineHeight: 1.5 }}>
                 Flags accounts with negative sentiment or overdue communications when LTV exceeds $5,000.
               </p>
             </div>

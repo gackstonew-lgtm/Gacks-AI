@@ -5,8 +5,6 @@ import { orchestrator } from './agent/orchestrator.js'
 import { toolRegistry } from './tools/registry.js'
 import { memoryStore } from './memory/memory-store.js'
 import { renderPage } from '../bridge/page.mjs'
-import { readFile, realpath, readdir, stat, writeFile, mkdir } from 'node:fs/promises'
-import { isAbsolute, resolve, relative } from 'node:path'
 import { spawn } from 'node:child_process'
 import { workspaceManager } from './security/workspace.js'
 import { terminalService } from './terminal/terminal-service.js'
@@ -20,6 +18,8 @@ import { crmService } from './business/crm-service.js'
 import { approvalCenter } from './business/approval-center.js'
 import { automationEngine } from './business/automation-engine.js'
 import { modelRouter } from './agent/model-router.js'
+import { systemMonitor } from './system/system-monitor.js'
+import { localFilesystemService } from './system/filesystem-service.js'
 import type { SystemHealthReport } from './types.js'
 
 const PORT = Number(process.env.PORT || process.env.JARVIS_BRIDGE_PORT || 8787)
@@ -139,6 +139,25 @@ export function createGatewayServer() {
 
         res.writeHead(200, { ...cors, 'content-type': 'application/json' })
         return res.end(JSON.stringify(report))
+      }
+
+      // --- 1.1 Real System Hardware Telemetry Endpoint ---
+      if (pathname === '/api/v1/system/metrics' && req.method === 'GET') {
+        try {
+          const metrics = await systemMonitor.getMetrics()
+          res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify(metrics))
+        } catch (err: any) {
+          res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message || 'Failed to gather hardware metrics' }))
+        }
+      }
+
+      // --- 1.2 System Capabilities Endpoint ---
+      if (pathname === '/api/v1/system/capabilities' && req.method === 'GET') {
+        const capabilities = systemMonitor.getCapabilities()
+        res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(capabilities))
       }
 
       // --- 2. Tasks API ---
@@ -370,84 +389,45 @@ export function createGatewayServer() {
         return res.end(JSON.stringify({ success: ok }))
       }
 
-      // --- 10. Safe Workspace Filesystem API ---
-      if (pathname === '/api/v1/fs/list' && req.method === 'GET') {
-        const reqPath = url.searchParams.get('path') || '.'
-        const validation = workspaceManager.validatePath(reqPath, 'read')
-        if (!validation.valid || !validation.resolvedPath || !validation.workspace) {
-          res.writeHead(403, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ error: validation.error || 'Access denied' }))
-        }
-
+      // --- 10. Genuine Windows-Style Local Filesystem API ---
+      if (pathname === '/api/v1/fs/drives' && req.method === 'GET') {
         try {
-          const entries = await readdir(validation.resolvedPath, { withFileTypes: true })
-          const items = []
-          for (const ent of entries) {
-            // Ignore heavy VCS / node_modules hidden noise
-            if (ent.name === '.git') continue
-            const full = resolve(validation.resolvedPath, ent.name)
-            const isSensitive = workspaceManager.isSensitiveFile(full)
-            let size: number | undefined
-            let modifiedAt: number | undefined
-            try {
-              const st = await stat(full)
-              size = st.size
-              modifiedAt = st.mtimeMs
-            } catch {}
-
-            items.push({
-              name: ent.name,
-              path: relative(validation.workspace.path, full).replace(/\\/g, '/'),
-              fullPath: full,
-              type: ent.isDirectory() ? 'dir' : 'file',
-              size,
-              modifiedAt,
-              isSensitive,
-            })
-          }
-
-          items.sort((a, b) => {
-            if (a.type !== b.type) return a.type === 'dir' ? -1 : 1
-            return a.name.localeCompare(b.name)
-          })
-
-          const relPath = relative(validation.workspace.path, validation.resolvedPath).replace(/\\/g, '/')
+          const drives = await localFilesystemService.getDrives()
           res.writeHead(200, { ...cors, 'content-type': 'application/json' })
-          return res.end(
-            JSON.stringify({
-              workspace: validation.workspace,
-              currentPath: relPath || '.',
-              fullPath: validation.resolvedPath,
-              items,
-            }),
-          )
+          return res.end(JSON.stringify({ drives, defaultPath: localFilesystemService.getDefaultPath() }))
         } catch (err: any) {
           res.writeHead(500, { ...cors, 'content-type': 'application/json' })
           return res.end(JSON.stringify({ error: err.message }))
         }
       }
 
+      if (pathname === '/api/v1/fs/list' && req.method === 'GET') {
+        const reqPath = url.searchParams.get('path') || ''
+        try {
+          const result = await localFilesystemService.listDirectory(reqPath)
+          res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify(result))
+        } catch (err: any) {
+          const status = err.code === 'EACCES' || err.code === 'EPERM' ? 403 : err.code === 'ENOENT' ? 404 : 500
+          res.writeHead(status, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message, code: err.code }))
+        }
+      }
+
       if (pathname === '/api/v1/fs/read' && req.method === 'GET') {
         const reqPath = url.searchParams.get('path') || ''
-        const validation = workspaceManager.validatePath(reqPath, 'read')
-        if (!validation.valid || !validation.resolvedPath) {
-          res.writeHead(403, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ error: validation.error || 'Access denied' }))
+        if (!reqPath) {
+          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: 'Path parameter is required' }))
         }
-
-        if (workspaceManager.isSensitiveFile(validation.resolvedPath)) {
-          res.writeHead(403, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ error: 'Reading sensitive credentials file is blocked.' }))
-        }
-
         try {
-          const content = await readFile(validation.resolvedPath, 'utf-8')
-          const sanitized = workspaceManager.redactSecrets(content)
+          const preview = await localFilesystemService.readFilePreview(reqPath)
           res.writeHead(200, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ path: reqPath, content: sanitized, size: sanitized.length }))
+          return res.end(JSON.stringify(preview))
         } catch (err: any) {
-          res.writeHead(500, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ error: err.message }))
+          const status = err.code === 'EACCES' || err.code === 'EPERM' ? 403 : err.code === 'ENOENT' ? 404 : 500
+          res.writeHead(status, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message, code: err.code }))
         }
       }
 
@@ -460,16 +440,11 @@ export function createGatewayServer() {
           return res.end(JSON.stringify({ error: 'Path is required' }))
         }
 
-        const validation = workspaceManager.validatePath(reqPath, 'write')
-        if (!validation.valid || !validation.resolvedPath) {
-          res.writeHead(403, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ error: validation.error || 'Write access denied' }))
-        }
-
         try {
-          await writeFile(validation.resolvedPath, content, 'utf-8')
+          const safePath = localFilesystemService.sanitizePath(reqPath)
+          await writeFile(safePath, content, 'utf-8')
           res.writeHead(200, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ success: true, path: reqPath }))
+          return res.end(JSON.stringify({ success: true, path: safePath }))
         } catch (err: any) {
           res.writeHead(500, { ...cors, 'content-type': 'application/json' })
           return res.end(JSON.stringify({ error: err.message }))
@@ -479,22 +454,57 @@ export function createGatewayServer() {
       if (pathname === '/api/v1/fs/mkdir' && req.method === 'POST') {
         let body = ''
         for await (const chunk of req) body += chunk
-        const { path: reqPath } = JSON.parse(body || '{}')
-        if (!reqPath) {
-          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ error: 'Path is required' }))
-        }
+        const parsed = JSON.parse(body || '{}')
+        const parentPath = parsed.parentPath || parsed.path
+        const folderName = parsed.folderName || parsed.name || 'New Folder'
 
-        const validation = workspaceManager.validatePath(reqPath, 'write')
-        if (!validation.valid || !validation.resolvedPath) {
-          res.writeHead(403, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ error: validation.error || 'Write access denied' }))
+        if (!parentPath) {
+          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: 'parentPath is required' }))
         }
 
         try {
-          await mkdir(validation.resolvedPath, { recursive: true })
+          const created = await localFilesystemService.createDirectory(parentPath, folderName)
+          res.writeHead(201, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ success: true, path: created }))
+        } catch (err: any) {
+          res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message }))
+        }
+      }
+
+      if (pathname === '/api/v1/fs/rename' && req.method === 'POST') {
+        let body = ''
+        for await (const chunk of req) body += chunk
+        const { oldPath, newName } = JSON.parse(body || '{}')
+        if (!oldPath || !newName) {
+          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: 'oldPath and newName are required' }))
+        }
+
+        try {
+          const updated = await localFilesystemService.renameEntry(oldPath, newName)
           res.writeHead(200, { ...cors, 'content-type': 'application/json' })
-          return res.end(JSON.stringify({ success: true, path: reqPath }))
+          return res.end(JSON.stringify({ success: true, path: updated }))
+        } catch (err: any) {
+          res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message }))
+        }
+      }
+
+      if (pathname === '/api/v1/fs/delete' && req.method === 'POST') {
+        let body = ''
+        for await (const chunk of req) body += chunk
+        const { targetPath, confirmName } = JSON.parse(body || '{}')
+        if (!targetPath || !confirmName) {
+          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: 'targetPath and confirmName are required' }))
+        }
+
+        try {
+          await localFilesystemService.deleteEntry(targetPath, confirmName)
+          res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ success: true }))
         } catch (err: any) {
           res.writeHead(500, { ...cors, 'content-type': 'application/json' })
           return res.end(JSON.stringify({ error: err.message }))

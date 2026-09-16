@@ -1,0 +1,24 @@
+[
+  {
+    "id": "default",
+    "name": "Gacks AI (Current Workspace)",
+    "path": "C:\\xampp\\htdocs\\Gacks AI",
+    "permissions": {
+      "read": true,
+      "write": true,
+      "terminal": true
+    },
+    "approvedAt": 1789545988673
+  },
+  {
+    "id": "ws-1789547633018-h5v7",
+    "name": "htdocs",
+    "path": "C:\\xampp\\htdocs",
+    "permissions": {
+      "read": true,
+      "write": true,
+      "terminal": true
+    },
+    "approvedAt": 1789547633018
+  }
+]

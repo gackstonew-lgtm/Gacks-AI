@@ -121,6 +121,47 @@ describe('JAVIS BS — Runtime Stabilization & Root-Cause Verification', () => {
       assert.ok(Array.isArray(data.rules))
     })
 
+    it('should respond 200 on /api/v1/system/metrics with real hardware data', async () => {
+      const res = await fetch(`${baseUrl}/api/v1/system/metrics`)
+      assert.strictEqual(res.status, 200)
+      const data = (await res.json()) as any
+      assert.strictEqual(typeof data.cpuUsagePercent, 'number')
+      assert.ok(data.cpuUsagePercent >= 0 && data.cpuUsagePercent <= 100)
+      assert.ok(data.memoryTotalBytes > 0)
+      assert.ok(data.memoryFreeBytes > 0)
+      assert.strictEqual(typeof data.network, 'object')
+    })
+
+    it('should respond 200 on /api/v1/system/capabilities', async () => {
+      const res = await fetch(`${baseUrl}/api/v1/system/capabilities`)
+      assert.strictEqual(res.status, 200)
+      const data = (await res.json()) as any
+      assert.strictEqual(data.localSystemAccess, true)
+      assert.strictEqual(data.systemMetrics, true)
+      assert.strictEqual(data.filesystemAccess, true)
+    })
+
+    it('should respond 200 on /api/v1/fs/drives with accessible local drives', async () => {
+      const res = await fetch(`${baseUrl}/api/v1/fs/drives`)
+      assert.strictEqual(res.status, 200)
+      const data = (await res.json()) as any
+      assert.ok(Array.isArray(data.drives))
+      assert.ok(data.drives.length >= 1)
+      assert.ok(data.drives[0].drive)
+      assert.ok(data.defaultPath)
+    })
+
+    it('should respond 200 on /api/v1/fs/list for the current directory', async () => {
+      const res = await fetch(`${baseUrl}/api/v1/fs/list?path=${encodeURIComponent(process.cwd())}`)
+      assert.strictEqual(res.status, 200)
+      const data = (await res.json()) as any
+      assert.ok(Array.isArray(data.items))
+      assert.ok(data.items.length > 0)
+      assert.strictEqual(typeof data.totalItems, 'number')
+      const hasPackageJson = data.items.some((item: any) => item.name === 'package.json')
+      assert.strictEqual(hasPackageJson, true)
+    })
+
     it('should close gateway server cleanly', async () => {
       await new Promise<void>((resolve) => server.close(() => resolve()))
     })

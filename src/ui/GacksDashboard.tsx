@@ -54,12 +54,14 @@ export const GacksDashboard: React.FC<GacksDashboardProps> = ({
 
   return (
     <div className="gacks-dashboard-root">
-      {/* 1. Left Vertical Navigation Sidebar (Collapsible & Expandable) */}
-      <Sidebar
-        isOpenMobile={mobileMenuOpen}
-        onCloseMobile={() => setMobileMenuOpen(false)}
-        onSelectNav={handleNavSelect}
-      />
+      {/* 1. Left Vertical Navigation Sidebar (Hidden on Business Suite for full-width layout) */}
+      {activeNav !== 'business' && (
+        <Sidebar
+          isOpenMobile={mobileMenuOpen}
+          onCloseMobile={() => setMobileMenuOpen(false)}
+          onSelectNav={handleNavSelect}
+        />
+      )}
 
       {/* 2. Main Viewport */}
       <main className="gacks-main-viewport">

@@ -1,52 +1,44 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import {
   Folder,
   FolderPlus,
   FileCode,
   FileText,
-  ShieldCheck,
+  FileImage,
+  FileArchive,
+  File,
   Search,
   Terminal,
   Play,
   Square,
   RefreshCw,
-  ExternalLink,
-  ChevronRight,
   ArrowUp,
+  ArrowLeft,
+  ArrowRight,
   Eye,
   X,
-  CheckCircle,
   AlertTriangle,
-  Lock,
   Trash2,
+  Edit2,
+  HardDrive,
+  LayoutList,
+  LayoutGrid,
+  Bot,
+  CheckCircle2,
+  Copy,
+  Check,
+  ShieldCheck,
   Cpu,
 } from 'lucide-react'
 import { useStore } from '../../store'
 import { navigate } from '../../lib/router'
 import { BRIDGE_HTTP_URL } from '../../config'
-
-interface ApprovedWorkspace {
-  id: string
-  name: string
-  path: string
-  permissions: {
-    read: boolean
-    write: boolean
-    terminal: boolean
-  }
-  approvedAt: number
-}
-
-interface FileEntry {
-  name: string
-  path: string
-  fullPath?: string
-  type: 'dir' | 'file'
-  size?: number
-  modifiedAt?: number
-  isSensitive?: boolean
-  desc?: string
-}
+import {
+  apiClient,
+  type LocalDrive,
+  type LocalFileItem,
+  type FilePreviewResult,
+} from '../../lib/api-client'
 
 interface TerminalTask {
   id: string
@@ -62,210 +54,346 @@ interface TerminalTask {
   error?: string
 }
 
-const FALLBACK_FILES: FileEntry[] = [
-  { name: 'server', path: 'server', type: 'dir', desc: 'Agent Runtime: Context Engine, Planner, Executor, Gateway' },
-  { name: 'src', path: 'src', type: 'dir', desc: 'React 19 Frontend: HUD, Arc Reactor Three.js, Control Center' },
-  { name: 'bridge', path: 'bridge', type: 'dir', desc: 'Node Bridge network gate & media proxy' },
-  { name: 'tests', path: 'tests', type: 'dir', desc: 'Architectural test suite' },
-  { name: 'package.json', path: 'package.json', type: 'file', size: 1840, desc: 'Dependencies & build scripts' },
-  { name: 'tsconfig.json', path: 'tsconfig.json', type: 'file', size: 1120, desc: 'Strict TypeScript configuration' },
-  { name: 'vite.config.ts', path: 'vite.config.ts', type: 'file', size: 820, desc: 'Vite build configuration' },
-  { name: 'ARCHITECTURE.md', path: 'ARCHITECTURE.md', type: 'file', size: 8600, desc: 'GACKS P.A. V2 architecture specification' },
-  { name: 'DEPLOYMENT.md', path: 'DEPLOYMENT.md', type: 'file', size: 5300, desc: 'Cloud deployment runbook' },
-  { name: 'Dockerfile', path: 'Dockerfile', type: 'file', size: 1200, desc: 'Production container setup' },
-  { name: '.env.example', path: '.env.example', type: 'file', size: 920, desc: 'Environment variables template', isSensitive: true },
-]
-
 function formatBytes(bytes?: number): string {
-  if (bytes === undefined || bytes === null || isNaN(bytes)) return ''
+  if (bytes === undefined || bytes === null || isNaN(bytes)) return '--'
+  if (bytes === 0) return '0 B'
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`
+}
+
+function formatDate(ms?: number): string {
+  if (!ms) return '--'
+  try {
+    const d = new Date(ms)
+    return d.toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  } catch {
+    return '--'
+  }
+}
+
+function getFileIcon(item: LocalFileItem) {
+  if (item.type === 'dir') {
+    return <Folder className="w-4 h-4 text-amber-400 shrink-0" />
+  }
+  const ext = (item.extension || '').toLowerCase()
+  if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'bmp', 'ico'].includes(ext)) {
+    return <FileImage className="w-4 h-4 text-emerald-400 shrink-0" />
+  }
+  if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) {
+    return <FileArchive className="w-4 h-4 text-yellow-400 shrink-0" />
+  }
+  if (['ts', 'tsx', 'js', 'jsx', 'json', 'py', 'html', 'css', 'scss', 'rs', 'go', 'php', 'sql'].includes(ext)) {
+    return <FileCode className="w-4 h-4 text-[#00A3FF] shrink-0" />
+  }
+  if (['md', 'txt', 'log', 'csv', 'yaml', 'yml', 'env', 'ini', 'xml'].includes(ext)) {
+    return <FileText className="w-4 h-4 text-cyan-400 shrink-0" />
+  }
+  return <File className="w-4 h-4 text-gray-400 shrink-0" />
+}
+
+function getFileTypeLabel(item: LocalFileItem): string {
+  if (item.type === 'dir') return 'File folder'
+  const ext = (item.extension || '').toLowerCase()
+  const map: Record<string, string> = {
+    ts: 'TypeScript File',
+    tsx: 'TypeScript JSX File',
+    js: 'JavaScript File',
+    jsx: 'JavaScript JSX File',
+    json: 'JSON Document',
+    md: 'Markdown Document',
+    txt: 'Text Document',
+    html: 'HTML Document',
+    css: 'CSS Stylesheet',
+    py: 'Python File',
+    png: 'PNG Image',
+    jpg: 'JPEG Image',
+    jpeg: 'JPEG Image',
+    svg: 'SVG Image',
+    pdf: 'PDF Document',
+    zip: 'Compressed Archive',
+    exe: 'Windows Executable',
+    bat: 'Windows Batch File',
+    cmd: 'Windows Command Script',
+    ps1: 'PowerShell Script',
+  }
+  return map[ext] || (ext ? `${ext.toUpperCase()} File` : 'File')
 }
 
 export const FilesPage: React.FC = () => {
   const submitQuery = useStore((s) => s.submitQuery)
 
-  // Workspaces state
-  const [workspaces, setWorkspaces] = useState<ApprovedWorkspace[]>([])
-  const [activeWorkspace, setActiveWorkspace] = useState<ApprovedWorkspace | null>(null)
-  const [currentSubpath, setCurrentSubpath] = useState<string>('.')
-  const [items, setItems] = useState<FileEntry[]>(FALLBACK_FILES)
+  // Local filesystem navigation state
+  const [drives, setDrives] = useState<LocalDrive[]>([])
+  const [currentPath, setCurrentPath] = useState<string>('')
+  const [parentPath, setParentPath] = useState<string | null>(null)
+  const [items, setItems] = useState<LocalFileItem[]>([])
   const [loading, setLoading] = useState(false)
-  const [bridgeConnected, setBridgeConnected] = useState(true)
+  const [isGatewayOnline, setIsGatewayOnline] = useState<boolean>(true)
+  const [permissionError, setPermissionError] = useState<string | null>(null)
 
-  // Search & Filter
+  // Navigation history
+  const [history, setHistory] = useState<string[]>([])
+  const [historyIndex, setHistoryIndex] = useState<number>(-1)
+
+  // Address bar input state
+  const [addressInput, setAddressInput] = useState<string>('')
+  const addressInputRef = useRef<HTMLInputElement>(null)
+
+  // Search & View preferences
   const [searchFilter, setSearchFilter] = useState('')
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list')
+  const [selectedItem, setSelectedItem] = useState<LocalFileItem | null>(null)
 
-  // Modals & Preview
-  const [previewFile, setPreviewFile] = useState<{ path: string; content: string } | null>(null)
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [newPath, setNewPath] = useState('')
-  const [newName, setNewName] = useState('')
-  const [newPerms, setNewPerms] = useState({ read: true, write: true, terminal: true })
-  const [modalError, setModalError] = useState<string | null>(null)
+  // Safe Modals
+  const [previewData, setPreviewData] = useState<FilePreviewResult | null>(null)
+  const [copiedPreview, setCopiedPreview] = useState(false)
 
-  // Terminal state
-  const [terminalOpen, setTerminalOpen] = useState(true)
+  const [showNewFolderModal, setShowNewFolderModal] = useState(false)
+  const [newFolderName, setNewFolderName] = useState('')
+  const [modalActionError, setModalActionError] = useState<string | null>(null)
+  const [isSubmittingAction, setIsSubmittingAction] = useState(false)
+
+  const [renameTarget, setRenameTarget] = useState<LocalFileItem | null>(null)
+  const [renameNewName, setRenameNewName] = useState('')
+
+  const [deleteTarget, setDeleteTarget] = useState<LocalFileItem | null>(null)
+  const [deleteConfirmName, setDeleteConfirmName] = useState('')
+
+  // Terminal Runner state
+  const [terminalOpen, setTerminalOpen] = useState(false)
   const [customCommand, setCustomCommand] = useState('')
   const [activeTask, setActiveTask] = useState<TerminalTask | null>(null)
   const [runningTerminal, setRunningTerminal] = useState(false)
 
-  // Load Workspaces
-  const loadWorkspaces = useCallback(async () => {
-    try {
-      const res = await fetch(`${BRIDGE_HTTP_URL}/api/v1/workspaces`)
-      if (!res.ok) throw new Error('Gateway unavailable')
-      const data = await res.json()
-      setWorkspaces(data.workspaces || [])
-      setActiveWorkspace(data.activeWorkspace || null)
-      setBridgeConnected(true)
-    } catch {
-      setBridgeConnected(false)
-    }
-  }, [])
-
-  // Load Directory Items
+  // Load directory contents
   const loadDirectory = useCallback(
-    async (subpath = '.') => {
+    async (targetPath?: string, addToHistory = true) => {
       setLoading(true)
+      setPermissionError(null)
       try {
-        const url = `${BRIDGE_HTTP_URL}/api/v1/fs/list?path=${encodeURIComponent(subpath)}`
-        const res = await fetch(url)
-        if (!res.ok) throw new Error(`Failed to load directory: ${res.statusText}`)
-        const data = await res.json()
-        if (data.items) {
-          setItems(data.items)
-          setCurrentSubpath(data.currentPath || subpath)
-          setBridgeConnected(true)
+        const res = await apiClient.listDirectory(targetPath)
+        if (res.ok && res.data) {
+          const data = res.data
+          setItems(data.items || [])
+          setCurrentPath(data.currentPath)
+          setAddressInput(data.currentPath)
+          setParentPath(data.parentPath)
+          setSelectedItem(null)
+          setIsGatewayOnline(true)
+
+          if (addToHistory) {
+            setHistory((prev) => {
+              const sliced = prev.slice(0, historyIndex + 1)
+              return [...sliced, data.currentPath]
+            })
+            setHistoryIndex((prev) => prev + 1)
+          }
+        } else {
+          if (res.status === 403 || res.error?.includes('Access denied') || res.error?.includes('EACCES')) {
+            setPermissionError(res.error || 'Access Denied: Windows permissions prevent opening this directory.')
+          } else {
+            setPermissionError(res.error || 'Unable to open directory.')
+          }
+          if (res.status === 0 || !res.status) {
+            setIsGatewayOnline(false)
+          }
         }
-      } catch (e) {
-        console.warn('[FilesPage] Local bridge offline or fetch error, using fallback view.', e)
-        setBridgeConnected(false)
+      } catch (err: any) {
+        setPermissionError(err.message || 'Error communicating with local filesystem service.')
+        setIsGatewayOnline(false)
       } finally {
         setLoading(false)
       }
     },
-    [],
+    [historyIndex],
   )
 
+  // Initial mount: fetch drives and load default directory
   useEffect(() => {
-    loadWorkspaces()
-    loadDirectory('.')
-  }, [loadWorkspaces, loadDirectory])
-
-  // Select Workspace
-  const handleSelectWorkspace = async (id: string) => {
-    try {
-      const res = await fetch(`${BRIDGE_HTTP_URL}/api/v1/workspaces/select`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ id }),
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setActiveWorkspace(data.activeWorkspace)
-        setCurrentSubpath('.')
-        loadDirectory('.')
+    let mounted = true
+    const init = async () => {
+      try {
+        const res = await apiClient.getFsDrives()
+        if (!mounted) return
+        if (res.ok && res.data) {
+          setDrives(res.data.drives || [])
+          const initial = res.data.defaultPath || (res.data.drives[0] ? res.data.drives[0].path : 'C:\\')
+          setCurrentPath(initial)
+          setAddressInput(initial)
+          setHistory([initial])
+          setHistoryIndex(0)
+          loadDirectory(initial, false)
+        } else {
+          setIsGatewayOnline(false)
+        }
+      } catch {
+        if (mounted) setIsGatewayOnline(false)
       }
-    } catch {}
+    }
+    init()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  // History navigation handlers
+  const handleGoBack = () => {
+    if (historyIndex > 0) {
+      const nextIndex = historyIndex - 1
+      const target = history[nextIndex]
+      setHistoryIndex(nextIndex)
+      loadDirectory(target, false)
+    }
   }
 
-  // Add Workspace
-  const handleAddWorkspaceSubmit = async (e: React.FormEvent) => {
+  const handleGoForward = () => {
+    if (historyIndex < history.length - 1) {
+      const nextIndex = historyIndex + 1
+      const target = history[nextIndex]
+      setHistoryIndex(nextIndex)
+      loadDirectory(target, false)
+    }
+  }
+
+  const handleGoUp = () => {
+    if (parentPath) {
+      loadDirectory(parentPath, true)
+    }
+  }
+
+  const handleRefresh = () => {
+    loadDirectory(currentPath, false)
+  }
+
+  const handleDriveClick = (drivePath: string) => {
+    loadDirectory(drivePath, true)
+  }
+
+  const handleAddressSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setModalError(null)
-    if (!newPath.trim()) {
-      setModalError('Local folder path is required.')
-      return
+    if (addressInput.trim()) {
+      loadDirectory(addressInput.trim(), true)
     }
+  }
 
+  // Row selection and navigation
+  const handleItemClick = (item: LocalFileItem) => {
+    setSelectedItem(item)
+  }
+
+  const handleItemDoubleClick = (item: LocalFileItem) => {
+    if (item.type === 'dir') {
+      loadDirectory(item.path, true)
+    } else {
+      handleOpenFilePreview(item.path)
+    }
+  }
+
+  // File Preview
+  const handleOpenFilePreview = async (filePath: string) => {
+    setPreviewData(null)
+    setCopiedPreview(false)
     try {
-      const res = await fetch(`${BRIDGE_HTTP_URL}/api/v1/workspaces`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          path: newPath.trim(),
-          name: newName.trim() || undefined,
-          permissions: newPerms,
-        }),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to add workspace')
+      const res = await apiClient.readFilePreview(filePath)
+      if (res.ok && res.data) {
+        setPreviewData(res.data)
+      } else {
+        alert(res.error || 'Failed to read file preview.')
       }
-
-      setShowAddModal(false)
-      setNewPath('')
-      setNewName('')
-      await loadWorkspaces()
-      loadDirectory('.')
     } catch (err: any) {
-      setModalError(err.message)
+      alert(`Preview failed: ${err.message}`)
     }
   }
 
-  // Revoke Workspace
-  const handleRevokeWorkspace = async (id: string) => {
-    if (id === 'default') return
-    try {
-      const res = await fetch(`${BRIDGE_HTTP_URL}/api/v1/workspaces?id=${encodeURIComponent(id)}`, {
-        method: 'DELETE',
-      })
-      if (res.ok) {
-        await loadWorkspaces()
-        loadDirectory('.')
-      }
-    } catch {}
-  }
-
-  // Reveal in Explorer
-  const handleReveal = async (path = '.') => {
-    try {
-      await fetch(`${BRIDGE_HTTP_URL}/api/v1/fs/reveal`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ path: path || currentSubpath }),
-      })
-    } catch {}
-  }
-
-  // Preview File
-  const handlePreview = async (filePath: string) => {
-    try {
-      const res = await fetch(`${BRIDGE_HTTP_URL}/api/v1/fs/read?path=${encodeURIComponent(filePath)}`)
-      if (!res.ok) {
-        const err = await res.json()
-        alert(err.error || 'Failed to read file')
-        return
-      }
-      const data = await res.json()
-      setPreviewFile({ path: filePath, content: data.content })
-    } catch (e: any) {
-      alert(`Preview unavailable: ${e.message}`)
+  const handleCopyPreview = () => {
+    if (previewData?.content) {
+      navigator.clipboard.writeText(previewData.content)
+      setCopiedPreview(true)
+      setTimeout(() => setCopiedPreview(false), 2000)
     }
   }
 
-  // Ask Gacks to Inspect
+  // Ask Gacks
   const handleInspect = (filePath: string) => {
     submitQuery(`Please inspect and analyze the file: ${filePath}`)
     navigate('chat')
   }
 
-  // Navigate Directory
-  const handleNavigate = (targetPath: string) => {
-    loadDirectory(targetPath)
+  // Create Folder
+  const handleCreateFolderSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newFolderName.trim()) return
+    setIsSubmittingAction(true)
+    setModalActionError(null)
+    try {
+      const res = await apiClient.createFolder(currentPath, newFolderName.trim())
+      if (res.ok) {
+        setShowNewFolderModal(false)
+        setNewFolderName('')
+        loadDirectory(currentPath, false)
+      } else {
+        setModalActionError(res.error || 'Failed to create folder.')
+      }
+    } catch (err: any) {
+      setModalActionError(err.message || 'Creation failed.')
+    } finally {
+      setIsSubmittingAction(false)
+    }
   }
 
-  const handleNavigateUp = () => {
-    if (currentSubpath === '.' || currentSubpath === '') return
-    const parts = currentSubpath.split(/[\\/]/).filter(Boolean)
-    parts.pop()
-    const parent = parts.length === 0 ? '.' : parts.join('/')
-    loadDirectory(parent)
+  // Rename
+  const handleRenameSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!renameTarget || !renameNewName.trim()) return
+    setIsSubmittingAction(true)
+    setModalActionError(null)
+    try {
+      const res = await apiClient.renameFile(renameTarget.path, renameNewName.trim())
+      if (res.ok) {
+        setRenameTarget(null)
+        setRenameNewName('')
+        loadDirectory(currentPath, false)
+      } else {
+        setModalActionError(res.error || 'Failed to rename entry.')
+      }
+    } catch (err: any) {
+      setModalActionError(err.message || 'Rename failed.')
+    } finally {
+      setIsSubmittingAction(false)
+    }
   }
 
-  // Terminal Execution
+  // Delete
+  const handleDeleteSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!deleteTarget || deleteConfirmName !== deleteTarget.name) return
+    setIsSubmittingAction(true)
+    setModalActionError(null)
+    try {
+      const res = await apiClient.deleteFile(deleteTarget.path, deleteConfirmName)
+      if (res.ok) {
+        setDeleteTarget(null)
+        setDeleteConfirmName('')
+        loadDirectory(currentPath, false)
+      } else {
+        setModalActionError(res.error || 'Failed to delete entry.')
+      }
+    } catch (err: any) {
+      setModalActionError(err.message || 'Delete failed.')
+    } finally {
+      setIsSubmittingAction(false)
+    }
+  }
+
+  // Terminal Drawer Execution
   const handleRunCommand = async (cmd: string) => {
     if (!cmd.trim() || runningTerminal) return
     setRunningTerminal(true)
@@ -273,7 +401,7 @@ export const FilesPage: React.FC = () => {
       const res = await fetch(`${BRIDGE_HTTP_URL}/api/v1/terminal/run`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ command: cmd.trim(), cwd: currentSubpath }),
+        body: JSON.stringify({ command: cmd.trim(), cwd: currentPath }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -304,15 +432,21 @@ export const FilesPage: React.FC = () => {
     } catch {}
   }
 
-  // Filter items
-  const filtered = items.filter(
-    (f) =>
-      f.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-      (f.desc && f.desc.toLowerCase().includes(searchFilter.toLowerCase())),
-  )
+  // Filtered files
+  const filtered = useMemo(() => {
+    if (!searchFilter.trim()) return items
+    const q = searchFilter.toLowerCase()
+    return items.filter((f) => f.name.toLowerCase().includes(q))
+  }, [items, searchFilter])
 
-  // Breadcrumbs calculation
-  const breadcrumbs = currentSubpath === '.' ? [] : currentSubpath.split(/[\\/]/).filter(Boolean)
+  const folderCount = useMemo(() => filtered.filter((i) => i.type === 'dir').length, [filtered])
+  const fileCount = useMemo(() => filtered.filter((i) => i.type === 'file').length, [filtered])
+
+  // Extract drive letter for status
+  const currentDrive = useMemo(() => {
+    const match = currentPath.match(/^([a-zA-Z]:)/)
+    return match ? match[1].toUpperCase() : ''
+  }, [currentPath])
 
   return (
     <div className="gacks-page-container gacks-files-page">
@@ -323,262 +457,409 @@ export const FilesPage: React.FC = () => {
             <Folder className="w-4 h-4 text-[#00A3FF]" />
           </div>
           <div>
-            <h1 className="gacks-page-title">LOCAL WORKSPACE & FILE SYSTEM</h1>
+            <h1 className="gacks-page-title">WINDOWS FILE EXPLORER</h1>
             <p className="gacks-page-subtitle">
-              Secure local operator environment with approved workspace isolation and terminal bridge
+              Live Windows file manager with drive navigation, safe file actions, and terminal bridge
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className={bridgeConnected ? 'gacks-security-badge-safe' : 'gacks-perm-badge-inactive'}>
+          <div className={isGatewayOnline ? 'gacks-security-badge-safe' : 'gacks-perm-badge-inactive'}>
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>{bridgeConnected ? 'Local Bridge Active' : 'Offline Mode'}</span>
+            <span>{isGatewayOnline ? 'Local Gateway Active' : 'Gateway Offline'}</span>
           </div>
         </div>
       </div>
 
-      {/* Workspace Management Bar */}
-      <div className="gacks-workspace-card">
-        <div className="gacks-workspace-header-row">
-          <div className="gacks-workspace-info">
-            <div className="gacks-workspace-name-wrap">
-              <span className="gacks-workspace-name">
-                {activeWorkspace?.name || 'Local Repository Workspace'}
-              </span>
-              {workspaces.length > 1 && (
-                <select
-                  value={activeWorkspace?.id}
-                  onChange={(e) => handleSelectWorkspace(e.target.value)}
-                  className="bg-[#141418] border border-white/10 text-xs text-white rounded px-2 py-0.5 outline-none font-mono"
-                >
-                  {workspaces.map((ws) => (
-                    <option key={ws.id} value={ws.id}>
-                      {ws.name}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-            <span className="gacks-workspace-path">
-              Path: {activeWorkspace?.path || 'Approved Workspace Root'}
+      {/* Main File Manager Container */}
+      <div className="gacks-fm-container">
+        {/* Drive Selector Row */}
+        {drives.length > 0 && (
+          <div className="flex items-center gap-2 px-1">
+            <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider flex items-center gap-1">
+              <HardDrive className="w-3.5 h-3.5 text-[#00A3FF]" />
+              Drives:
             </span>
-          </div>
-
-          <div className="gacks-workspace-actions">
-            <div className="gacks-workspace-badges">
-              <span className="gacks-perm-badge gacks-perm-badge-active">
-                <CheckCircle className="w-3 h-3" /> Read
-              </span>
-              <span
-                className={`gacks-perm-badge ${
-                  activeWorkspace?.permissions?.write !== false
-                    ? 'gacks-perm-badge-active'
-                    : 'gacks-perm-badge-inactive'
-                }`}
-              >
-                {activeWorkspace?.permissions?.write !== false ? (
-                  <CheckCircle className="w-3 h-3" />
-                ) : (
-                  <Lock className="w-3 h-3" />
-                )}
-                Write
-              </span>
-              <span
-                className={`gacks-perm-badge ${
-                  activeWorkspace?.permissions?.terminal !== false
-                    ? 'gacks-perm-badge-active'
-                    : 'gacks-perm-badge-inactive'
-                }`}
-              >
-                {activeWorkspace?.permissions?.terminal !== false ? (
-                  <CheckCircle className="w-3 h-3" />
-                ) : (
-                  <Lock className="w-3 h-3" />
-                )}
-                Terminal
-              </span>
+            <div className="gacks-fm-drives-list">
+              {drives.map((d) => {
+                const isActive = currentPath.toLowerCase().startsWith(d.path.toLowerCase())
+                return (
+                  <button
+                    key={d.path}
+                    type="button"
+                    className={`gacks-fm-drive-pill ${isActive ? 'gacks-fm-drive-pill-active' : ''}`}
+                    onClick={() => handleDriveClick(d.path)}
+                    title={`Browse drive ${d.drive}`}
+                  >
+                    <span>{d.drive}</span>
+                  </button>
+                )
+              })}
             </div>
-
-            <button
-              type="button"
-              className="gacks-action-btn-secondary"
-              onClick={() => handleReveal(currentSubpath)}
-              title="Reveal active folder in Explorer"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Reveal in Explorer</span>
-            </button>
-
-            <button
-              type="button"
-              className="gacks-action-btn-primary"
-              onClick={() => setShowAddModal(true)}
-            >
-              <FolderPlus className="w-3.5 h-3.5" />
-              <span>Grant Folder Access</span>
-            </button>
-
-            {activeWorkspace && activeWorkspace.id !== 'default' && (
-              <button
-                type="button"
-                className="gacks-action-btn-secondary text-red-400 hover:text-red-300"
-                onClick={() => handleRevokeWorkspace(activeWorkspace.id)}
-                title="Revoke access to this workspace"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Revoke</span>
-              </button>
-            )}
-
-            <button
-              type="button"
-              className="gacks-action-btn-secondary"
-              onClick={() => loadDirectory(currentSubpath)}
-              disabled={loading}
-              title="Refresh directory contents"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Directory Breadcrumbs Bar */}
-      <div className="gacks-breadcrumb-bar">
-        <button
-          type="button"
-          className={`gacks-breadcrumb-item ${breadcrumbs.length === 0 ? 'gacks-breadcrumb-active' : ''}`}
-          onClick={() => handleNavigate('.')}
-        >
-          <Folder className="w-3.5 h-3.5 text-[#00A3FF]" />
-          <span>Root</span>
-        </button>
-
-        {breadcrumbs.map((segment, idx) => {
-          const sub = breadcrumbs.slice(0, idx + 1).join('/')
-          const isLast = idx === breadcrumbs.length - 1
-          return (
-            <React.Fragment key={sub}>
-              <ChevronRight className="w-3 h-3 text-gray-500 shrink-0" />
-              <button
-                type="button"
-                className={`gacks-breadcrumb-item ${isLast ? 'gacks-breadcrumb-active' : ''}`}
-                onClick={() => handleNavigate(sub)}
-              >
-                <span>{segment}</span>
-              </button>
-            </React.Fragment>
-          )
-        })}
-      </div>
-
-      {/* Filter & Search Bar */}
-      <div className="gacks-files-filter-bar">
-        <div className="gacks-files-search-box">
-          <Search className="w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            className="gacks-files-search-input"
-            placeholder="Search files and directories in current path..."
-            value={searchFilter}
-            onChange={(e) => setSearchFilter(e.target.value)}
-          />
-        </div>
-        <span className="text-xs font-mono text-gray-400">
-          Showing {filtered.length} items {currentSubpath !== '.' ? `in ${currentSubpath}` : ''}
-        </span>
-      </div>
-
-      {/* File & Folder Grid */}
-      <div className="gacks-files-grid">
-        {currentSubpath !== '.' && (
-          <div
-            className="gacks-file-card cursor-pointer border-dashed border-white/20 hover:border-[#00A3FF]"
-            onClick={handleNavigateUp}
-          >
-            <div className="gacks-file-card-header">
-              <div className="flex items-center gap-2.5">
-                <ArrowUp className="w-5 h-5 text-[#00A3FF]" />
-                <span className="text-sm font-mono text-white font-semibold">.. (Up one level)</span>
-              </div>
-            </div>
-            <p className="text-xs text-gray-400 mt-2">Return to parent directory</p>
           </div>
         )}
 
-        {filtered.map((item) => {
-          const isDir = item.type === 'dir'
-          return (
-            <div
-              key={item.path}
-              className={`gacks-file-card ${isDir ? 'hover:border-[#00A3FF]/60 cursor-pointer' : ''}`}
-              onClick={isDir ? () => handleNavigate(item.path) : undefined}
+        {/* Windows-style Header Navigation Bar */}
+        <div className="gacks-fm-header-bar">
+          {/* Navigation Cluster: Back, Forward, Up, Refresh */}
+          <div className="gacks-fm-nav-cluster">
+            <button
+              type="button"
+              className="gacks-fm-icon-btn"
+              onClick={handleGoBack}
+              disabled={historyIndex <= 0}
+              title="Back"
             >
-              <div className="gacks-file-card-header">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  {isDir ? (
-                    <Folder className="w-5 h-5 text-amber-400 shrink-0" />
-                  ) : item.name.endsWith('.md') ? (
-                    <FileText className="w-5 h-5 text-cyan-400 shrink-0" />
-                  ) : (
-                    <FileCode className="w-5 h-5 text-[#00A3FF] shrink-0" />
-                  )}
-                  <span className="text-sm font-semibold text-white font-mono truncate" title={item.name}>
-                    {item.name}
-                  </span>
-                </div>
+              <ArrowLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              className="gacks-fm-icon-btn"
+              onClick={handleGoForward}
+              disabled={historyIndex >= history.length - 1}
+              title="Forward"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              className="gacks-fm-icon-btn"
+              onClick={handleGoUp}
+              disabled={!parentPath}
+              title="Up one level"
+            >
+              <ArrowUp className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              className="gacks-fm-icon-btn"
+              onClick={handleRefresh}
+              disabled={loading}
+              title="Refresh"
+            >
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
 
-                {item.isSensitive && (
-                  <span className="text-[10px] font-mono bg-red-950/80 text-red-400 border border-red-800/60 px-1.5 py-0.5 rounded">
-                    PROTECTED
-                  </span>
-                )}
+          {/* Address Bar */}
+          <form className="gacks-fm-address-box" onSubmit={handleAddressSubmit}>
+            <Folder className="w-4 h-4 text-[#00A3FF] shrink-0" />
+            <input
+              ref={addressInputRef}
+              type="text"
+              className="gacks-fm-address-input"
+              value={addressInput}
+              onChange={(e) => setAddressInput(e.target.value)}
+              placeholder="Enter absolute Windows path..."
+            />
+          </form>
 
-                {item.size !== undefined && (
-                  <span className="text-xs font-mono text-gray-400 bg-white/5 px-2 py-0.5 rounded shrink-0">
-                    {formatBytes(item.size)}
-                  </span>
-                )}
-              </div>
+          {/* Search Box */}
+          <div className="gacks-files-search-box" style={{ width: '220px' }}>
+            <Search className="w-3.5 h-3.5 text-gray-400" />
+            <input
+              type="text"
+              className="gacks-files-search-input"
+              placeholder="Search current folder..."
+              value={searchFilter}
+              onChange={(e) => setSearchFilter(e.target.value)}
+            />
+            {searchFilter && (
+              <button
+                type="button"
+                className="text-gray-400 hover:text-white"
+                onClick={() => setSearchFilter('')}
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
 
-              {item.desc && <p className="text-xs text-gray-400 line-clamp-2 mt-2 mb-3">{item.desc}</p>}
+          {/* View Mode & New Folder Actions */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className={`gacks-fm-icon-btn ${viewMode === 'list' ? 'border-[#00A3FF] text-[#00A3FF]' : ''}`}
+              onClick={() => setViewMode('list')}
+              title="Details List View"
+            >
+              <LayoutList className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              className={`gacks-fm-icon-btn ${viewMode === 'grid' ? 'border-[#00A3FF] text-[#00A3FF]' : ''}`}
+              onClick={() => setViewMode('grid')}
+              title="Grid View"
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              className="gacks-action-btn-primary"
+              onClick={() => {
+                setNewFolderName('')
+                setModalActionError(null)
+                setShowNewFolderModal(true)
+              }}
+              title="Create new folder"
+            >
+              <FolderPlus className="w-3.5 h-3.5" />
+              <span>New Folder</span>
+            </button>
+          </div>
+        </div>
 
-              <div className="gacks-file-card-actions">
-                {!isDir && (
-                  <button
-                    type="button"
-                    className="gacks-file-inspect-btn"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handlePreview(item.path)
-                    }}
-                    title="View file contents"
-                  >
-                    <Eye className="w-3.5 h-3.5 mr-1" />
-                    <span>Preview</span>
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  className="gacks-file-inspect-btn ml-auto"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleInspect(item.path)
-                  }}
-                  title="Ask Gacks to examine this file"
-                >
-                  <span>Ask Gacks</span>
-                  <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
-                </button>
-              </div>
+        {/* Windows Permission Error Banner */}
+        {permissionError && (
+          <div className="p-3.5 bg-amber-950/40 border border-amber-800/60 rounded-lg flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <h4 className="text-xs font-bold text-amber-300 uppercase tracking-wider font-mono">
+                Access Denied by Windows
+              </h4>
+              <p className="text-xs text-amber-200/90 mt-1">
+                Windows operating system permissions prevent opening this directory.
+              </p>
+              <p className="text-[11px] font-mono text-amber-300/70 mt-0.5">{permissionError}</p>
             </div>
-          )
-        })}
+          </div>
+        )}
+
+        {/* File Manager View: List or Grid */}
+        {viewMode === 'list' ? (
+          <div className="gacks-fm-table-wrap">
+            <table className="gacks-fm-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '45%' }}>Name</th>
+                  <th style={{ width: '22%' }}>Date modified</th>
+                  <th style={{ width: '18%' }}>Type</th>
+                  <th style={{ width: '15%' }}>Size</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {parentPath && (
+                  <tr className="gacks-fm-row" onDoubleClick={handleGoUp}>
+                    <td colSpan={5}>
+                      <div className="flex items-center gap-2 text-gray-400 font-mono text-xs py-1">
+                        <ArrowUp className="w-4 h-4 text-[#00A3FF]" />
+                        <span>.. (Up to {parentPath})</span>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+
+                {filtered.map((item) => {
+                  const isSelected = selectedItem?.path === item.path
+                  const isDir = item.type === 'dir'
+                  return (
+                    <tr
+                      key={item.path}
+                      className={`gacks-fm-row ${isSelected ? 'gacks-fm-row-selected' : ''}`}
+                      onClick={() => handleItemClick(item)}
+                      onDoubleClick={() => handleItemDoubleClick(item)}
+                    >
+                      <td>
+                        <div className="gacks-fm-name-cell">
+                          {getFileIcon(item)}
+                          <span
+                            className={`truncate font-mono text-xs ${
+                              isDir ? 'font-semibold text-white' : 'text-gray-200'
+                            }`}
+                            title={item.name}
+                          >
+                            {item.name}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="font-mono text-xs text-gray-400">{formatDate(item.modifiedAt)}</td>
+                      <td className="font-mono text-xs text-gray-400">{getFileTypeLabel(item)}</td>
+                      <td className="font-mono text-xs text-gray-400">
+                        {item.type === 'file' ? formatBytes(item.size) : ''}
+                      </td>
+                      <td>
+                        <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                          {!isDir && (
+                            <button
+                              type="button"
+                              className="gacks-file-inspect-btn"
+                              onClick={() => handleOpenFilePreview(item.path)}
+                              title="Preview file content"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              <span className="hidden sm:inline ml-1">Preview</span>
+                            </button>
+                          )}
+                          {!isDir && (
+                            <button
+                              type="button"
+                              className="gacks-file-inspect-btn text-[#00A3FF] hover:text-[#38BDF8]"
+                              onClick={() => handleInspect(item.path)}
+                              title="Ask Gacks AI to inspect this file"
+                            >
+                              <Bot className="w-3.5 h-3.5" />
+                              <span className="hidden sm:inline ml-1">Ask Gacks</span>
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            className="gacks-file-inspect-btn text-gray-400 hover:text-white"
+                            onClick={() => {
+                              setRenameTarget(item)
+                              setRenameNewName(item.name)
+                              setModalActionError(null)
+                            }}
+                            title="Rename"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            className="gacks-file-inspect-btn text-red-400 hover:text-red-300"
+                            onClick={() => {
+                              setDeleteTarget(item)
+                              setDeleteConfirmName('')
+                              setModalActionError(null)
+                            }}
+                            title="Delete"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+
+                {filtered.length === 0 && !loading && (
+                  <tr>
+                    <td colSpan={5} className="text-center py-12 text-gray-500 font-mono text-xs">
+                      This folder is empty.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="gacks-files-grid">
+            {filtered.map((item) => {
+              const isDir = item.type === 'dir'
+              const isSelected = selectedItem?.path === item.path
+              return (
+                <div
+                  key={item.path}
+                  className={`gacks-file-card ${isSelected ? 'border-[#00A3FF] bg-[#1a1c24]' : ''} ${
+                    isDir ? 'hover:border-[#00A3FF]/60 cursor-pointer' : ''
+                  }`}
+                  onClick={() => handleItemClick(item)}
+                  onDoubleClick={() => handleItemDoubleClick(item)}
+                >
+                  <div className="gacks-file-card-header">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      {getFileIcon(item)}
+                      <span className="text-sm font-semibold text-white font-mono truncate" title={item.name}>
+                        {item.name}
+                      </span>
+                    </div>
+
+                    {item.size !== undefined && !isDir && (
+                      <span className="text-xs font-mono text-gray-400 bg-white/5 px-2 py-0.5 rounded shrink-0">
+                        {formatBytes(item.size)}
+                      </span>
+                    )}
+                  </div>
+
+                  <p className="text-[11px] font-mono text-gray-400 mt-2">
+                    {getFileTypeLabel(item)} • {formatDate(item.modifiedAt)}
+                  </p>
+
+                  <div className="gacks-file-card-actions mt-3">
+                    {!isDir && (
+                      <button
+                        type="button"
+                        className="gacks-file-inspect-btn"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleOpenFilePreview(item.path)
+                        }}
+                        title="View file contents"
+                      >
+                        <Eye className="w-3.5 h-3.5 mr-1" />
+                        <span>Preview</span>
+                      </button>
+                    )}
+
+                    {!isDir && (
+                      <button
+                        type="button"
+                        className="gacks-file-inspect-btn text-[#00A3FF]"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleInspect(item.path)
+                        }}
+                        title="Ask Gacks to examine this file"
+                      >
+                        <Bot className="w-3.5 h-3.5 mr-1" />
+                        <span>Ask Gacks</span>
+                      </button>
+                    )}
+
+                    <div className="flex items-center gap-1 ml-auto" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        type="button"
+                        className="p-1 text-gray-400 hover:text-white"
+                        onClick={() => {
+                          setRenameTarget(item)
+                          setRenameNewName(item.name)
+                          setModalActionError(null)
+                        }}
+                        title="Rename"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        className="p-1 text-red-400 hover:text-red-300"
+                        onClick={() => {
+                          setDeleteTarget(item)
+                          setDeleteConfirmName('')
+                          setModalActionError(null)
+                        }}
+                        title="Delete"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {/* Explorer Bottom Status Bar */}
+        <div className="gacks-fm-status-bar">
+          <div className="flex items-center gap-3">
+            <span>
+              {filtered.length} items ({folderCount} folders, {fileCount} files)
+            </span>
+            {selectedItem && (
+              <span className="text-[#38BDF8]">
+                Selected: {selectedItem.name} {selectedItem.type === 'file' ? `(${formatBytes(selectedItem.size)})` : ''}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {currentDrive && <span>Volume {currentDrive}</span>}
+            <span className="text-gray-500">NTFS Filesystem</span>
+          </div>
+        </div>
       </div>
 
-      {/* Collapsible Terminal Task Drawer */}
+      {/* Collapsible Local Terminal Task Drawer */}
       <div className="gacks-terminal-drawer">
         <div
           className="gacks-terminal-header"
@@ -606,8 +887,8 @@ export const FilesPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-[11px] font-mono text-gray-400">
-              cwd: {currentSubpath !== '.' ? currentSubpath : activeWorkspace?.name || 'root'}
+            <span className="text-[11px] font-mono text-gray-400 truncate max-w-[280px]">
+              cwd: {currentPath || '.'}
             </span>
             <span className="text-xs text-[#00A3FF] font-mono">{terminalOpen ? '▲ Collapse' : '▼ Expand'}</span>
           </div>
@@ -642,7 +923,7 @@ export const FilesPage: React.FC = () => {
                 onClick={() => handleRunCommand('npm run lint')}
                 disabled={runningTerminal}
               >
-                <CheckCircle className="w-3 h-3 text-amber-400" />
+                <CheckCircle2 className="w-3 h-3 text-amber-400" />
                 <span>npm run lint</span>
               </button>
 
@@ -670,7 +951,7 @@ export const FilesPage: React.FC = () => {
               <input
                 type="text"
                 className="gacks-terminal-input"
-                placeholder="Enter development command (e.g. npm test, npx tsc --noEmit)..."
+                placeholder="Enter command in current directory (e.g. dir, git status, npm test)..."
                 value={customCommand}
                 onChange={(e) => setCustomCommand(e.target.value)}
                 disabled={runningTerminal}
@@ -689,17 +970,17 @@ export const FilesPage: React.FC = () => {
             <div className="gacks-terminal-screen">
               {activeTask ? (
                 <>
-                  <div className="text-gray-500 mb-2">
+                  <div className="text-gray-500 mb-2 font-mono text-xs">
                     $ {activeTask.command} (exit: {activeTask.exitCode ?? 'running'}, duration:{' '}
                     {activeTask.durationMs ? `${activeTask.durationMs}ms` : 'active'})
                   </div>
-                  {activeTask.stdout && <div className="text-gray-200">{activeTask.stdout}</div>}
-                  {activeTask.stderr && <div className="text-amber-400 mt-1">{activeTask.stderr}</div>}
-                  {activeTask.error && <div className="text-red-400 mt-1">{activeTask.error}</div>}
+                  {activeTask.stdout && <div className="text-gray-200 whitespace-pre-wrap">{activeTask.stdout}</div>}
+                  {activeTask.stderr && <div className="text-amber-400 mt-1 whitespace-pre-wrap">{activeTask.stderr}</div>}
+                  {activeTask.error && <div className="text-red-400 mt-1 whitespace-pre-wrap">{activeTask.error}</div>}
                 </>
               ) : (
-                <div className="text-gray-500 italic">
-                  No active terminal session. Select a task above or enter a command to run within the approved workspace.
+                <div className="text-gray-500 italic font-mono text-xs">
+                  No active terminal session. Select a preset task or enter a custom command to run in this folder.
                 </div>
               )}
             </div>
@@ -707,136 +988,49 @@ export const FilesPage: React.FC = () => {
         )}
       </div>
 
-      {/* Grant Access / Add Workspace Modal */}
-      {showAddModal && (
-        <div className="gacks-modal-overlay" onClick={() => setShowAddModal(false)}>
-          <div className="gacks-modal-window" onClick={(e) => e.stopPropagation()}>
+      {/* Modal: File Preview */}
+      {previewData && (
+        <div className="gacks-modal-overlay" onClick={() => setPreviewData(null)}>
+          <div className="gacks-modal-window" style={{ maxWidth: '820px' }} onClick={(e) => e.stopPropagation()}>
             <div className="gacks-modal-header">
-              <div className="flex items-center gap-2">
-                <FolderPlus className="w-4 h-4 text-[#00A3FF]" />
-                <span className="text-sm font-bold text-white">GRANT LOCAL WORKSPACE ACCESS</span>
+              <div className="flex items-center gap-2 min-w-0">
+                <FileCode className="w-4 h-4 text-[#00A3FF] shrink-0" />
+                <span className="text-xs font-mono text-white truncate" title={previewData.path}>
+                  {previewData.name} ({formatBytes(previewData.size)})
+                </span>
+                {previewData.truncated && (
+                  <span className="text-[10px] font-mono bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded">
+                    Truncated (1MB limit)
+                  </span>
+                )}
               </div>
-              <button
-                type="button"
-                className="text-gray-400 hover:text-white"
-                onClick={() => setShowAddModal(false)}
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleAddWorkspaceSubmit} className="gacks-modal-body">
-              <p className="text-xs text-gray-400">
-                Register an approved local directory for the GACKS AI Operator. All file modifications and terminal
-                commands will be strictly isolated to this path.
-              </p>
-
-              {modalError && (
-                <div className="p-3 bg-red-950/60 border border-red-800 text-red-300 text-xs rounded flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 shrink-0" />
-                  <span>{modalError}</span>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-xs font-mono text-gray-300 mb-1">
-                  Local Folder Path (Absolute):
-                </label>
-                <input
-                  type="text"
-                  className="w-full bg-[#0d0d10] border border-white/10 rounded px-3 py-2 text-xs font-mono text-white outline-none focus:border-[#00A3FF]"
-                  placeholder="e.g. C:/xampp/htdocs/MyProject"
-                  value={newPath}
-                  onChange={(e) => setNewPath(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono text-gray-300 mb-1">
-                  Workspace Display Name (Optional):
-                </label>
-                <input
-                  type="text"
-                  className="w-full bg-[#0d0d10] border border-white/10 rounded px-3 py-2 text-xs font-mono text-white outline-none focus:border-[#00A3FF]"
-                  placeholder="e.g. Client Web App"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono text-gray-300 mb-2">Granted Permissions:</label>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2 text-xs text-white font-mono cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={newPerms.read}
-                      onChange={(e) => setNewPerms({ ...newPerms, read: e.target.checked })}
-                    />
-                    <span>Read Files</span>
-                  </label>
-                  <label className="flex items-center gap-2 text-xs text-white font-mono cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={newPerms.write}
-                      onChange={(e) => setNewPerms({ ...newPerms, write: e.target.checked })}
-                    />
-                    <span>Write Files</span>
-                  </label>
-                  <label className="flex items-center gap-2 text-xs text-white font-mono cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={newPerms.terminal}
-                      onChange={(e) => setNewPerms({ ...newPerms, terminal: e.target.checked })}
-                    />
-                    <span>Terminal Commands</span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2 border-t border-white/10">
+              <div className="flex items-center gap-2 shrink-0">
                 <button
                   type="button"
-                  className="gacks-action-btn-secondary"
-                  onClick={() => setShowAddModal(false)}
+                  className="gacks-action-btn-secondary py-1 px-2.5"
+                  onClick={handleCopyPreview}
+                  title="Copy contents"
                 >
-                  Cancel
+                  {copiedPreview ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedPreview ? 'Copied' : 'Copy'}</span>
                 </button>
-                <button type="submit" className="gacks-action-btn-primary">
-                  Approve & Save Workspace
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* File Preview Modal */}
-      {previewFile && (
-        <div className="gacks-modal-overlay" onClick={() => setPreviewFile(null)}>
-          <div className="gacks-modal-window" onClick={(e) => e.stopPropagation()}>
-            <div className="gacks-modal-header">
-              <div className="flex items-center gap-2">
-                <FileCode className="w-4 h-4 text-[#00A3FF]" />
-                <span className="text-xs font-mono text-white">{previewFile.path}</span>
-              </div>
-              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   className="gacks-action-btn-primary py-1 px-2.5"
                   onClick={() => {
-                    const p = previewFile.path
-                    setPreviewFile(null)
+                    const p = previewData.path
+                    setPreviewData(null)
                     handleInspect(p)
                   }}
+                  title="Ask Gacks AI to inspect this file"
                 >
+                  <Bot className="w-3.5 h-3.5" />
                   <span>Ask Gacks</span>
                 </button>
                 <button
                   type="button"
                   className="text-gray-400 hover:text-white"
-                  onClick={() => setPreviewFile(null)}
+                  onClick={() => setPreviewData(null)}
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -844,14 +1038,223 @@ export const FilesPage: React.FC = () => {
             </div>
 
             <div className="gacks-modal-body p-0">
-              <pre className="p-4 text-xs font-mono text-gray-200 bg-[#0a0a0d] overflow-x-auto whitespace-pre-wrap max-h-[60vh] leading-relaxed">
-                {previewFile.content}
-              </pre>
+              {previewData.isBinary ? (
+                <div className="p-8 text-center text-gray-400 font-mono text-xs">
+                  <AlertTriangle className="w-8 h-8 text-amber-400 mx-auto mb-2" />
+                  <p>Binary or non-text file preview is not supported.</p>
+                  <p className="text-gray-500 text-[11px] mt-1">
+                    Open using native Windows desktop applications or reveal in Explorer.
+                  </p>
+                </div>
+              ) : (
+                <pre className="p-4 text-xs font-mono text-gray-200 bg-[#0a0a0d] overflow-x-auto whitespace-pre-wrap max-h-[65vh] leading-relaxed">
+                  {previewData.content}
+                </pre>
+              )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: New Folder */}
+      {showNewFolderModal && (
+        <div className="gacks-modal-overlay" onClick={() => setShowNewFolderModal(false)}>
+          <div className="gacks-modal-window" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="gacks-modal-header">
+              <div className="flex items-center gap-2">
+                <FolderPlus className="w-4 h-4 text-[#00A3FF]" />
+                <span className="text-sm font-bold text-white">NEW FOLDER</span>
+              </div>
+              <button
+                type="button"
+                className="text-gray-400 hover:text-white"
+                onClick={() => setShowNewFolderModal(false)}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateFolderSubmit} className="gacks-modal-body">
+              <p className="text-xs text-gray-400">
+                Create a new subfolder in: <span className="text-white font-mono">{currentPath}</span>
+              </p>
+
+              {modalActionError && (
+                <div className="p-2.5 bg-red-950/60 border border-red-800 text-red-300 text-xs rounded flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
+                  <span>{modalActionError}</span>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-mono text-gray-300 mb-1">Folder Name:</label>
+                <input
+                  type="text"
+                  className="w-full bg-[#0d0d10] border border-white/10 rounded px-3 py-2 text-xs font-mono text-white outline-none focus:border-[#00A3FF]"
+                  placeholder="e.g. documentation"
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  autoFocus
+                  required
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-white/10">
+                <button
+                  type="button"
+                  className="gacks-action-btn-secondary"
+                  onClick={() => setShowNewFolderModal(false)}
+                  disabled={isSubmittingAction}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="gacks-action-btn-primary"
+                  disabled={isSubmittingAction || !newFolderName.trim()}
+                >
+                  {isSubmittingAction ? 'Creating...' : 'Create Folder'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Rename */}
+      {renameTarget && (
+        <div className="gacks-modal-overlay" onClick={() => setRenameTarget(null)}>
+          <div className="gacks-modal-window" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="gacks-modal-header">
+              <div className="flex items-center gap-2">
+                <Edit2 className="w-4 h-4 text-[#00A3FF]" />
+                <span className="text-sm font-bold text-white">RENAME ENTRY</span>
+              </div>
+              <button
+                type="button"
+                className="text-gray-400 hover:text-white"
+                onClick={() => setRenameTarget(null)}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleRenameSubmit} className="gacks-modal-body">
+              <p className="text-xs text-gray-400">
+                Rename <span className="text-white font-mono font-semibold">{renameTarget.name}</span> to a new name.
+              </p>
+
+              {modalActionError && (
+                <div className="p-2.5 bg-red-950/60 border border-red-800 text-red-300 text-xs rounded flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
+                  <span>{modalActionError}</span>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-mono text-gray-300 mb-1">New Name:</label>
+                <input
+                  type="text"
+                  className="w-full bg-[#0d0d10] border border-white/10 rounded px-3 py-2 text-xs font-mono text-white outline-none focus:border-[#00A3FF]"
+                  value={renameNewName}
+                  onChange={(e) => setRenameNewName(e.target.value)}
+                  autoFocus
+                  required
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-white/10">
+                <button
+                  type="button"
+                  className="gacks-action-btn-secondary"
+                  onClick={() => setRenameTarget(null)}
+                  disabled={isSubmittingAction}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="gacks-action-btn-primary"
+                  disabled={isSubmittingAction || !renameNewName.trim() || renameNewName === renameTarget.name}
+                >
+                  {isSubmittingAction ? 'Renaming...' : 'Rename'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Delete Confirmation (Mandatory Exact Match) */}
+      {deleteTarget && (
+        <div className="gacks-modal-overlay" onClick={() => setDeleteTarget(null)}>
+          <div className="gacks-modal-window" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="gacks-modal-header">
+              <div className="flex items-center gap-2">
+                <Trash2 className="w-4 h-4 text-red-400" />
+                <span className="text-sm font-bold text-red-400">CONFIRM DELETION</span>
+              </div>
+              <button
+                type="button"
+                className="text-gray-400 hover:text-white"
+                onClick={() => setDeleteTarget(null)}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleDeleteSubmit} className="gacks-modal-body">
+              <div className="p-3 bg-red-950/40 border border-red-800/60 rounded text-xs text-red-300 flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold">This action permanently deletes the selected item:</p>
+                  <p className="font-mono text-white mt-1 break-all">{deleteTarget.path}</p>
+                </div>
+              </div>
+
+              {modalActionError && (
+                <div className="p-2.5 bg-red-950/60 border border-red-800 text-red-300 text-xs rounded flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
+                  <span>{modalActionError}</span>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-mono text-gray-300 mb-1">
+                  Type <span className="text-white font-bold font-mono">{deleteTarget.name}</span> to confirm:
+                </label>
+                <input
+                  type="text"
+                  className="w-full bg-[#0d0d10] border border-white/10 rounded px-3 py-2 text-xs font-mono text-white outline-none focus:border-red-500"
+                  placeholder={deleteTarget.name}
+                  value={deleteConfirmName}
+                  onChange={(e) => setDeleteConfirmName(e.target.value)}
+                  autoFocus
+                  required
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-white/10">
+                <button
+                  type="button"
+                  className="gacks-action-btn-secondary"
+                  onClick={() => setDeleteTarget(null)}
+                  disabled={isSubmittingAction}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-3 py-1.5 rounded text-xs font-semibold bg-red-600 hover:bg-red-500 text-white disabled:opacity-40 disabled:cursor-not-allowed transition"
+                  disabled={isSubmittingAction || deleteConfirmName !== deleteTarget.name}
+                >
+                  {isSubmittingAction ? 'Deleting...' : 'Permanently Delete'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
     </div>
   )
 }
-

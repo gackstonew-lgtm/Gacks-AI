@@ -26,6 +26,73 @@ export interface SystemHealthReport {
   status?: string
 }
 
+export interface NetworkAdapterInfo {
+  adapterName: string
+  adapterType?: string
+  linkSpeed?: string
+  status: 'Up' | 'Connected' | 'Disconnected' | 'Unknown'
+}
+
+export interface SystemMetrics {
+  cpuUsagePercent: number
+  memoryUsagePercent: number
+  memoryUsedBytes: number
+  memoryTotalBytes: number
+  memoryFreeBytes: number
+  storageUsagePercent: number
+  storageUsedBytes: number
+  storageTotalBytes: number
+  storageDrive: string
+  network: NetworkAdapterInfo
+  operationalState: 'operational' | 'degraded' | 'unavailable'
+  statusMessage: string
+  timestamp: number
+}
+
+export interface SystemCapabilities {
+  localSystemAccess: boolean
+  systemMetrics: boolean
+  filesystemAccess: boolean
+  platform: string
+}
+
+export interface LocalDrive {
+  drive: string
+  path: string
+  label: string
+}
+
+export interface LocalFileItem {
+  name: string
+  path: string
+  type: 'dir' | 'file'
+  size?: number
+  extension?: string
+  modifiedAt?: number
+  isSensitive?: boolean
+  isReadOnly?: boolean
+}
+
+export interface DirectoryListingResult {
+  currentPath: string
+  parentPath: string | null
+  drive: string
+  items: LocalFileItem[]
+  totalItems: number
+  totalDirs: number
+  totalFiles: number
+}
+
+export interface FilePreviewResult {
+  path: string
+  name: string
+  size: number
+  modifiedAt: number
+  content: string
+  isBinary: boolean
+  truncated: boolean
+}
+
 class ApiClient {
   private baseUrl = BRIDGE_HTTP_URL
   private isGatewayOnline: boolean | null = null
@@ -208,6 +275,71 @@ class ApiClient {
     return this.request('/api/v1/apis/test', {
       method: 'POST',
       body: JSON.stringify({ providerId }),
+    })
+  }
+
+  // --- Real Hardware Telemetry ---
+
+  public async getSystemMetrics(signal?: AbortSignal, isBackground = false): Promise<ApiResponse<SystemMetrics>> {
+    return this.request<SystemMetrics>('/api/v1/system/metrics', {
+      method: 'GET',
+      signal,
+      timeoutMs: 4500,
+      isBackground,
+    })
+  }
+
+  public async getSystemCapabilities(): Promise<ApiResponse<SystemCapabilities>> {
+    return this.request<SystemCapabilities>('/api/v1/system/capabilities', {
+      method: 'GET',
+      timeoutMs: 3000,
+    })
+  }
+
+  // --- Genuine Local Filesystem Operations ---
+
+  public async getFsDrives(): Promise<ApiResponse<{ drives: LocalDrive[]; defaultPath: string }>> {
+    return this.request<{ drives: LocalDrive[]; defaultPath: string }>('/api/v1/fs/drives', {
+      method: 'GET',
+      timeoutMs: 4000,
+    })
+  }
+
+  public async listDirectory(path?: string, signal?: AbortSignal): Promise<ApiResponse<DirectoryListingResult>> {
+    const qs = path ? `?path=${encodeURIComponent(path)}` : ''
+    return this.request<DirectoryListingResult>(`/api/v1/fs/list${qs}`, {
+      method: 'GET',
+      signal,
+      timeoutMs: 6000,
+    })
+  }
+
+  public async readFilePreview(filePath: string, signal?: AbortSignal): Promise<ApiResponse<FilePreviewResult>> {
+    return this.request<FilePreviewResult>(`/api/v1/fs/read?path=${encodeURIComponent(filePath)}`, {
+      method: 'GET',
+      signal,
+      timeoutMs: 6000,
+    })
+  }
+
+  public async createFolder(parentPath: string, folderName: string): Promise<ApiResponse<{ success: boolean; path: string }>> {
+    return this.request('/api/v1/fs/mkdir', {
+      method: 'POST',
+      body: JSON.stringify({ parentPath, folderName }),
+    })
+  }
+
+  public async renameFile(oldPath: string, newName: string): Promise<ApiResponse<{ success: boolean; path: string }>> {
+    return this.request('/api/v1/fs/rename', {
+      method: 'POST',
+      body: JSON.stringify({ oldPath, newName }),
+    })
+  }
+
+  public async deleteFile(targetPath: string, confirmName: string): Promise<ApiResponse<{ success: boolean }>> {
+    return this.request('/api/v1/fs/delete', {
+      method: 'POST',
+      body: JSON.stringify({ targetPath, confirmName }),
     })
   }
 }
