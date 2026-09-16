@@ -100,7 +100,11 @@ export class RemoteAgentTransport implements AgentTransport {
   }
 
   private scheduleReconnect() {
-    if (this.attempt >= this.RECONNECT_DELAYS.length) return
+    if (!BRIDGE_WS_URL) return
+    if (this.attempt >= this.RECONNECT_DELAYS.length) {
+      console.warn('[GACKS Transport] Gateway auto-reconnect paused after maximum attempts.')
+      return
+    }
     const delay = this.RECONNECT_DELAYS[this.attempt]
     this.attempt += 1
     clearTimeout(this.reconnectTimer)
@@ -176,6 +180,11 @@ export class RemoteAgentTransport implements AgentTransport {
     if (this.socket?.readyState === WebSocket.OPEN) return Promise.resolve(this.socket)
     if (this.connecting) return this.connecting
 
+    if (!BRIDGE_WS_URL) {
+      this.onConnection?.('lost')
+      return Promise.reject(new Error('GACKS Agent Gateway URL is unconfigured. In production, configure VITE_BRIDGE_URL.'))
+    }
+
     this.firstReady = this.deferred()
 
     this.connecting = new Promise<WebSocket>((resolve, reject) => {
@@ -230,11 +239,16 @@ export class RemoteAgentTransport implements AgentTransport {
   }
 
   public async warm(): Promise<void> {
-    await this.connect()
-    await Promise.race([
-      this.firstReady.promise,
-      new Promise<void>((resolve) => setTimeout(resolve, 2500)),
-    ])
+    if (!BRIDGE_WS_URL) return
+    try {
+      await this.connect()
+      await Promise.race([
+        this.firstReady.promise,
+        new Promise<void>((resolve) => setTimeout(resolve, 2500)),
+      ])
+    } catch {
+      // Warm up failure silently swallowed
+    }
   }
 
   public async ask(

@@ -99,9 +99,9 @@
         "projects"
       ],
       "createdAt": 1789455800159,
-      "updatedAt": 1789546040171,
-      "accessedAt": 1789546040170,
-      "accessCount": 72
+      "updatedAt": 1789550378166,
+      "accessedAt": 1789550378155,
+      "accessCount": 73
     },
     "mem-1789455800185-bwanj": {
       "id": "mem-1789455800185-bwanj",
@@ -116,9 +116,9 @@
         "london"
       ],
       "createdAt": 1789455800185,
-      "updatedAt": 1789548199792,
-      "accessedAt": 1789548199791,
-      "accessCount": 176
+      "updatedAt": 1789551545033,
+      "accessedAt": 1789551545023,
+      "accessCount": 178
     },
     "mem-1789465738534-ik7a3": {
       "id": "mem-1789465738534-ik7a3",
@@ -133,9 +133,9 @@
         "london"
       ],
       "createdAt": 1789465738534,
-      "updatedAt": 1789548199792,
-      "accessedAt": 1789548199791,
-      "accessCount": 116
+      "updatedAt": 1789551545033,
+      "accessedAt": 1789551545023,
+      "accessCount": 118
     },
     "mem-1789503411710-wjb6q": {
       "id": "mem-1789503411710-wjb6q",
@@ -224,8 +224,8 @@
       "confidence": 0.9,
       "tags": [],
       "createdAt": 1789505807506,
-      "updatedAt": 1789547904430,
-      "accessedAt": 1789547904430,
+      "updatedAt": 1789551559831,
+      "accessedAt": 1789551559831,
       "accessCount": 2
     },
     "mem-1789505807516-w7xwv": {
@@ -363,8 +363,8 @@
       "accessedAt": 1789544067938,
       "accessCount": 3
     },
-    "mem-1789546532432-ciaiy": {
-      "id": "mem-1789546532432-ciaiy",
+    "mem-1789550862335-xfcp2": {
+      "id": "mem-1789550862335-xfcp2",
       "userId": "default",
       "workspaceId": "default-workspace",
       "scope": "workspace",
@@ -377,13 +377,13 @@
         "xauusd",
         "london"
       ],
-      "createdAt": 1789546532432,
-      "updatedAt": 1789546532433,
-      "accessedAt": 1789546532432,
+      "createdAt": 1789550862335,
+      "updatedAt": 1789550862336,
+      "accessedAt": 1789550862336,
       "accessCount": 1
     },
-    "mem-1789547895149-5go1b": {
-      "id": "mem-1789547895149-5go1b",
+    "mem-1789551144486-m77hs": {
+      "id": "mem-1789551144486-m77hs",
       "userId": "default",
       "workspaceId": "default-workspace",
       "scope": "workspace",
@@ -396,13 +396,51 @@
         "xauusd",
         "london"
       ],
-      "createdAt": 1789547895149,
-      "updatedAt": 1789547895152,
-      "accessedAt": 1789547895150,
+      "createdAt": 1789551144486,
+      "updatedAt": 1789551144488,
+      "accessedAt": 1789551144487,
       "accessCount": 1
     },
-    "mem-1789547904420-rze0x": {
-      "id": "mem-1789547904420-rze0x",
+    "mem-1789551288096-gd8rs": {
+      "id": "mem-1789551288096-gd8rs",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789551288096,
+      "updatedAt": 1789551288100,
+      "accessedAt": 1789551288098,
+      "accessCount": 1
+    },
+    "mem-1789551545019-v2654": {
+      "id": "mem-1789551545019-v2654",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789551545019,
+      "updatedAt": 1789551545033,
+      "accessedAt": 1789551545023,
+      "accessCount": 1
+    },
+    "mem-1789551559826-pe35g": {
+      "id": "mem-1789551559826-pe35g",
       "userId": "exec-1",
       "workspaceId": "tenant-alpha",
       "scope": "workspace",
@@ -411,13 +449,13 @@
       "importance": 3,
       "confidence": 0.9,
       "tags": [],
-      "createdAt": 1789547904421,
-      "updatedAt": 1789547904430,
-      "accessedAt": 1789547904430,
+      "createdAt": 1789551559826,
+      "updatedAt": 1789551559831,
+      "accessedAt": 1789551559831,
       "accessCount": 1
     },
-    "mem-1789547904429-zvwvx": {
-      "id": "mem-1789547904429-zvwvx",
+    "mem-1789551559829-tdug7": {
+      "id": "mem-1789551559829-tdug7",
       "userId": "exec-2",
       "workspaceId": "tenant-beta",
       "scope": "workspace",
@@ -426,29 +464,10 @@
       "importance": 3,
       "confidence": 0.9,
       "tags": [],
-      "createdAt": 1789547904429,
-      "updatedAt": 1789547904429,
-      "accessedAt": 1789547904429,
+      "createdAt": 1789551559829,
+      "updatedAt": 1789551559829,
+      "accessedAt": 1789551559829,
       "accessCount": 0
-    },
-    "mem-1789548199790-eyb5p": {
-      "id": "mem-1789548199790-eyb5p",
-      "userId": "default",
-      "workspaceId": "default-workspace",
-      "scope": "workspace",
-      "category": "semantic",
-      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
-      "importance": 5,
-      "confidence": 0.9,
-      "tags": [
-        "trading",
-        "xauusd",
-        "london"
-      ],
-      "createdAt": 1789548199790,
-      "updatedAt": 1789548199792,
-      "accessedAt": 1789548199791,
-      "accessCount": 1
     }
   },
   "entities": {
@@ -469,8 +488,188 @@
   "relations": {},
   "auditLogs": [
     {
-      "id": "audit-1789548202046-2xugt",
-      "timestamp": 1789548202047,
+      "id": "audit-1789551617119-4kdbg",
+      "timestamp": 1789551617119,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 18616,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789551560855-imofr",
+      "timestamp": 1789551560855,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "business-communication",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789551560855-0jdh",
+        "action": "Send Outbound WhatsApp to +254711223344",
+        "target": "+254711223344",
+        "costUsd": 0,
+        "potentialImpact": "MEDIUM"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789551560838-i789w",
+      "timestamp": 1789551560838,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-business",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789551560838-xupf",
+        "action": "Publish Live Meta Campaign",
+        "target": "Unapproved Campaign",
+        "costUsd": 3000,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789551560756-x3r35",
+      "timestamp": 1789551560756,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "execute_meta_ad_action",
+      "action": "AUTOMATION_QUEUED_APPROVAL",
+      "inputsMetadata": {
+        "ruleId": "auto-3",
+        "approvalRequestId": "appr-1789551560756-3s6c"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789551560756-bza76",
+      "timestamp": 1789551560756,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "automation-engine",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789551560756-3s6c",
+        "action": "Automation Triggered: Meta Ad Daily Budget Scale (> $100/day)",
+        "target": "execute_meta_ad_action",
+        "costUsd": 0,
+        "potentialImpact": "HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789551560756-kxrtl",
+      "timestamp": 1789551560756,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "generate_morning_briefing",
+      "action": "AUTOMATION_EXECUTED",
+      "inputsMetadata": {
+        "ruleId": "auto-1",
+        "eventPayload": {}
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789551559957-n7uq8",
+      "timestamp": 1789551559957,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_APPROVED",
+      "inputsMetadata": {
+        "requestId": "appr-1789551559955-dh8h",
+        "action": "Scale Meta Campaign Budget",
+        "resolvedBy": "chief_officer"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789551559956-sv5y2",
+      "timestamp": 1789551559956,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789551559955-dh8h",
+        "action": "Scale Meta Campaign Budget",
+        "target": "Q3 Enterprise Campaign",
+        "costUsd": 1500,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789551559925-redju",
+      "timestamp": 1789551559925,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789551559923-lgn7",
+        "action": "Publish META Ad Campaign: Enterprise Logistics Expansion",
+        "target": "Enterprise Logistics Expansion",
+        "costUsd": 2250,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789551322342-v7vds",
+      "timestamp": 1789551322343,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 8973,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789551291957-69kge",
+      "timestamp": 1789551291957,
       "userId": "default",
       "sessionId": "session-default",
       "agentRunId": "run-default",
@@ -481,12 +680,12 @@
       },
       "permissionDecision": "ALLOWED",
       "resultSuccess": true,
-      "durationMs": 0,
+      "durationMs": 1,
       "verificationStatus": "verified_success"
     },
     {
-      "id": "audit-1789548202045-bap2e",
-      "timestamp": 1789548202045,
+      "id": "audit-1789551291954-sauy8",
+      "timestamp": 1789551291954,
       "userId": "default",
       "sessionId": "session-default",
       "agentRunId": "run-default",
@@ -507,8 +706,8 @@
       "verificationStatus": "verified_success"
     },
     {
-      "id": "audit-1789548193119-j3yuf",
-      "timestamp": 1789548193119,
+      "id": "audit-1789551148689-6ev4o",
+      "timestamp": 1789551148689,
       "userId": "default",
       "sessionId": "session-default",
       "agentRunId": "run-default",
@@ -523,8 +722,8 @@
       "verificationStatus": "verified_success"
     },
     {
-      "id": "audit-1789548193117-ublb0",
-      "timestamp": 1789548193117,
+      "id": "audit-1789551148688-h2wot",
+      "timestamp": 1789551148688,
       "userId": "default",
       "sessionId": "session-default",
       "agentRunId": "run-default",
@@ -545,8 +744,8 @@
       "verificationStatus": "verified_success"
     },
     {
-      "id": "audit-1789548177656-08y8j",
-      "timestamp": 1789548177656,
+      "id": "audit-1789550865735-qd5vb",
+      "timestamp": 1789550865735,
       "userId": "default",
       "sessionId": "session-default",
       "agentRunId": "run-default",
@@ -557,12 +756,12 @@
       },
       "permissionDecision": "ALLOWED",
       "resultSuccess": true,
-      "durationMs": 1,
+      "durationMs": 2,
       "verificationStatus": "verified_success"
     },
     {
-      "id": "audit-1789548177655-9bdg2",
-      "timestamp": 1789548177655,
+      "id": "audit-1789550865731-zxyt8",
+      "timestamp": 1789550865731,
       "userId": "default",
       "sessionId": "session-default",
       "agentRunId": "run-default",
@@ -579,19 +778,19 @@
       },
       "permissionDecision": "ALLOWED",
       "resultSuccess": true,
-      "durationMs": 1,
+      "durationMs": 5,
       "verificationStatus": "verified_success"
     },
     {
-      "id": "audit-1789548148617-mioqb",
-      "timestamp": 1789548148617,
+      "id": "audit-1789550382735-krsh5",
+      "timestamp": 1789550382735,
       "userId": "default",
       "sessionId": "session-default",
       "agentRunId": "run-default",
       "tool": "webhunt_research",
       "action": "executed",
       "inputsMetadata": {
-        "topic": "Gold XAUUSD forex market sentiment"
+        "topic": "Gold XAUUSD forex market analysis trends today"
       },
       "permissionDecision": "ALLOWED",
       "resultSuccess": true,
@@ -599,253 +798,17 @@
       "verificationStatus": "verified_success"
     },
     {
-      "id": "audit-1789548148616-hlvcf",
-      "timestamp": 1789548148616,
+      "id": "audit-1789550382734-cjwav",
+      "timestamp": 1789550382734,
       "userId": "default",
       "sessionId": "session-default",
       "agentRunId": "run-default",
-      "tool": "audit_forex_trade",
+      "tool": "analyze_business_growth",
       "action": "executed",
-      "inputsMetadata": {
-        "pair": "XAUUSD",
-        "direction": "LONG",
-        "entryPrice": 2650.5,
-        "stopLoss": 2640,
-        "takeProfit": 2680,
-        "accountBalanceUsd": 10000,
-        "riskPercent": 1.5
-      },
+      "inputsMetadata": {},
       "permissionDecision": "ALLOWED",
       "resultSuccess": true,
-      "durationMs": 1,
-      "verificationStatus": "verified_success"
-    },
-    {
-      "id": "audit-1789547904694-xdbfs",
-      "timestamp": 1789547904694,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "business-communication",
-      "action": "APPROVAL_REQUESTED",
-      "inputsMetadata": {
-        "requestId": "appr-1789547904694-h78r",
-        "action": "Send Outbound WhatsApp to +254711223344",
-        "target": "+254711223344",
-        "costUsd": 0,
-        "potentialImpact": "MEDIUM"
-      },
-      "permissionDecision": "CONFIRMED",
-      "resultSuccess": true,
-      "durationMs": 0,
-      "verificationStatus": "unverified_success"
-    },
-    {
-      "id": "audit-1789547904693-husfb",
-      "timestamp": 1789547904693,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "meta-business",
-      "action": "APPROVAL_REQUESTED",
-      "inputsMetadata": {
-        "requestId": "appr-1789547904693-vas0",
-        "action": "Publish Live Meta Campaign",
-        "target": "Unapproved Campaign",
-        "costUsd": 3000,
-        "potentialImpact": "FINANCIAL_HIGH"
-      },
-      "permissionDecision": "CONFIRMED",
-      "resultSuccess": true,
-      "durationMs": 0,
-      "verificationStatus": "unverified_success"
-    },
-    {
-      "id": "audit-1789547904690-1215b",
-      "timestamp": 1789547904691,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "execute_meta_ad_action",
-      "action": "AUTOMATION_QUEUED_APPROVAL",
-      "inputsMetadata": {
-        "ruleId": "auto-3",
-        "approvalRequestId": "appr-1789547904689-8n5z"
-      },
-      "permissionDecision": "CONFIRMED",
-      "resultSuccess": true,
-      "durationMs": 0,
-      "verificationStatus": "unverified_success"
-    },
-    {
-      "id": "audit-1789547904690-krxir",
-      "timestamp": 1789547904690,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "automation-engine",
-      "action": "APPROVAL_REQUESTED",
-      "inputsMetadata": {
-        "requestId": "appr-1789547904689-8n5z",
-        "action": "Automation Triggered: Meta Ad Daily Budget Scale (> $100/day)",
-        "target": "execute_meta_ad_action",
-        "costUsd": 0,
-        "potentialImpact": "HIGH"
-      },
-      "permissionDecision": "CONFIRMED",
-      "resultSuccess": true,
-      "durationMs": 0,
-      "verificationStatus": "unverified_success"
-    },
-    {
-      "id": "audit-1789547904684-5nhv2",
-      "timestamp": 1789547904684,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "generate_morning_briefing",
-      "action": "AUTOMATION_EXECUTED",
-      "inputsMetadata": {
-        "ruleId": "auto-1",
-        "eventPayload": {}
-      },
-      "permissionDecision": "ALLOWED",
-      "resultSuccess": true,
-      "durationMs": 0,
-      "verificationStatus": "unverified_success"
-    },
-    {
-      "id": "audit-1789547904471-359in",
-      "timestamp": 1789547904471,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "meta-ads",
-      "action": "APPROVAL_APPROVED",
-      "inputsMetadata": {
-        "requestId": "appr-1789547904471-augy",
-        "action": "Scale Meta Campaign Budget",
-        "resolvedBy": "chief_officer"
-      },
-      "permissionDecision": "ALLOWED",
-      "resultSuccess": true,
-      "durationMs": 0,
-      "verificationStatus": "unverified_success"
-    },
-    {
-      "id": "audit-1789547904471-6e5ct",
-      "timestamp": 1789547904471,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "meta-ads",
-      "action": "APPROVAL_REQUESTED",
-      "inputsMetadata": {
-        "requestId": "appr-1789547904471-augy",
-        "action": "Scale Meta Campaign Budget",
-        "target": "Q3 Enterprise Campaign",
-        "costUsd": 1500,
-        "potentialImpact": "FINANCIAL_HIGH"
-      },
-      "permissionDecision": "CONFIRMED",
-      "resultSuccess": true,
-      "durationMs": 0,
-      "verificationStatus": "unverified_success"
-    },
-    {
-      "id": "audit-1789547904455-7gau7",
-      "timestamp": 1789547904455,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "meta-ads",
-      "action": "APPROVAL_REQUESTED",
-      "inputsMetadata": {
-        "requestId": "appr-1789547904452-80xs",
-        "action": "Publish META Ad Campaign: Enterprise Logistics Expansion",
-        "target": "Enterprise Logistics Expansion",
-        "costUsd": 2250,
-        "potentialImpact": "FINANCIAL_HIGH"
-      },
-      "permissionDecision": "CONFIRMED",
-      "resultSuccess": true,
-      "durationMs": 0,
-      "verificationStatus": "unverified_success"
-    },
-    {
-      "id": "audit-1789547899082-jzrg1",
-      "timestamp": 1789547899082,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "webhunt_research",
-      "action": "executed",
-      "inputsMetadata": {
-        "topic": "Gold XAUUSD forex market sentiment"
-      },
-      "permissionDecision": "ALLOWED",
-      "resultSuccess": true,
-      "durationMs": 1,
-      "verificationStatus": "verified_success"
-    },
-    {
-      "id": "audit-1789547899080-27386",
-      "timestamp": 1789547899080,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "audit_forex_trade",
-      "action": "executed",
-      "inputsMetadata": {
-        "pair": "XAUUSD",
-        "direction": "LONG",
-        "entryPrice": 2650.5,
-        "stopLoss": 2640,
-        "takeProfit": 2680,
-        "accountBalanceUsd": 10000,
-        "riskPercent": 1.5
-      },
-      "permissionDecision": "ALLOWED",
-      "resultSuccess": true,
-      "durationMs": 1,
-      "verificationStatus": "verified_success"
-    },
-    {
-      "id": "audit-1789546535623-u7wdx",
-      "timestamp": 1789546535623,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "webhunt_research",
-      "action": "executed",
-      "inputsMetadata": {
-        "topic": "Gold XAUUSD forex market sentiment"
-      },
-      "permissionDecision": "ALLOWED",
-      "resultSuccess": true,
-      "durationMs": 1,
-      "verificationStatus": "verified_success"
-    },
-    {
-      "id": "audit-1789546535621-9betc",
-      "timestamp": 1789546535621,
-      "userId": "default",
-      "sessionId": "session-default",
-      "agentRunId": "run-default",
-      "tool": "audit_forex_trade",
-      "action": "executed",
-      "inputsMetadata": {
-        "pair": "XAUUSD",
-        "direction": "LONG",
-        "entryPrice": 2650.5,
-        "stopLoss": 2640,
-        "takeProfit": 2680,
-        "accountBalanceUsd": 10000,
-        "riskPercent": 1.5
-      },
-      "permissionDecision": "ALLOWED",
-      "resultSuccess": true,
-      "durationMs": 4,
+      "durationMs": 2,
       "verificationStatus": "verified_success"
     },
     {

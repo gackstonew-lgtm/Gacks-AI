@@ -36,24 +36,52 @@ function flag(_name: string, raw: unknown, fallback: boolean): boolean {
 
 /**
  * Target Agent Gateway URL.
- * Automatically resolves to current origin over WSS when deployed over HTTPS,
- * or ws://localhost:8787 in local development.
+ * Automatically resolves to custom VITE_BRIDGE_URL / VITE_WS_URL,
+ * ws://localhost:8787 in local development,
+ * or empty string in remote production when a dedicated backend is not configured.
  */
 function resolveGatewayWsUrl(): string {
-  const custom = str(import.meta.env.VITE_BRIDGE_URL)
+  const custom = str(import.meta.env.VITE_BRIDGE_URL) || str(import.meta.env.VITE_WS_URL)
   if (custom) return custom
 
   if (typeof window !== 'undefined' && window.location) {
-    if (window.location.protocol === 'https:') {
-      return `wss://${window.location.host}/ws`
+    const isLocal =
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname === '0.0.0.0'
+    if (isLocal) {
+      return `ws://${window.location.hostname}:8787`
     }
-    return `ws://${window.location.hostname}:8787`
+    // In production on static cloud hosts (e.g. Vercel), do NOT default to wss://${host}/ws
+    // unless explicitly configured via VITE_BRIDGE_URL.
+    return ''
   }
   return 'ws://localhost:8787'
 }
 
+function resolveGatewayHttpUrl(): string {
+  const custom = str(import.meta.env.VITE_BRIDGE_HTTP_URL) || str(import.meta.env.VITE_API_URL)
+  if (custom) return custom
+
+  const ws = resolveGatewayWsUrl()
+  if (ws) {
+    return ws.replace(/^ws/, 'http').replace(/\/ws\/?$/, '')
+  }
+  if (typeof window !== 'undefined' && window.location) {
+    const isLocal =
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname === '0.0.0.0'
+    if (isLocal) {
+      return `http://${window.location.hostname}:8787`
+    }
+  }
+  return ''
+}
+
 export const BRIDGE_WS_URL = resolveGatewayWsUrl()
-export const BRIDGE_HTTP_URL = BRIDGE_WS_URL.replace(/^ws/, 'http').replace(/\/ws\/?$/, '')
+export const BRIDGE_HTTP_URL = resolveGatewayHttpUrl()
+export const IS_GATEWAY_CONFIGURED = Boolean(BRIDGE_WS_URL || BRIDGE_HTTP_URL)
 
 /**
  * Speech output configuration.

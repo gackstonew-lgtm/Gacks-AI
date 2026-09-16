@@ -18,6 +18,7 @@ import { webHuntDeltaAgent } from '../business/agents/research-agent.js'
 import { crmService } from '../business/crm-service.js'
 import { approvalCenter } from '../business/approval-center.js'
 import { automationEngine } from '../business/automation-engine.js'
+import { windowsSystemService } from '../system/windows-system-service.js'
 import type { RiskLevel, ToolResult, VerificationStatus } from '../types.js'
 
 export interface ToolDefinition {
@@ -1400,6 +1401,184 @@ export class ToolRegistryV2 {
       },
       execute: async (args) => {
         return await automationEngine.triggerRule(String(args.ruleId), (args.payload as any) || {})
+      },
+    })
+
+    // --- Windows System OS & Hardware Integration Tools ---
+
+    this.registerTool({
+      name: 'system_get_hardware_details',
+      description: 'Query comprehensive real-time Windows hardware vitals: CPU model, core counts, utilization, RAM breakdown, GPU status, battery/power, connected displays, and storage drives.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {},
+      },
+      execute: async () => {
+        return await windowsSystemService.getHardwareReport()
+      },
+    })
+
+    this.registerTool({
+      name: 'system_get_devices',
+      description: 'Query connected devices and network telemetry: active Wi-Fi SSID and signal strength, Bluetooth radios/devices, network adapters, audio endpoints, and printers.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {},
+      },
+      execute: async () => {
+        return await windowsSystemService.getDevicesReport()
+      },
+    })
+
+    this.registerTool({
+      name: 'system_get_processes',
+      description: 'Inspect active running processes and resource consumers on the Windows system (Task Manager view).',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          limit: { type: 'INTEGER', description: 'Maximum number of processes to return (default 35).' },
+        },
+      },
+      execute: async (args) => {
+        return await windowsSystemService.getProcesses(Number(args.limit || 35))
+      },
+    })
+
+    this.registerTool({
+      name: 'system_terminate_process',
+      description: 'Safely terminate an active process by PID and process name. Requires explicit confirmation and blocks termination of core Windows system processes.',
+      category: 'write',
+      riskLevel: 3,
+      requiresConfirmation: true,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          pid: { type: 'INTEGER', description: 'Target process ID.' },
+          confirmName: { type: 'STRING', description: 'Process name for confirmation safety check.' },
+        },
+        required: ['pid', 'confirmName'],
+      },
+      execute: async (args, context) => {
+        return await windowsSystemService.terminateProcess(
+          Number(args.pid),
+          String(args.confirmName),
+          context?.hasUserConfirmation ?? false,
+        )
+      },
+    })
+
+    this.registerTool({
+      name: 'system_get_apps',
+      description: 'Discover installed Windows desktop applications and inspect currently running applications.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {},
+      },
+      execute: async () => {
+        const [installed, running] = await Promise.all([
+          windowsSystemService.getInstalledApps(),
+          windowsSystemService.getRunningApps(),
+        ])
+        return { installed, running }
+      },
+    })
+
+    this.registerTool({
+      name: 'system_launch_app',
+      description: 'Launch a verified Windows application or program. Requires explicit user confirmation and strictly rejects dangerous scripts.',
+      category: 'write',
+      riskLevel: 2,
+      requiresConfirmation: true,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          app: { type: 'STRING', description: 'Application executable name or registered command (e.g. "notepad.exe", "calc.exe").' },
+        },
+        required: ['app'],
+      },
+      execute: async (args, context) => {
+        return await windowsSystemService.launchApp(String(args.app), context?.hasUserConfirmation ?? false)
+      },
+    })
+
+    this.registerTool({
+      name: 'system_read_clipboard',
+      description: 'Read the current plain text contents of the Windows system clipboard.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {},
+      },
+      execute: async () => {
+        return await windowsSystemService.readClipboard(true)
+      },
+    })
+
+    this.registerTool({
+      name: 'system_write_clipboard',
+      description: 'Copy text to the Windows system clipboard.',
+      category: 'write',
+      riskLevel: 1,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          text: { type: 'STRING', description: 'Text string to copy to the clipboard.' },
+        },
+        required: ['text'],
+      },
+      execute: async (args) => {
+        return await windowsSystemService.writeClipboard(String(args.text), true)
+      },
+    })
+
+    this.registerTool({
+      name: 'system_send_notification',
+      description: 'Send a native Windows desktop toast notification or system banner.',
+      category: 'communication',
+      riskLevel: 2,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          title: { type: 'STRING', description: 'Notification title.' },
+          message: { type: 'STRING', description: 'Notification body message.' },
+        },
+        required: ['title', 'message'],
+      },
+      execute: async (args) => {
+        return await windowsSystemService.sendNotification(String(args.title), String(args.message))
+      },
+    })
+
+    this.registerTool({
+      name: 'system_get_services',
+      description: 'Inspect running Windows system services in a safe, read-only mode.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          limit: { type: 'INTEGER', description: 'Maximum number of running services to inspect (default 30).' },
+        },
+      },
+      execute: async (args) => {
+        return await windowsSystemService.getRunningServices(Number(args.limit || 30))
       },
     })
   }

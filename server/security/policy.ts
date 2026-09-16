@@ -32,21 +32,21 @@ export class PolicyEngine {
 
     // Destructive / Security (Level 3)
     if (
-      /(delete|destroy|drop|format|unlink|kill|wipe|rmdir|remove_file|exec_shell|run_bash)/i.test(
+      /(delete|destroy|drop|format|unlink|kill|terminate|wipe|rmdir|remove_file|exec_shell|run_bash)/i.test(
         name,
       )
     ) {
       return RiskLevels.DESTRUCTIVE_SECURITY
     }
 
-    // External side effect (Level 2)
-    if (/(send_email|send_whatsapp|post_message|publish|tweet|outbound)/i.test(name)) {
+    // External side effect / Governed execution (Level 2)
+    if (/(send_email|send_whatsapp|post_message|publish|tweet|outbound|launch_app|send_notification)/i.test(name)) {
       return RiskLevels.EXTERNAL_SIDE_EFFECT
     }
 
     // Low-risk write (Level 1)
     if (
-      /(write_file|create_task|save_note|patch_ui|ui_theme|ui_effect|ui_reset|edit_file)/i.test(
+      /(write_file|create_task|save_note|patch_ui|ui_theme|ui_effect|ui_reset|edit_file|write_clipboard)/i.test(
         name,
       )
     ) {

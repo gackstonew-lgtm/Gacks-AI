@@ -29,7 +29,6 @@ export const GacksVoiceVisualization: React.FC = () => {
   // Transition visibility state
   const isActive = ACTIVE_PHASES.includes(phase)
   const [shouldRender, setShouldRender] = useState(isActive)
-  const [transitionProgress, setTransitionProgress] = useState(isActive ? 1 : 0)
   const [dismissed, setDismissed] = useState(false)
 
   // Reset dismissed state whenever a new active voice interaction begins
@@ -194,12 +193,15 @@ export const GacksVoiceVisualization: React.FC = () => {
         animRef.current.scale = 0.88 + animRef.current.opacity * 0.12
         if (animRef.current.opacity <= 0.005) {
           setShouldRender(false)
-          setTransitionProgress(0)
           return // Stop animation loop when idle
         }
       }
 
-      setTransitionProgress(animRef.current.opacity)
+      // High-performance direct DOM mutation to prevent 60-120fps React re-renders
+      if (containerRef.current) {
+        containerRef.current.style.opacity = String(animRef.current.opacity)
+        containerRef.current.style.transform = `translate(-50%, -50%) scale(${animRef.current.scale})`
+      }
 
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       const width = canvas.width / dpr
@@ -358,8 +360,8 @@ export const GacksVoiceVisualization: React.FC = () => {
       ref={containerRef}
       className="gacks-voice-overlay-root"
       style={{
-        opacity: transitionProgress,
-        transform: `translate(-50%, -50%) scale(${0.88 + transitionProgress * 0.12})`,
+        opacity: isActive ? 1 : 0,
+        transform: `translate(-50%, -50%) scale(${isActive ? 1 : 0.88})`,
       }}
       aria-live="polite"
       aria-label={`Insight Voice Assistant: ${stateLabel}`}

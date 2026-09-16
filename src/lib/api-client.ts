@@ -49,11 +49,196 @@ export interface SystemMetrics {
   timestamp: number
 }
 
+export type CapabilityId =
+  | 'system_metrics'
+  | 'hardware_devices'
+  | 'filesystem'
+  | 'processes'
+  | 'applications'
+  | 'clipboard'
+  | 'notifications'
+  | 'windows_services'
+
+export type PermissionState = 'granted' | 'prompt' | 'denied' | 'admin_required' | 'unavailable'
+
+export type RiskLevel = 'read' | 'write' | 'control' | 'destructive' | 'privileged'
+
+export interface CapabilityMeta {
+  id: CapabilityId
+  name: string
+  description: string
+  category: 'Telemetry' | 'Devices' | 'OS Operations' | 'Security'
+  riskLevel: RiskLevel
+  defaultState: PermissionState
+  currentState: PermissionState
+  supportedOnPlatform: boolean
+  requiresAdmin: boolean
+  lastUsedTimestamp?: number
+}
+
+export interface CapabilityRegistryStatus {
+  platform: string
+  isWindows: boolean
+  isLocalEnvironment: boolean
+  capabilities: Record<CapabilityId, CapabilityMeta>
+  timestamp: number
+}
+
 export interface SystemCapabilities {
   localSystemAccess: boolean
   systemMetrics: boolean
   filesystemAccess: boolean
   platform: string
+  isWindows?: boolean
+  capabilities?: Record<CapabilityId, CapabilityMeta>
+}
+
+export interface CpuTelemetry {
+  model: string
+  physicalCores: number
+  logicalCores: number
+  speedMhz: number
+  utilizationPercent: number
+  architecture: string
+}
+
+export interface MemoryTelemetry {
+  totalBytes: number
+  usedBytes: number
+  freeBytes: number
+  usagePercent: number
+}
+
+export interface GpuTelemetry {
+  available: boolean
+  name: string
+  driverVersion?: string
+  videoProcessor?: string
+  adapterRamBytes?: number
+  status: string
+}
+
+export interface PowerTelemetry {
+  hasBattery: boolean
+  acConnected: boolean
+  chargePercent: number
+  status: string
+}
+
+export interface DisplayTelemetry {
+  name: string
+  resolution: string
+  refreshRateHz: number
+  status: string
+}
+
+export interface DriveTelemetry {
+  drive: string
+  label: string
+  totalBytes: number
+  usedBytes: number
+  freeBytes: number
+  usagePercent: number
+}
+
+export interface HardwareReport {
+  cpu: CpuTelemetry
+  memory: MemoryTelemetry
+  gpu: GpuTelemetry
+  power: PowerTelemetry
+  displays: DisplayTelemetry[]
+  drives: DriveTelemetry[]
+  uptimeSeconds: number
+  platform: string
+  hostname: string
+  timestamp: number
+}
+
+export interface WifiInfo {
+  connected: boolean
+  ssid?: string
+  signalPercent?: number
+  interfaceName?: string
+  radioType?: string
+  state?: string
+}
+
+export interface BluetoothDevice {
+  name: string
+  status: string
+  present: boolean
+}
+
+export interface NetworkInterfaceInfo {
+  name: string
+  description?: string
+  linkSpeed?: string
+  status: string
+  macAddress?: string
+}
+
+export interface AudioDevice {
+  name: string
+  manufacturer?: string
+  status: string
+}
+
+export interface PrinterInfo {
+  name: string
+  driverName?: string
+  isDefault: boolean
+  status: string
+  jobCount: number
+}
+
+export interface DevicesReport {
+  wifi: WifiInfo
+  bluetoothDevices: BluetoothDevice[]
+  networkAdapters: NetworkInterfaceInfo[]
+  audioDevices: AudioDevice[]
+  printers: PrinterInfo[]
+  timestamp: number
+}
+
+export interface ProcessItem {
+  pid: number
+  name: string
+  cpuSeconds: number
+  memoryBytes: number
+  memoryMb: number
+  responding: boolean
+  isSystemProcess: boolean
+}
+
+export interface DesktopApp {
+  name: string
+  version?: string
+  publisher?: string
+  installLocation?: string
+  isRunning?: boolean
+  pid?: number
+}
+
+export interface WindowsServiceInfo {
+  name: string
+  displayName: string
+  status: string
+  startType?: string
+}
+
+export interface SystemAuditEntry {
+  id: string
+  timestamp: number
+  capability: CapabilityId
+  action: string
+  initiator: 'ai' | 'operator' | 'system'
+  inputs: Record<string, unknown>
+  riskLevel: RiskLevel
+  confirmationState: 'granted' | 'confirmed' | 'blocked' | 'denied'
+  success: boolean
+  durationMs: number
+  error?: string
+  resultSummary?: string
 }
 
 export interface LocalDrive {
@@ -134,7 +319,17 @@ class ApiClient {
     const isBackground = Boolean(options.isBackground)
     const now = Date.now()
 
-    // 1. Circuit breaker: If known offline and in cooldown, skip background polling to prevent console flood
+    // 1. Guard against unconfigured gateway on static cloud hosting
+    if (!this.baseUrl) {
+      return {
+        ok: false,
+        status: 0,
+        error: 'Remote Agent Gateway unconfigured. In production, configure VITE_API_URL.',
+        isOffline: true,
+      }
+    }
+
+    // 2. Circuit breaker: If known offline and in cooldown, skip background polling to prevent console flood
     if (isBackground && this.isGatewayOnline === false && now - this.lastFailureTime < this.offlineCooldownMs) {
       return {
         ok: false,
@@ -296,6 +491,10 @@ class ApiClient {
     })
   }
 
+  public async getCapabilities(): Promise<ApiResponse<SystemCapabilities>> {
+    return this.getSystemCapabilities()
+  }
+
   // --- Genuine Local Filesystem Operations ---
 
   public async getFsDrives(): Promise<ApiResponse<{ drives: LocalDrive[]; defaultPath: string }>> {
@@ -341,6 +540,150 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify({ targetPath, confirmName }),
     })
+  }
+
+  // --- Windows OS Operating System Integrations ---
+
+  public async setCapabilityPermission(
+    id: CapabilityId,
+    state: PermissionState,
+  ): Promise<ApiResponse<{ success: boolean; capability: CapabilityMeta }>> {
+    return this.request<{ success: boolean; capability: CapabilityMeta }>('/api/v1/system/capabilities/permission', {
+      method: 'PATCH',
+      body: JSON.stringify({ id, state }),
+    })
+  }
+
+  public async getHardwareReport(
+    signal?: AbortSignal,
+    isBackground = false,
+  ): Promise<ApiResponse<HardwareReport>> {
+    return this.request<HardwareReport>('/api/v1/system/hardware', {
+      method: 'GET',
+      signal,
+      timeoutMs: 4500,
+      isBackground,
+    })
+  }
+
+  public async getDevicesReport(
+    signal?: AbortSignal,
+    isBackground = false,
+  ): Promise<ApiResponse<DevicesReport>> {
+    return this.request<DevicesReport>('/api/v1/system/devices', {
+      method: 'GET',
+      signal,
+      timeoutMs: 4500,
+      isBackground,
+    })
+  }
+
+  public async getProcesses(
+    limit = 35,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ total: number; processes: ProcessItem[] }>> {
+    return this.request<{ total: number; processes: ProcessItem[] }>(
+      `/api/v1/system/processes?limit=${limit}`,
+      {
+        method: 'GET',
+        signal,
+        timeoutMs: 5000,
+      },
+    )
+  }
+
+  public async terminateProcess(
+    pid: number,
+    confirmName: string,
+    hasConfirmation = false,
+  ): Promise<ApiResponse<{ success: boolean; message: string }>> {
+    return this.request<{ success: boolean; message: string }>('/api/v1/system/processes/terminate', {
+      method: 'POST',
+      body: JSON.stringify({ pid, confirmName, hasConfirmation }),
+    })
+  }
+
+  public async getInstalledAndRunningApps(
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ installed: DesktopApp[]; running: DesktopApp[] }>> {
+    return this.request<{ installed: DesktopApp[]; running: DesktopApp[] }>('/api/v1/system/apps', {
+      method: 'GET',
+      signal,
+      timeoutMs: 6000,
+    })
+  }
+
+  public async launchApp(
+    app: string,
+    hasConfirmation = false,
+  ): Promise<ApiResponse<{ success: boolean; message: string }>> {
+    return this.request<{ success: boolean; message: string }>('/api/v1/system/apps/launch', {
+      method: 'POST',
+      body: JSON.stringify({ app, hasConfirmation }),
+    })
+  }
+
+  public async getClipboard(
+    hasConfirmation = false,
+  ): Promise<ApiResponse<{ success: boolean; text?: string; error?: string }>> {
+    const qs = hasConfirmation ? '?confirm=1' : ''
+    return this.request<{ success: boolean; text?: string; error?: string }>(
+      `/api/v1/system/clipboard${qs}`,
+      {
+        method: 'GET',
+        timeoutMs: 4000,
+      },
+    )
+  }
+
+  public async setClipboard(
+    text: string,
+    hasConfirmation = false,
+  ): Promise<ApiResponse<{ success: boolean; error?: string }>> {
+    return this.request<{ success: boolean; error?: string }>('/api/v1/system/clipboard', {
+      method: 'POST',
+      body: JSON.stringify({ text, hasConfirmation }),
+    })
+  }
+
+  public async sendSystemNotification(
+    title: string,
+    message: string,
+  ): Promise<ApiResponse<{ success: boolean; error?: string }>> {
+    return this.request<{ success: boolean; error?: string }>('/api/v1/system/notify', {
+      method: 'POST',
+      body: JSON.stringify({ title, message }),
+    })
+  }
+
+  public async getWindowsServices(
+    limit = 30,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ services: WindowsServiceInfo[] }>> {
+    return this.request<{ services: WindowsServiceInfo[] }>(
+      `/api/v1/system/services?limit=${limit}`,
+      {
+        method: 'GET',
+        signal,
+        timeoutMs: 4500,
+      },
+    )
+  }
+
+  public async getSystemAuditLog(
+    limit = 50,
+    capability?: string,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ total: number; entries: SystemAuditEntry[] }>> {
+    const qs = capability ? `&capability=${encodeURIComponent(capability)}` : ''
+    return this.request<{ total: number; entries: SystemAuditEntry[] }>(
+      `/api/v1/system/audit-log?limit=${limit}${qs}`,
+      {
+        method: 'GET',
+        signal,
+        timeoutMs: 4000,
+      },
+    )
   }
 }
 

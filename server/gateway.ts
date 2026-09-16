@@ -20,6 +20,9 @@ import { automationEngine } from './business/automation-engine.js'
 import { modelRouter } from './agent/model-router.js'
 import { systemMonitor } from './system/system-monitor.js'
 import { localFilesystemService } from './system/filesystem-service.js'
+import { capabilityRegistry } from './system/capability-registry.js'
+import { windowsSystemService } from './system/windows-system-service.js'
+import { systemAuditLogger } from './system/audit-logger.js'
 import type { SystemHealthReport } from './types.js'
 
 const PORT = Number(process.env.PORT || process.env.JARVIS_BRIDGE_PORT || 8787)
@@ -153,11 +156,160 @@ export function createGatewayServer() {
         }
       }
 
-      // --- 1.2 System Capabilities Endpoint ---
+      // --- 1.2 System Capabilities & Permissions Endpoint ---
       if (pathname === '/api/v1/system/capabilities' && req.method === 'GET') {
-        const capabilities = systemMonitor.getCapabilities()
+        const legacyCaps = systemMonitor.getCapabilities()
+        const regStatus = capabilityRegistry.getStatus()
         res.writeHead(200, { ...cors, 'content-type': 'application/json' })
-        return res.end(JSON.stringify(capabilities))
+        return res.end(JSON.stringify({ ...legacyCaps, ...regStatus }))
+      }
+
+      if (pathname === '/api/v1/system/capabilities/permission' && req.method === 'PATCH') {
+        let body = ''
+        for await (const chunk of req) body += chunk
+        const { id, state } = JSON.parse(body || '{}')
+        if (!id || !state) {
+          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: 'id and state are required' }))
+        }
+        const ok = capabilityRegistry.setPermission(id, state)
+        res.writeHead(ok ? 200 : 400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ success: ok, capability: capabilityRegistry.getCapability(id) }))
+      }
+
+      // --- 1.3 Hardware Telemetry & Vitals ---
+      if (pathname === '/api/v1/system/hardware' && req.method === 'GET') {
+        try {
+          const report = await windowsSystemService.getHardwareReport()
+          res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify(report))
+        } catch (err: any) {
+          res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message || 'Failed to gather hardware report' }))
+        }
+      }
+
+      // --- 1.4 Hardware Devices & Network Telemetry ---
+      if (pathname === '/api/v1/system/devices' && req.method === 'GET') {
+        try {
+          const devices = await windowsSystemService.getDevicesReport()
+          res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify(devices))
+        } catch (err: any) {
+          res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message || 'Failed to gather devices' }))
+        }
+      }
+
+      // --- 1.5 Task Manager & Processes ---
+      if (pathname === '/api/v1/system/processes' && req.method === 'GET') {
+        try {
+          const limit = Math.min(100, Math.max(5, Number(url.searchParams.get('limit') || 35)))
+          const procs = await windowsSystemService.getProcesses(limit)
+          res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ total: procs.length, processes: procs }))
+        } catch (err: any) {
+          res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message }))
+        }
+      }
+
+      if (pathname === '/api/v1/system/processes/terminate' && req.method === 'POST') {
+        let body = ''
+        for await (const chunk of req) body += chunk
+        const { pid, confirmName, hasConfirmation } = JSON.parse(body || '{}')
+        if (pid === undefined || !confirmName) {
+          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: 'pid and confirmName are required' }))
+        }
+        const result = await windowsSystemService.terminateProcess(Number(pid), String(confirmName), Boolean(hasConfirmation))
+        res.writeHead(result.success ? 200 : 400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(result))
+      }
+
+      // --- 1.6 Applications Management ---
+      if (pathname === '/api/v1/system/apps' && req.method === 'GET') {
+        try {
+          const [installed, running] = await Promise.all([
+            windowsSystemService.getInstalledApps(),
+            windowsSystemService.getRunningApps(),
+          ])
+          res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ installed, running }))
+        } catch (err: any) {
+          res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message }))
+        }
+      }
+
+      if (pathname === '/api/v1/system/apps/launch' && req.method === 'POST') {
+        let body = ''
+        for await (const chunk of req) body += chunk
+        const { app, hasConfirmation } = JSON.parse(body || '{}')
+        if (!app) {
+          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: 'app name or path is required' }))
+        }
+        const result = await windowsSystemService.launchApp(String(app), Boolean(hasConfirmation))
+        res.writeHead(result.success ? 200 : 400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(result))
+      }
+
+      // --- 1.7 Clipboard Integration ---
+      if (pathname === '/api/v1/system/clipboard' && req.method === 'GET') {
+        const hasConfirmation = url.searchParams.get('confirm') === '1'
+        const result = await windowsSystemService.readClipboard(hasConfirmation)
+        res.writeHead(result.success ? 200 : 400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(result))
+      }
+
+      if (pathname === '/api/v1/system/clipboard' && req.method === 'POST') {
+        let body = ''
+        for await (const chunk of req) body += chunk
+        const { text, hasConfirmation } = JSON.parse(body || '{}')
+        if (text === undefined) {
+          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: 'text is required' }))
+        }
+        const result = await windowsSystemService.writeClipboard(String(text), Boolean(hasConfirmation))
+        res.writeHead(result.success ? 200 : 400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(result))
+      }
+
+      // --- 1.8 Desktop Notifications ---
+      if (pathname === '/api/v1/system/notify' && req.method === 'POST') {
+        let body = ''
+        for await (const chunk of req) body += chunk
+        const { title, message } = JSON.parse(body || '{}')
+        if (!title || !message) {
+          res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: 'title and message are required' }))
+        }
+        const result = await windowsSystemService.sendNotification(String(title), String(message))
+        res.writeHead(result.success ? 200 : 400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(result))
+      }
+
+      // --- 1.9 Windows Services (Read-Only) ---
+      if (pathname === '/api/v1/system/services' && req.method === 'GET') {
+        try {
+          const limit = Math.min(100, Math.max(5, Number(url.searchParams.get('limit') || 30)))
+          const services = await windowsSystemService.getRunningServices(limit)
+          res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ services }))
+        } catch (err: any) {
+          res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+          return res.end(JSON.stringify({ error: err.message }))
+        }
+      }
+
+      // --- 1.10 System Audit Log ---
+      if (pathname === '/api/v1/system/audit-log' && req.method === 'GET') {
+        const limit = Math.min(200, Math.max(5, Number(url.searchParams.get('limit') || 50)))
+        const capability = (url.searchParams.get('capability') as any) || undefined
+        const entries = systemAuditLogger.getEntries(limit, capability)
+        res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ total: entries.length, entries }))
       }
 
       // --- 2. Tasks API ---

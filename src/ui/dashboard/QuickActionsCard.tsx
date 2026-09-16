@@ -65,8 +65,11 @@ export const QuickActionsCard: React.FC<QuickActionsCardProps> = ({
       subtitle: 'Quick action',
       type: 'tool',
     })
-    setActiveNav(id)
-    onActionClick?.(id)
+    if (onActionClick) {
+      onActionClick(id)
+    } else {
+      setActiveNav(id)
+    }
   }
 
   return (

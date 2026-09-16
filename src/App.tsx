@@ -701,19 +701,26 @@ export default function App() {
 
   useEffect(() => {
     let raf = 0
+    let lastLevel = 0
+    let lastTime = 0
 
-    const pump = () => {
-      const st = store.getState()
-      // While speaking, follow JARVIS's own output rather than the mic, so the
-      // orb lip-syncs instead of reacting to room noise.
-      const lvl =
-        st.phase === 'speaking' && speaker.current
-          ? speaker.current.level()
-          : micLevel()
-      st.setLevel(lvl)
+    const pump = (now: number) => {
+      // Throttle audio level state emissions to avoid running full React re-render cycles at 60-120Hz
+      if (now - lastTime >= 50) {
+        const st = store.getState()
+        const lvl =
+          st.phase === 'speaking' && speaker.current
+            ? speaker.current.level()
+            : micLevel()
+        if (Math.abs(lvl - lastLevel) > 0.03 || (lvl === 0 && lastLevel !== 0)) {
+          lastLevel = lvl
+          st.setLevel(lvl)
+        }
+        lastTime = now
+      }
       raf = requestAnimationFrame(pump)
     }
-    pump()
+    raf = requestAnimationFrame(pump)
 
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName
