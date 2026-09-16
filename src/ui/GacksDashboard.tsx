@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Sidebar } from './dashboard/Sidebar'
 import { TopBar } from './dashboard/TopBar'
 import { HeroPanel } from './dashboard/HeroPanel'
 import { SystemStatusCard } from './dashboard/SystemStatusCard'
 import { QuickActionsCard } from './dashboard/QuickActionsCard'
-import { RecentActivityCard } from './dashboard/RecentActivityCard'
-import { TodaysFocusCard } from './dashboard/TodaysFocusCard'
 import { CalendarCard } from './dashboard/CalendarCard'
 import { MarketOverviewCard } from './dashboard/MarketOverviewCard'
 import { QuoteAndStatsCards } from './dashboard/QuoteAndStatsCards'
-import { ViewsModals } from './dashboard/ViewsModals'
+import { ChatPage } from './pages/ChatPage'
+import { TasksPage } from './pages/TasksPage'
+import { FilesPage } from './pages/FilesPage'
+import { CalendarPage } from './pages/CalendarPage'
+import { SearchPage } from './pages/SearchPage'
+import { SystemPage } from './pages/SystemPage'
+import { SettingsPage } from './pages/settings/SettingsPage'
+import { BusinessSuitePage } from './pages/BusinessSuitePage'
 import { useStore, type NavRoute } from '../store'
+import { initRouter, navigate, type SettingsCategory } from '../lib/router'
 import { Mic, Volume2 } from 'lucide-react'
 
 interface GacksDashboardProps {
@@ -21,80 +27,100 @@ export const GacksDashboard: React.FC<GacksDashboardProps> = ({
   onToggleVoice,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const activeNav = useStore((s) => s.activeNav)
   const setActiveNav = useStore((s) => s.setActiveNav)
+  const setSettingsCategory = useStore((s) => s.setSettingsCategory)
   const phase = useStore((s) => s.phase)
   const caption = useStore((s) => s.caption)
 
-  const handleNavSelect = (route: NavRoute) => {
+  // Initialize HTML5 History routing and listen for browser back/forward & deep links
+  useEffect(() => {
+    const unbind = initRouter((route, category) => {
+      setActiveNav(route)
+      if (category) {
+        setSettingsCategory(category)
+      }
+    })
+    return unbind
+  }, [setActiveNav, setSettingsCategory])
+
+  const handleNavSelect = (route: NavRoute, category?: SettingsCategory) => {
+    navigate(route, category)
     setActiveNav(route)
+    if (category) {
+      setSettingsCategory(category)
+    }
   }
 
   return (
     <div className="gacks-dashboard-root">
-      {/* 1. Left Vertical Navigation Sidebar */}
+      {/* 1. Left Vertical Navigation Sidebar (Collapsible & Expandable) */}
       <Sidebar
         isOpenMobile={mobileMenuOpen}
         onCloseMobile={() => setMobileMenuOpen(false)}
         onSelectNav={handleNavSelect}
       />
 
-      {/* 2. Main Dashboard Viewport */}
+      {/* 2. Main Viewport */}
       <main className="gacks-main-viewport">
         {/* Top Command Bar */}
         <TopBar
           onOpenMobileMenu={() => setMobileMenuOpen(true)}
-          onOpenSettings={() => setActiveNav('settings')}
-          onOpenChat={() => setActiveNav('chat')}
+          onOpenSettings={() => handleNavSelect('settings')}
+          onOpenChat={() => handleNavSelect('chat')}
         />
 
-        {/* Dashboard Content Container */}
+        {/* Viewport Content: Real Page Routing */}
         <div className="gacks-dashboard-content">
-          {/* Top Row: Hero Assistant Panel + System Status */}
-          <div className="gacks-grid-top-row">
-            <div className="gacks-hero-col">
-              <HeroPanel
-                onTriggerMode={(_mode) => setActiveNav('chat')}
-                onToggleVoice={onToggleVoice}
-              />
-            </div>
-            <div className="gacks-system-col">
-              <SystemStatusCard />
-            </div>
-          </div>
+          {activeNav === 'dashboard' && (
+            <div className="gacks-dashboard-grid-container">
+              {/* Row 1: Hero Assistant Panel + System Status */}
+              <div className="gacks-grid-top-row">
+                <div className="gacks-hero-col">
+                  <HeroPanel
+                    onTriggerMode={(_mode) => handleNavSelect('chat')}
+                    onToggleVoice={onToggleVoice}
+                  />
+                </div>
+                <div className="gacks-system-col">
+                  <SystemStatusCard />
+                </div>
+              </div>
 
-          {/* Middle Row: Quick Actions + Recent Activity + Focus / Calendar */}
-          <div className="gacks-grid-middle-row">
-            <div className="gacks-quickactions-col">
-              <QuickActionsCard onActionClick={(route) => setActiveNav(route as NavRoute)} />
-            </div>
-            <div className="gacks-activity-col">
-              <RecentActivityCard onViewAll={() => setActiveNav('chat')} />
-            </div>
-            <div className="gacks-schedule-col">
-              <TodaysFocusCard onViewAll={() => setActiveNav('tasks')} />
-              <CalendarCard onViewAll={() => setActiveNav('calendar')} />
-            </div>
-          </div>
+              {/* Row 2: Rebalanced Execution Grid (Quick Actions + Calendar) */}
+              <div className="gacks-grid-middle-row">
+                <div className="gacks-quickactions-col">
+                  <QuickActionsCard onActionClick={(route) => handleNavSelect(route as NavRoute)} />
+                </div>
+                <div className="gacks-calendar-col">
+                  <CalendarCard onViewAll={() => handleNavSelect('calendar')} />
+                </div>
+              </div>
 
-          {/* Bottom Row: Live Market Overview + Quote & Stats Cluster */}
-          <div className="gacks-grid-bottom-row">
-            <div className="gacks-market-col">
-              <MarketOverviewCard />
+              {/* Row 3: Live Market Overview + Quote & Stats Cluster */}
+              <div className="gacks-grid-bottom-row">
+                <div className="gacks-market-col">
+                  <MarketOverviewCard />
+                </div>
+                <div className="gacks-stats-col">
+                  <QuoteAndStatsCards />
+                </div>
+              </div>
             </div>
-            <div className="gacks-stats-col">
-              <QuoteAndStatsCards />
-            </div>
-          </div>
+          )}
+
+          {activeNav === 'business' && <BusinessSuitePage />}
+          {activeNav === 'chat' && <ChatPage onToggleVoice={onToggleVoice} />}
+          {activeNav === 'tasks' && <TasksPage />}
+          {activeNav === 'files' && <FilesPage />}
+          {activeNav === 'calendar' && <CalendarPage />}
+          {activeNav === 'websearch' && <SearchPage />}
+          {activeNav === 'system' && <SystemPage />}
+          {activeNav === 'settings' && <SettingsPage onToggleVoice={onToggleVoice} />}
         </div>
       </main>
 
-      {/* 3. Interactive Modals for Active Navigation Routes */}
-      <ViewsModals
-        onClose={() => setActiveNav('dashboard')}
-        onToggleVoice={onToggleVoice}
-      />
-
-      {/* 4. Floating Mic Action FAB */}
+      {/* 3. Floating Voice FAB */}
       <button
         type="button"
         className={`gacks-floating-mic-btn ${
@@ -107,7 +133,7 @@ export const GacksDashboard: React.FC<GacksDashboardProps> = ({
             : ''
         }`}
         onClick={onToggleVoice}
-        title="Voice Assistant (Space or 'Hey Gacks')"
+        title="Voice Assistant (Space or 'Hey Insight')"
         aria-label="Toggle voice conversation"
       >
         {phase === 'listening' ? (
@@ -119,7 +145,7 @@ export const GacksDashboard: React.FC<GacksDashboardProps> = ({
         )}
       </button>
 
-      {/* Spoken subtitle overlay when voice is talking */}
+      {/* Spoken subtitle overlay when voice is speaking */}
       {caption && (
         <div className="gacks-floating-caption">
           <span className="gacks-caption-dot" />

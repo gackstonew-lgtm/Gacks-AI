@@ -1,7 +1,7 @@
 import React from 'react'
 import { MessageSquare, Compass, PenTool, Cpu, Mic, Volume2 } from 'lucide-react'
 import { useStore, type Phase } from '../../store'
-import gacksAvatar from '../../assets/gacks-avatar.png'
+import insightLogo from '../../assets/insight-logo.jpeg'
 
 interface HeroPanelProps {
   onTriggerMode?: (mode: 'Research' | 'Plan' | 'Create' | 'Automate') => void
@@ -49,15 +49,16 @@ export const HeroPanel: React.FC<HeroPanelProps> = ({
   }
 
   return (
-    <section className="gacks-hero-panel" aria-label="GACKS AI Assistant">
-      {/* Visual Left: Robotic Cyborg in tailored suit with orange tie */}
+    <section className="gacks-hero-panel" aria-label="Insight Business Suite">
+      {/* Visual Left: Official Insight Business Suite Logo */}
       <div className="gacks-hero-visual" onClick={onToggleVoice} title="Click to activate voice assistant">
         <div className="gacks-hero-avatar-glow" />
         <div className="gacks-hero-avatar-container">
           <img
-            src={gacksAvatar}
-            alt="GACKS Personal Assistant"
+            src={userProfile.avatar || insightLogo}
+            alt="Insight Business Suite"
             className="gacks-hero-avatar-img"
+            style={{ objectFit: 'contain', padding: '4px' }}
           />
           {/* Subtle glowing visor & HUD overlay effect */}
           <div className="gacks-hero-hud-arcs" />
@@ -77,10 +78,10 @@ export const HeroPanel: React.FC<HeroPanelProps> = ({
       {/* Content Right: Brand, Headline, Greeting, Mode Buttons */}
       <div className="gacks-hero-content">
         <div className="gacks-hero-header">
-          <h2 className="gacks-hero-title">GACKS</h2>
-          <p className="gacks-hero-tagline">Your AI Assistant. Always On.</p>
+          <h2 className="gacks-hero-title">Insight Business Suite</h2>
+          <p className="gacks-hero-tagline">Autonomous Enterprise AI Operating System</p>
           <p className="gacks-hero-description">
-            Ready to assist, analyze, create and get things done.
+            Executive intelligence for business growth, marketing, analytics, and operational automation.
           </p>
         </div>
 

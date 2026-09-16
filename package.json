@@ -10,12 +10,15 @@
   },
   "scripts": {
     "start": "node scripts/start.mjs",
-    "dev": "vite",
+    "dev": "node scripts/start.mjs",
+    "dev:client": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "bridge": "node bridge/server.mjs",
-    "bridge:writes": "JARVIS_ALLOW_WRITES=1 node bridge/server.mjs",
+    "server": "node node_modules/tsx/dist/cli.mjs server/index.ts",
+    "bridge": "node node_modules/tsx/dist/cli.mjs server/index.ts",
+    "bridge:legacy": "node bridge/server.mjs",
+    "bridge:writes": "JARVIS_ALLOW_WRITES=1 node node_modules/tsx/dist/cli.mjs server/index.ts",
     "setup": "node scripts/setup.mjs"
   },
   "dependencies": {

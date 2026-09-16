@@ -553,10 +553,34 @@ export function createSpeaker(): Speaker {
 
       // If `start` never arrives the engine has swallowed the utterance, and
       // nothing else will ever tell us — no error fires. Un-wedge and try once
-      // more; if that also goes nowhere, resolve rather than hang, because a
-      // silent sentence is recoverable and a stuck queue is not.
+      // more; if that also goes nowhere, resolve rather than hang.
+      // We allow 2500ms initial threshold to accommodate OS speech engine cold starts.
       watchdog = setTimeout(() => {
         if (done || started) return
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+          if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+            watchdog = setTimeout(() => {
+              if (done || started) return
+              console.warn('[jarvis] speech did not start — un-wedging the engine')
+              speechSynthesis.cancel()
+              speechSynthesis.resume()
+              try {
+                speechSynthesis.speak(u)
+              } catch {
+                finish()
+                return
+              }
+              watchdog = setTimeout(() => {
+                if (done || started) return
+                console.error('[jarvis] speech engine is not responding — switching to the cloud voice')
+                diag.failures++
+                diag.lastError = diag.lastError || 'no-start'
+                finish()
+              }, 2000)
+            }, 1800)
+            return
+          }
+        }
         console.warn('[jarvis] speech did not start — un-wedging the engine')
         speechSynthesis.cancel()
         speechSynthesis.resume()
@@ -572,8 +596,8 @@ export function createSpeaker(): Speaker {
           diag.failures++
           diag.lastError = diag.lastError || 'no-start'
           finish()
-        }, 1500)
-      }, 700)
+        }, 2000)
+      }, 2500)
       diag.spoken++
       diag.lastText = text.slice(0, 60)
       diag.voice = u.voice?.name ?? 'default'
@@ -738,8 +762,10 @@ export function createSpeaker(): Speaker {
 
 /** Only used when USE_ELEVENLABS is on. Bridge proxy first (it already holds
  *  the key), then a direct key, then null to fall back to the native voice. */
+let bridgeTtsUnavailable = false
+
 async function fetchCloudAudio(text: string): Promise<string | null> {
-  if (BACKEND === 'bridge') {
+  if (BACKEND === 'bridge' && !bridgeTtsUnavailable) {
     try {
       const res = await fetch(`${BRIDGE_HTTP_URL}/tts`, {
         method: 'POST',
@@ -747,8 +773,12 @@ async function fetchCloudAudio(text: string): Promise<string | null> {
         body: JSON.stringify({ text }),
       })
       if (res.ok) return URL.createObjectURL(await res.blob())
+      if (res.status === 401 || res.status === 403 || res.status === 503) {
+        bridgeTtsUnavailable = true
+        console.info(`[jarvis] Bridge speech proxy unavailable (status ${res.status}); using browser speech synthesis.`)
+      }
     } catch {
-      /* fall through */
+      bridgeTtsUnavailable = true
     }
   }
 

@@ -6,6 +6,7 @@ import { Boot } from './ui/Boot'
 import { Ignition } from './ui/Ignition'
 import { Diagnostics } from './ui/Diagnostics'
 import { IntroSequence } from './ui/IntroSequence'
+import { GacksVoiceVisualization } from './ui/voice/GacksVoiceVisualization'
 import { useStore } from './store'
 import { startVoice, type Voice, type VoiceMode } from './lib/voice'
 import { createSpeaker, cycleVoice, currentVoiceName } from './lib/tts'
@@ -28,6 +29,7 @@ import {
   watchCaptureScreen,
   watchUi,
   watchConnection,
+  watchMission,
   connectedLabels,
   usingBridge,
   type Msg,
@@ -35,7 +37,7 @@ import {
 import { captureScreen } from './lib/screen'
 import { startAnalyser, micLevel } from './lib/audio'
 import { probeCapabilities } from './lib/capabilities'
-import { env } from './config'
+import { useSettingsTheme } from './lib/useSettingsTheme'
 
 /**
  * The conversation.
@@ -74,6 +76,7 @@ const BARE_NAME = new RegExp(`^(?:hey|hi|ok|okay|yo)?\\s*${NAME}[\\s,.!?]*$`, 'i
 const LEADING_NAME = new RegExp(`^(?:hey|hi|ok|okay|yo)?\\s*${NAME}\\b[\\s,.:!?-]*`, 'i')
 
 export default function App() {
+  useSettingsTheme()
   const store = useStore
   const phase = useStore((s) => s.phase)
   const [viewMode, setViewMode] = useState<'dashboard' | 'hud'>('dashboard')
@@ -216,7 +219,11 @@ export default function App() {
       sfx.play('error')
       const msg = err instanceof Error ? err.message : 'Something went wrong.'
       store.getState().setError(msg)
-      store.getState().pushTurn({ id: turnId, role: 'jarvis', text: msg })
+      if (started) {
+        store.getState().appendToLastTurn(`\n\n[Error: ${msg}]`)
+      } else {
+        store.getState().pushTurn({ id: turnId, role: 'jarvis', text: msg })
+      }
       spk.say(msg)
       await spk.end().catch(() => {})
     } finally {
@@ -341,6 +348,9 @@ export default function App() {
     watchServers((servers) => store.getState().setConnected(servers))
     watchPanels((panel) => store.getState().pushPanel(panel))
     watchBlades((blade) => store.getState().pushBlade(blade))
+    watchMission((mission) => {
+      if (mission) store.getState().setMission(mission)
+    })
 
     watchCapture(async (req) => {
       const note =
@@ -425,12 +435,6 @@ export default function App() {
     })
 
     void warm().catch((err: Error) => s.setError(err.message))
-
-    if (!usingBridge && !env.anthropicKey) {
-      s.setError(
-        'No Anthropic API key — copy .env.example to .env.local and set VITE_ANTHROPIC_API_KEY.',
-      )
-    }
 
     if (TTS_ENGINE === 'kokoro') {
       void kokoro.load()
@@ -537,6 +541,9 @@ export default function App() {
     watchServers((servers) => store.getState().setConnected(servers))
     watchPanels((panel) => store.getState().pushPanel(panel))
     watchBlades((blade) => store.getState().pushBlade(blade))
+    watchMission((mission) => {
+      if (mission) store.getState().setMission(mission)
+    })
 
     /**
      * JARVIS asking to see something.
@@ -639,12 +646,6 @@ export default function App() {
       }
     })
     const warming = warm().catch((err: Error) => s.setError(err.message))
-
-    if (!usingBridge && !env.anthropicKey) {
-      s.setError(
-        'No Anthropic API key — copy .env.example to .env.local and set VITE_ANTHROPIC_API_KEY.',
-      )
-    }
 
     // Pull the neural voice down during the boot sequence so the first
     // "Hey Jarvis" isn't waiting on an 86MB download. Deliberately not awaited
@@ -926,7 +927,10 @@ export default function App() {
         <>
           <Scene />
           {viewMode === 'dashboard' ? (
-            <GacksDashboard onToggleVoice={handleToggleVoice} />
+            <>
+              <GacksDashboard onToggleVoice={handleToggleVoice} />
+              <GacksVoiceVisualization />
+            </>
           ) : (
             <>
               <Hud />

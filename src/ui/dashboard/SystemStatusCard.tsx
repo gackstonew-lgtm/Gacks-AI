@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Cpu, Layers, HardDrive, Wifi } from 'lucide-react'
 import { useStore } from '../../store'
+import { apiClient } from '../../lib/api-client'
 
 export const SystemStatusCard: React.FC = () => {
   const phase = useStore((s) => s.phase)
@@ -15,6 +16,7 @@ export const SystemStatusCard: React.FC = () => {
 
   useEffect(() => {
     let cancelled = false
+    const abortController = new AbortController()
 
     const gatherRealMetrics = async () => {
       // 1. CPU estimate based on hardware cores & navigator
@@ -43,17 +45,21 @@ export const SystemStatusCard: React.FC = () => {
         } catch {}
       }
 
-      // 4. Real network latency check to local bridge /health
+      // 4. Real network latency check using centralized API client (circuit breaker & offline-safe)
       let netLatencyScore = 28
       let isBridgeHealthy = true
       try {
         const start = performance.now()
-        const res = await fetch('http://localhost:8787/health', { method: 'GET' })
+        const res = await apiClient.getHealth(abortController.signal, true)
         const elapsed = Math.round(performance.now() - start)
         if (res.ok) {
           netLatencyScore = Math.max(10, Math.min(95, elapsed))
-        } else {
+          isBridgeHealthy = true
+        } else if (res.isOffline) {
           isBridgeHealthy = false
+          netLatencyScore = 0
+        } else {
+          isBridgeHealthy = phase !== 'offline'
         }
       } catch {
         isBridgeHealthy = phase !== 'offline'
@@ -71,9 +77,10 @@ export const SystemStatusCard: React.FC = () => {
     }
 
     gatherRealMetrics()
-    const timer = setInterval(gatherRealMetrics, 10000)
+    const timer = setInterval(gatherRealMetrics, 12000)
     return () => {
       cancelled = true
+      abortController.abort()
       clearInterval(timer)
     }
   }, [phase])

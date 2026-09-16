@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
-import gacksLogo from '../assets/gacks-logo.png'
+import insightLogo from '../assets/insight-logo.jpeg'
 import './intro.css'
 
 export type IntroStatus =
@@ -72,7 +72,20 @@ export const IntroSequence: React.FC<IntroSequenceProps> = ({
   // 2. Synchronized completion checker
   const checkCompletion = useCallback(() => {
     if (completedRef.current) return
-    if (videoEnded.current && audioEnded.current) {
+    // When video completes its visual sequence, finalize cleanly with audio fadeout
+    if (videoEnded.current) {
+      const a = audioRef.current
+      if (a && !a.paused) {
+        let vol = a.volume
+        const fadeInterval = setInterval(() => {
+          vol = Math.max(0, vol - 0.25)
+          if (a) a.volume = vol
+          if (vol <= 0) {
+            clearInterval(fadeInterval)
+            try { a.pause() } catch {}
+          }
+        }, 60)
+      }
       finalizeSequence()
     }
   }, [finalizeSequence])
@@ -100,13 +113,13 @@ export const IntroSequence: React.FC<IntroSequenceProps> = ({
       startedRef.current = true
       setStatus('playing')
 
-      // Set safety watchdog: 17s (video is ~13.3s, audio ~11.8s)
+      // Set safety watchdog: 10s (video is concise, ensure reliable transition)
       watchdogTimer.current = setTimeout(() => {
         if (!completedRef.current) {
-          console.warn('[GACKS Intro] Watchdog triggered, ensuring dashboard transition')
+          console.warn('[Insight Intro] Watchdog triggered, transitioning to dashboard')
           finalizeSequence()
         }
-      }, 17000)
+      }, 10000)
     } catch (err) {
       if (unmountedRef.current) return
       console.info('[GACKS Intro] Autoplay blocked by browser policy:', err)
@@ -191,10 +204,14 @@ export const IntroSequence: React.FC<IntroSequenceProps> = ({
   }, [])
 
   const handleVideoError = useCallback(() => {
-    console.warn('[GACKS Intro] Video asset error')
-    setErrorMsg('Video initialization failed. You can proceed to the dashboard.')
+    console.warn('[Insight Intro] Video asset unavailable or error — transitioning directly to dashboard')
+    setErrorMsg('Video playback unavailable. Proceeding directly to dashboard...')
     setStatus('error')
-  }, [])
+    // Automatically proceed after 1.5s so user is never stuck
+    setTimeout(() => {
+      finalizeSequence()
+    }, 1500)
+  }, [finalizeSequence])
 
   const handleAudioError = useCallback(() => {
     console.warn('[GACKS Intro] Audio asset error — proceeding with visual stream only')
@@ -255,12 +272,17 @@ export const IntroSequence: React.FC<IntroSequenceProps> = ({
     <div
       className={`gacks-intro-container ${status === 'completing' ? 'is-completing' : ''}`}
       role="region"
-      aria-label="GACKS P.A Startup Sequence"
+      aria-label="Insight Business Suite Startup Sequence"
     >
       {/* Discreet Header Branding */}
       <header className="gacks-intro-header">
-        <img src={gacksLogo} alt="GACKS" className="gacks-intro-logo" />
-        <span className="gacks-intro-title">GACKS P.A // STARTUP SEQUENCE</span>
+        <img
+          src={insightLogo}
+          alt="Insight Business Suite"
+          className="gacks-intro-logo"
+          style={{ objectFit: 'contain', width: 28, height: 28 }}
+        />
+        <span className="gacks-intro-title">INSIGHT BUSINESS SUITE // STARTUP SEQUENCE</span>
         <span className="gacks-intro-status-dot" aria-hidden="true" />
       </header>
 
@@ -281,7 +303,7 @@ export const IntroSequence: React.FC<IntroSequenceProps> = ({
       <div className="gacks-intro-stage">
         <video
           ref={videoRef}
-          src="/video/gacks%20INTRO.mp4"
+          src="/video/insight_logo_animation.mp4"
           className="gacks-intro-video"
           playsInline
           muted={false}
@@ -319,7 +341,7 @@ export const IntroSequence: React.FC<IntroSequenceProps> = ({
         <div className="gacks-intro-overlay">
           <div className="gacks-intro-spinner" />
           <div className="gacks-intro-loading-text">
-            INITIALIZING GACKS P.A STREAMS...
+            INITIALIZING INSIGHT BUSINESS SUITE...
           </div>
         </div>
       )}
@@ -330,10 +352,14 @@ export const IntroSequence: React.FC<IntroSequenceProps> = ({
           <div className="gacks-intro-start-box">
             <div className="gacks-intro-reticle-ring">
               <div className="gacks-intro-reticle-inner">
-                <img src={gacksLogo} alt="" style={{ width: 28, height: 28 }} />
+                <img
+                  src={insightLogo}
+                  alt=""
+                  style={{ width: 28, height: 28, objectFit: 'contain' }}
+                />
               </div>
             </div>
-            <h1 className="gacks-intro-start-heading">GACKS P.A</h1>
+            <h1 className="gacks-intro-start-heading">INSIGHT BUSINESS SUITE</h1>
             <p className="gacks-intro-start-sub">
               System ready. Click below or press Space to enable synchronized audio & visual core.
             </p>
@@ -342,7 +368,7 @@ export const IntroSequence: React.FC<IntroSequenceProps> = ({
               className="gacks-intro-start-btn"
               onClick={handleUserStart}
             >
-              INITIALIZE GACKS P.A
+              INITIALIZE INSIGHT SUITE
             </button>
             <div className="gacks-intro-hint">PRESS [SPACE] OR CLICK TO COMMENCE</div>
           </div>

@@ -14,6 +14,21 @@ import { Particles } from './Particles'
 import { Orbits } from './Orbits'
 import { useStore, phaseColor, accentFor, type Phase } from '../store'
 
+// Suppress THREE.Clock deprecation warning until @react-three/fiber migrates internally to THREE.Timer
+if (typeof window !== 'undefined') {
+  const origWarn = console.warn
+  console.warn = (...args: any[]) => {
+    if (
+      typeof args[0] === 'string' &&
+      args[0].includes('THREE.Clock') &&
+      args[0].includes('deprecated')
+    ) {
+      return
+    }
+    origWarn.apply(console, args)
+  }
+}
+
 /** Rings spin harder while JARVIS is working — reads as effort. */
 const spinFor: Record<Phase, number> = {
   offline: 0.08, // barely turning — the machine is off

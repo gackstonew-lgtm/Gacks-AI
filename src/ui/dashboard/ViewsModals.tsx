@@ -79,7 +79,7 @@ export const ViewsModals: React.FC<ViewsModalsProps> = ({
               {activeNav === 'calendar' && 'CALENDAR & SCHEDULE'}
               {activeNav === 'websearch' && 'WEB RESEARCH & INTELLIGENCE'}
               {activeNav === 'system' && 'SYSTEM DIAGNOSTICS & TELEMETRY'}
-              {activeNav === 'settings' && 'GACKS P.A PREFERENCES'}
+              {activeNav === 'settings' && 'INSIGHT BUSINESS SUITE PREFERENCES'}
             </h2>
           </div>
           <button
@@ -103,7 +103,7 @@ export const ViewsModals: React.FC<ViewsModalsProps> = ({
                     <MessageSquare className="w-10 h-10 text-orange-500/50 mb-2" />
                     <p className="text-gray-300 font-medium">Session initialized and ready.</p>
                     <p className="text-xs text-gray-500">
-                      Say "Hey Gacks" or type below to ask anything or run tools.
+                      Say "Hey Insight" or type below to ask anything or run tools.
                     </p>
                   </div>
                 ) : (
@@ -115,7 +115,7 @@ export const ViewsModals: React.FC<ViewsModalsProps> = ({
                       }`}
                     >
                       <div className="gacks-bubble-role">
-                        {t.role === 'user' ? 'YOU' : 'GACKS P.A'}
+                        {t.role === 'user' ? 'YOU' : 'INSIGHT'}
                       </div>
                       <div className="gacks-bubble-text">{t.text}</div>
                     </div>
@@ -281,7 +281,7 @@ export const ViewsModals: React.FC<ViewsModalsProps> = ({
                 <div>
                   <p className="text-sm font-semibold text-white">Autonomous Web Research</p>
                   <p className="text-xs text-gray-400">
-                    GACKS P.A performs real-time queries through the Gemini reasoning core.
+                    Insight Business Suite performs real-time queries through the Gemini reasoning core.
                   </p>
                 </div>
               </div>

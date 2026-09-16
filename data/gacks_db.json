@@ -1,0 +1,569 @@
+{
+  "users": {
+    "default": {
+      "id": "default",
+      "name": "Gackstone",
+      "settings": {
+        "voiceEngine": "system",
+        "riskPolicy": "standard",
+        "allowWrites": false
+      }
+    }
+  },
+  "sessions": {},
+  "missions": {
+    "mission-initial": {
+      "id": "mission-initial",
+      "title": "Initialize GACKS P.A. V2 Architecture",
+      "goal": "Deploy resilient agent runtime, memory, and verification engine",
+      "progress": 100,
+      "currentPhase": "VERIFICATION",
+      "phaseStatuses": {
+        "PLANNING": "completed",
+        "DIAGNOSIS": "completed",
+        "IMPLEMENTATION": "completed",
+        "VERIFICATION": "completed",
+        "DEPLOYMENT": "pending"
+      },
+      "startedAt": 1789452200159,
+      "updatedAt": 1789455800159,
+      "completedAt": null
+    }
+  },
+  "tasks": [
+    {
+      "id": "task-1",
+      "userId": "default",
+      "text": "Analyze XAUUSD price action & Market Trends",
+      "completed": true,
+      "createdAt": 1789448600159
+    },
+    {
+      "id": "task-2",
+      "userId": "default",
+      "text": "Review trading journal & system metrics",
+      "completed": true,
+      "createdAt": 1789450400159
+    },
+    {
+      "id": "task-3",
+      "userId": "default",
+      "text": "Upgrade GACKS P.A. V2 Agent Runtime & Verifier",
+      "completed": true,
+      "createdAt": 1789452200159
+    },
+    {
+      "id": "task-4",
+      "userId": "default",
+      "text": "Test voice latency & barge-in controls",
+      "completed": false,
+      "createdAt": 1789454000159
+    },
+    {
+      "id": "task-5",
+      "userId": "default",
+      "text": "Run verification tests on live tools",
+      "completed": false,
+      "createdAt": 1789454900159
+    }
+  ],
+  "memories": {
+    "mem-default-pref": {
+      "id": "mem-default-pref",
+      "userId": "default",
+      "category": "semantic",
+      "content": "User prefers concise, dry, British RP conversational delivery under 60 words, with verified tool actions.",
+      "importance": 5,
+      "confidence": 1,
+      "source": "system_bootstrap",
+      "tags": [
+        "preference",
+        "communication_style"
+      ],
+      "createdAt": 1789455800159,
+      "updatedAt": 1789501440753,
+      "accessedAt": 1789501440753,
+      "accessCount": 141
+    },
+    "mem-trading-focus": {
+      "id": "mem-trading-focus",
+      "userId": "default",
+      "category": "semantic",
+      "content": "Primary focus markets are XAUUSD (Gold), Forex pairs, and AI engineering workflows.",
+      "importance": 4,
+      "confidence": 0.95,
+      "source": "user_profile",
+      "tags": [
+        "trading",
+        "focus_markets",
+        "projects"
+      ],
+      "createdAt": 1789455800159,
+      "updatedAt": 1789501422977,
+      "accessedAt": 1789501422977,
+      "accessCount": 67
+    },
+    "mem-1789455800185-bwanj": {
+      "id": "mem-1789455800185-bwanj",
+      "userId": "default",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789455800185,
+      "updatedAt": 1789505798491,
+      "accessedAt": 1789505798488,
+      "accessCount": 152
+    },
+    "mem-1789465738534-ik7a3": {
+      "id": "mem-1789465738534-ik7a3",
+      "userId": "default",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789465738534,
+      "updatedAt": 1789505798491,
+      "accessedAt": 1789505798488,
+      "accessCount": 94
+    },
+    "mem-1789503411710-wjb6q": {
+      "id": "mem-1789503411710-wjb6q",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789503411710,
+      "updatedAt": 1789503411713,
+      "accessedAt": 1789503411711,
+      "accessCount": 1
+    },
+    "mem-1789504958253-3f0e6": {
+      "id": "mem-1789504958253-3f0e6",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789504958253,
+      "updatedAt": 1789504958256,
+      "accessedAt": 1789504958256,
+      "accessCount": 1
+    },
+    "mem-1789505147002-fibdv": {
+      "id": "mem-1789505147002-fibdv",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789505147002,
+      "updatedAt": 1789505147004,
+      "accessedAt": 1789505147003,
+      "accessCount": 1
+    },
+    "mem-1789505798486-fdk7s": {
+      "id": "mem-1789505798486-fdk7s",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789505798486,
+      "updatedAt": 1789505798490,
+      "accessedAt": 1789505798488,
+      "accessCount": 1
+    },
+    "mem-1789505807506-uwaem": {
+      "id": "mem-1789505807506-uwaem",
+      "userId": "exec-1",
+      "workspaceId": "tenant-alpha",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Alpha focuses on B2B freight forwarding and enterprise logistics.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789505807506,
+      "updatedAt": 1789505807526,
+      "accessedAt": 1789505807525,
+      "accessCount": 1
+    },
+    "mem-1789505807516-w7xwv": {
+      "id": "mem-1789505807516-w7xwv",
+      "userId": "exec-2",
+      "workspaceId": "tenant-beta",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Beta focuses on consumer fintech and mobile payments.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789505807516,
+      "updatedAt": 1789505807516,
+      "accessedAt": 1789505807516,
+      "accessCount": 0
+    }
+  },
+  "entities": {
+    "ent-project-gacks": {
+      "id": "ent-project-gacks",
+      "userId": "default",
+      "name": "GACKS P.A.",
+      "type": "project",
+      "properties": {
+        "repo": "https://github.com/gackstonew-lgtm/Gacks-AI.git",
+        "productionUrl": "https://gacks-ai.vercel.app/",
+        "architecture": "GACKS P.A. V2 Jarvis Surpass"
+      },
+      "createdAt": 1789455800159,
+      "updatedAt": 1789455800159
+    }
+  },
+  "relations": {},
+  "auditLogs": [
+    {
+      "id": "audit-1789505813803-7hrx4",
+      "timestamp": 1789505813803,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "Gold XAUUSD forex market sentiment"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789505813800-cy6tm",
+      "timestamp": 1789505813800,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "audit_forex_trade",
+      "action": "executed",
+      "inputsMetadata": {
+        "pair": "XAUUSD",
+        "direction": "LONG",
+        "entryPrice": 2650.5,
+        "stopLoss": 2640,
+        "takeProfit": 2680,
+        "accountBalanceUsd": 10000,
+        "riskPercent": 1.5
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 31,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789505808054-u42ui",
+      "timestamp": 1789505808054,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "business-communication",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789505808054-joh5",
+        "action": "Send Outbound WhatsApp to +254711223344",
+        "target": "+254711223344",
+        "costUsd": 0,
+        "potentialImpact": "MEDIUM"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789505808054-6n248",
+      "timestamp": 1789505808054,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-business",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789505808053-7p3g",
+        "action": "Publish Live Meta Campaign",
+        "target": "Unapproved Campaign",
+        "costUsd": 3000,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789505808050-vyjv6",
+      "timestamp": 1789505808051,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "execute_meta_ad_action",
+      "action": "AUTOMATION_QUEUED_APPROVAL",
+      "inputsMetadata": {
+        "ruleId": "auto-3",
+        "approvalRequestId": "appr-1789505808050-6d78"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789505808050-7h34t",
+      "timestamp": 1789505808050,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "automation-engine",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789505808050-6d78",
+        "action": "Automation Triggered: Meta Ad Daily Budget Scale (> $100/day)",
+        "target": "execute_meta_ad_action",
+        "costUsd": 0,
+        "potentialImpact": "HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789505808049-h86k7",
+      "timestamp": 1789505808050,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "generate_morning_briefing",
+      "action": "AUTOMATION_EXECUTED",
+      "inputsMetadata": {
+        "ruleId": "auto-1",
+        "eventPayload": {}
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789505807577-18pwp",
+      "timestamp": 1789505807577,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_APPROVED",
+      "inputsMetadata": {
+        "requestId": "appr-1789505807576-n8rp",
+        "action": "Scale Meta Campaign Budget",
+        "resolvedBy": "chief_officer"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789505807576-2h0it",
+      "timestamp": 1789505807576,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789505807576-n8rp",
+        "action": "Scale Meta Campaign Budget",
+        "target": "Q3 Enterprise Campaign",
+        "costUsd": 1500,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789505807554-jijqf",
+      "timestamp": 1789505807554,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789505807553-hucw",
+        "action": "Publish META Ad Campaign: Enterprise Logistics Expansion",
+        "target": "Enterprise Logistics Expansion",
+        "costUsd": 2250,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789505151138-5vyp6",
+      "timestamp": 1789505151138,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "Gold XAUUSD forex market sentiment"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 3,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789505151134-csrek",
+      "timestamp": 1789505151134,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "audit_forex_trade",
+      "action": "executed",
+      "inputsMetadata": {
+        "pair": "XAUUSD",
+        "direction": "LONG",
+        "entryPrice": 2650.5,
+        "stopLoss": 2640,
+        "takeProfit": 2680,
+        "accountBalanceUsd": 10000,
+        "riskPercent": 1.5
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789504961358-2lj7t",
+      "timestamp": 1789504961358,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "Gold XAUUSD forex market sentiment"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789504961356-stnv5",
+      "timestamp": 1789504961356,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "audit_forex_trade",
+      "action": "executed",
+      "inputsMetadata": {
+        "pair": "XAUUSD",
+        "direction": "LONG",
+        "entryPrice": 2650.5,
+        "stopLoss": 2640,
+        "takeProfit": 2680,
+        "accountBalanceUsd": 10000,
+        "riskPercent": 1.5
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789503427358-fpau7",
+      "timestamp": 1789503427358,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "Gold XAUUSD forex market sentiment"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 7,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789503427350-i7wdh",
+      "timestamp": 1789503427350,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "audit_forex_trade",
+      "action": "executed",
+      "inputsMetadata": {
+        "pair": "XAUUSD",
+        "direction": "LONG",
+        "entryPrice": 2650.5,
+        "stopLoss": 2640,
+        "takeProfit": 2680,
+        "accountBalanceUsd": 10000,
+        "riskPercent": 1.5
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    }
+  ]
+}

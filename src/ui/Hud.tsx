@@ -11,7 +11,7 @@ import { HudInput } from './HudInput'
 const statusText: Record<Phase, string> = {
   offline: 'OFFLINE',
   boot: 'INITIALISING',
-  dormant: 'STANDBY — SAY “HEY GACKS” OR “HEY JARVIS”',
+  dormant: 'STANDBY — SAY “HEY INSIGHT”',
   waking: 'ONLINE',
   listening: 'LISTENING',
   thinking: 'PROCESSING',
@@ -274,7 +274,7 @@ export function Hud() {
                 exit={{ opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 320, damping: 32 }}
               >
-                <span className="log-who">{t.role === 'user' ? 'YOU' : 'GACKS P.A'}</span>
+                <span className="log-who">{t.role === 'user' ? 'YOU' : 'INSIGHT'}</span>
                 {/* Only his half decodes. What the user said was never
                     transmitted from anywhere — dressing it up as machine
                     output would be a lie about where the words came from. */}

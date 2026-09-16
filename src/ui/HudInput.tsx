@@ -69,7 +69,7 @@ export function HudInput() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask GACKS P.A anything... (Press / to focus)"
+          placeholder="Ask Insight Business Suite anything... (Press / to focus)"
           disabled={phase === 'boot'}
           autoComplete="off"
           spellCheck="false"

@@ -4,8 +4,8 @@ import {
   Folder,
   Calendar,
   Globe,
-  Grid,
   Settings,
+  Briefcase,
   LayoutGrid,
 } from 'lucide-react'
 import { useStore, type NavRoute } from '../../store'
@@ -22,39 +22,39 @@ export const QuickActionsCard: React.FC<QuickActionsCardProps> = ({
 
   const actions = [
     {
+      id: 'business' as NavRoute,
+      title: 'Business Suite',
+      desc: 'Growth, CRM & Ops',
+      icon: Briefcase,
+    },
+    {
       id: 'chat' as NavRoute,
       title: 'Start Chat',
-      desc: 'Ask anything',
+      desc: 'Ask Insight anything',
       icon: MessageSquare,
     },
     {
       id: 'files' as NavRoute,
       title: 'Manage Files',
-      desc: 'Access your files',
+      desc: 'Access workspace',
       icon: Folder,
     },
     {
       id: 'calendar' as NavRoute,
       title: 'Plan My Day',
-      desc: 'View calendar & tasks',
+      desc: 'Calendar & priorities',
       icon: Calendar,
     },
     {
       id: 'websearch' as NavRoute,
       title: 'Web Search',
-      desc: 'Find information',
+      desc: 'WebHunt research',
       icon: Globe,
-    },
-    {
-      id: 'system' as NavRoute,
-      title: 'Open Tools',
-      desc: 'Productivity tools',
-      icon: Grid,
     },
     {
       id: 'settings' as NavRoute,
       title: 'Settings',
-      desc: 'Customize Gacks',
+      desc: 'Customize Insight Suite',
       icon: Settings,
     },
   ]

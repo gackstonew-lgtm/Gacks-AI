@@ -62,6 +62,7 @@ export type Turn = {
 
 export type NavRoute =
   | 'dashboard'
+  | 'business'
   | 'chat'
   | 'tasks'
   | 'files'
@@ -81,6 +82,22 @@ export type CalendarEvent = {
   title: string
   time: string
   color: string
+}
+
+export type MissionPhase =
+  | 'PLANNING'
+  | 'DIAGNOSIS'
+  | 'IMPLEMENTATION'
+  | 'VERIFICATION'
+  | 'DEPLOYMENT'
+
+export type MissionState = {
+  id: string
+  title: string
+  goal: string
+  progress: number
+  currentPhase: MissionPhase
+  phaseStatuses: Record<MissionPhase, 'pending' | 'active' | 'completed' | 'failed'>
 }
 
 export type ActivityItem = {
@@ -241,6 +258,208 @@ function defined<T extends object>(patch: T | undefined): Partial<T> {
  */
 const MAX_ORBITS = 8
 
+export interface AppSettings {
+  general: {
+    theme: 'dark' | 'light' | 'system' | 'dark-charcoal' | 'cyber-black' | 'deep-space'
+    accentColor: string
+    density: 'compact' | 'comfortable' | 'spacious'
+    glassIntensity: 'low' | 'medium' | 'high' | number
+    fontSize: 'sm' | 'md' | 'lg'
+    animationsEnabled: boolean
+    backgroundGrid: boolean
+    sidebarBehavior?: 'expanded' | 'collapsed' | 'auto'
+    sidebarCollapsedDefault: boolean
+    chatLayout: 'standard' | 'centered' | 'compact' | 'wide'
+    fullscreenMode?: boolean
+    compactMode?: boolean
+    soundEffects: boolean
+    desktopNotifications: boolean
+    taskCompletionAlerts: boolean
+    errorAlerts: boolean
+    customAssistantName: string
+    operatorName: string
+    operatorMotto: string
+    timezone: string
+    dateFormat: string
+    timeFormat: '12h' | '24h'
+  }
+  ai: {
+    personality: 'Jarvis-style' | 'Professional' | 'Technical' | 'Friendly' | 'Executive' | 'Teacher'
+    responseStyle: 'Balanced' | 'Concise' | 'Detailed' | 'Formal' | 'Conversational'
+    markdown: boolean
+    tables: boolean
+    stepByStep: boolean
+    clarifyingQuestions: boolean
+    confidenceIndicators: boolean
+    customInstructions: string
+    memoryEnabled: boolean
+    temporaryConversations: boolean
+    activeVoice: string
+    speechSpeed: number
+    wakeWordEnabled: boolean
+    readAloud: boolean
+  }
+  performance: {
+    responseSpeed: 'Fast' | 'Balanced' | 'Thorough'
+    defaultModel: 'gemini-2.5-flash' | 'gemini-1.5-pro' | 'claude-3-5-sonnet'
+    autoModelRouting: boolean
+    taskSpecificModels: boolean
+    fallbackModel: string
+    streaming: boolean
+    thinkingDepth: number
+    parallelProcessing: boolean
+    contextOptimization: boolean
+    timeoutSeconds: number
+    autoRetries: boolean
+    caching: boolean
+    lowBandwidthMode: boolean
+  }
+  automation: {
+    scheduledTasksEnabled: boolean
+    backgroundAgentsEnabled: boolean
+    agentPermissionTier: 'Read-only' | 'Suggest' | 'Draft' | 'Execute with Approval' | 'Trusted Automation'
+    requireApprovalForMessages: boolean
+    requireApprovalForFiles: boolean
+    requireApprovalForDeletion: boolean
+    taskExecutionLimitSec: number
+  }
+  security: {
+    conversationHistory: boolean
+    dataRetentionDays: number
+    twoFactorAuth: boolean
+    sensitiveDataWarnings: boolean
+    secretRedaction: boolean
+  }
+  advanced: {
+    temperature: number
+    maxOutputTokens: number
+    reasoningBudget: number
+    contextLimit: number
+    experimentalMultiAgent: boolean
+    experimentalLocalModels: boolean
+  }
+  desktop: {
+    companionEnabled: boolean
+    autoStartWithOS: boolean
+    screenReadingPermitted: boolean
+    clipboardPermitted: boolean
+    terminalPermitted: boolean
+    fileAccessPermitted: boolean
+    requireConfirmationForCommands: boolean
+  }
+  developerMode: boolean
+  experimentalFlags: {
+    multiAgentCollaboration: boolean
+    screenUnderstanding: boolean
+    autonomousResearch: boolean
+    localAiModels: boolean
+    customPlugins: boolean
+    smartNotifications: boolean
+    crossDeviceSync: boolean
+  }
+}
+
+export const DEFAULT_SETTINGS: AppSettings = {
+  general: {
+    theme: 'dark-charcoal',
+    accentColor: '#00A3FF',
+    density: 'comfortable',
+    glassIntensity: 25,
+    fontSize: 'md',
+    animationsEnabled: true,
+    backgroundGrid: true,
+    sidebarBehavior: 'auto',
+    sidebarCollapsedDefault: false,
+    chatLayout: 'standard',
+    fullscreenMode: false,
+    compactMode: false,
+    soundEffects: true,
+    desktopNotifications: true,
+    taskCompletionAlerts: true,
+    errorAlerts: true,
+    customAssistantName: 'Insight',
+    operatorName: 'Gackstone',
+    operatorMotto: 'Always Forward',
+    timezone: 'Africa/Nairobi (UTC+3)',
+    dateFormat: 'YYYY-MM-DD',
+    timeFormat: '12h',
+  },
+  ai: {
+    personality: 'Jarvis-style',
+    responseStyle: 'Balanced',
+    markdown: true,
+    tables: true,
+    stepByStep: true,
+    clarifyingQuestions: true,
+    confidenceIndicators: true,
+    customInstructions: 'Act as a top-tier executive autonomous AI operator. Always prioritize correctness, verification, precision, and proactive insights.',
+    memoryEnabled: true,
+    temporaryConversations: false,
+    activeVoice: 'ElevenLabs Neural / System Fallback',
+    speechSpeed: 1.0,
+    wakeWordEnabled: true,
+    readAloud: true,
+  },
+  performance: {
+    responseSpeed: 'Fast',
+    defaultModel: 'gemini-2.5-flash',
+    autoModelRouting: true,
+    taskSpecificModels: true,
+    fallbackModel: 'claude-3-5-sonnet',
+    streaming: true,
+    thinkingDepth: 3,
+    parallelProcessing: true,
+    contextOptimization: true,
+    timeoutSeconds: 30,
+    autoRetries: true,
+    caching: true,
+    lowBandwidthMode: false,
+  },
+  automation: {
+    scheduledTasksEnabled: true,
+    backgroundAgentsEnabled: true,
+    agentPermissionTier: 'Execute with Approval',
+    requireApprovalForMessages: true,
+    requireApprovalForFiles: true,
+    requireApprovalForDeletion: true,
+    taskExecutionLimitSec: 120,
+  },
+  security: {
+    conversationHistory: true,
+    dataRetentionDays: 90,
+    twoFactorAuth: true,
+    sensitiveDataWarnings: true,
+    secretRedaction: true,
+  },
+  advanced: {
+    temperature: 0.7,
+    maxOutputTokens: 4096,
+    reasoningBudget: 3,
+    contextLimit: 32000,
+    experimentalMultiAgent: false,
+    experimentalLocalModels: false,
+  },
+  desktop: {
+    companionEnabled: false,
+    autoStartWithOS: false,
+    screenReadingPermitted: true,
+    clipboardPermitted: false,
+    terminalPermitted: false,
+    fileAccessPermitted: true,
+    requireConfirmationForCommands: true,
+  },
+  developerMode: false,
+  experimentalFlags: {
+    multiAgentCollaboration: false,
+    screenUnderstanding: true,
+    autonomousResearch: true,
+    localAiModels: false,
+    customPlugins: false,
+    smartNotifications: true,
+    crossDeviceSync: false,
+  },
+}
+
 type State = {
   phase: Phase
   /** 0..1 mic loudness, drives the reactor pulse. */
@@ -302,8 +521,13 @@ type State = {
   screenAccess: boolean
   permissions: Record<string, 'ALLOWED' | 'DENIED' | 'ASK_EVERY_TIME'>
 
+  mission: MissionState
+  setMission: (m: MissionState) => void
   activeNav: NavRoute
   setActiveNav: (nav: NavRoute) => void
+  sidebarCollapsed: boolean
+  setSidebarCollapsed: (collapsed: boolean) => void
+  toggleSidebarCollapsed: () => void
   tasks: FocusTask[]
   toggleTask: (id: string) => void
   addTask: (text: string) => void
@@ -313,6 +537,13 @@ type State = {
   logActivity: (item: Omit<ActivityItem, 'id' | 'time'>) => void
   userProfile: { name: string; subtitle: string; avatar: string }
   setUserProfile: (profile: Partial<{ name: string; subtitle: string; avatar: string }>) => void
+
+  settings: AppSettings
+  settingsCategory: string
+  setSettingsCategory: (cat: string) => void
+  updateSettingsCategory: <K extends keyof AppSettings>(cat: K, patch: Partial<AppSettings[K]>) => void
+  resetSettingsCategory: (cat: keyof AppSettings) => void
+  resetAllSettings: () => void
 
   submitQuery: (q: string) => void
   clearPendingQuery: () => void
@@ -342,6 +573,109 @@ export const useStore = create<State>((set) => ({
   screenAccess: false,
   activeNav: 'dashboard',
   setActiveNav: (activeNav) => set({ activeNav }),
+  sidebarCollapsed: (() => {
+    try {
+      return localStorage.getItem('gacks_sidebar_collapsed') === 'true'
+    } catch {
+      return false
+    }
+  })(),
+  setSidebarCollapsed: (sidebarCollapsed) => {
+    try {
+      localStorage.setItem('gacks_sidebar_collapsed', String(sidebarCollapsed))
+    } catch {}
+    set({ sidebarCollapsed })
+  },
+  toggleSidebarCollapsed: () =>
+    set((s) => {
+      const next = !s.sidebarCollapsed
+      try {
+        localStorage.setItem('gacks_sidebar_collapsed', String(next))
+      } catch {}
+      return { sidebarCollapsed: next }
+    }),
+  settings: (() => {
+    try {
+      const saved = localStorage.getItem('gacks_settings_v2')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        return {
+          general: { ...DEFAULT_SETTINGS.general, ...parsed.general },
+          ai: { ...DEFAULT_SETTINGS.ai, ...parsed.ai },
+          performance: { ...DEFAULT_SETTINGS.performance, ...parsed.performance },
+          automation: { ...DEFAULT_SETTINGS.automation, ...parsed.automation },
+          security: { ...DEFAULT_SETTINGS.security, ...parsed.security },
+          advanced: { ...DEFAULT_SETTINGS.advanced, ...parsed.advanced },
+          desktop: { ...DEFAULT_SETTINGS.desktop, ...parsed.desktop },
+          developerMode: parsed.developerMode ?? DEFAULT_SETTINGS.developerMode,
+          experimentalFlags: { ...DEFAULT_SETTINGS.experimentalFlags, ...parsed.experimentalFlags },
+        }
+      }
+    } catch {}
+    return DEFAULT_SETTINGS
+  })(),
+  settingsCategory: 'general',
+  setSettingsCategory: (settingsCategory) => set({ settingsCategory }),
+  updateSettingsCategory: (cat, patch) =>
+    set((s) => {
+      let next: AppSettings
+      if (cat === 'developerMode') {
+        next = { ...s.settings, developerMode: Boolean(patch) }
+      } else if (cat === 'experimentalFlags') {
+        next = {
+          ...s.settings,
+          experimentalFlags: { ...s.settings.experimentalFlags, ...(patch as Record<string, boolean>) },
+        }
+      } else {
+        next = {
+          ...s.settings,
+          [cat]: { ...(s.settings[cat] as Record<string, unknown>), ...(patch as Record<string, unknown>) },
+        } as AppSettings
+      }
+      try {
+        localStorage.setItem('gacks_settings_v2', JSON.stringify(next))
+      } catch {}
+      return { settings: next }
+    }),
+  resetSettingsCategory: (cat) =>
+    set((s) => {
+      let next: AppSettings
+      if (cat === 'developerMode') {
+        next = { ...s.settings, developerMode: DEFAULT_SETTINGS.developerMode }
+      } else if (cat === 'experimentalFlags') {
+        next = { ...s.settings, experimentalFlags: { ...DEFAULT_SETTINGS.experimentalFlags } }
+      } else {
+        next = {
+          ...s.settings,
+          [cat]: { ...DEFAULT_SETTINGS[cat] },
+        } as AppSettings
+      }
+      try {
+        localStorage.setItem('gacks_settings_v2', JSON.stringify(next))
+      } catch {}
+      return { settings: next }
+    }),
+  resetAllSettings: () => {
+    try {
+      localStorage.setItem('gacks_settings_v2', JSON.stringify(DEFAULT_SETTINGS))
+    } catch {}
+    set({ settings: DEFAULT_SETTINGS })
+  },
+  mission: {
+    id: 'mission-active',
+    title: 'GACKS Production Agent Architecture',
+    goal: 'Maintain high reliability, persistent memory & verification',
+    progress: 88,
+    currentPhase: 'VERIFICATION',
+    phaseStatuses: {
+      PLANNING: 'completed',
+      DIAGNOSIS: 'completed',
+      IMPLEMENTATION: 'completed',
+      VERIFICATION: 'active',
+      DEPLOYMENT: 'pending',
+    },
+  },
+  setMission: (mission) => set({ mission }),
   tasks: (() => {
     try {
       const saved = localStorage.getItem('gacks_tasks')
@@ -508,7 +842,11 @@ export const useStore = create<State>((set) => ({
   setActiveTool: (activeTool) => set({ activeTool }),
   setError: (error) => set({ error }),
   setConnected: (connected) => set({ connected }),
-  pushTurn: (turn) => set((s) => ({ turns: [...s.turns.slice(-40), turn] })),
+  pushTurn: (turn) =>
+    set((s) => {
+      const filtered = s.turns.filter((t) => t.id !== turn.id)
+      return { turns: [...filtered.slice(-39), turn] }
+    }),
   appendToLastTurn: (text) =>
     set((s) => {
       const turns = [...s.turns]

@@ -155,7 +155,7 @@ export const QuoteAndStatsCards: React.FC = () => {
           <div className="gacks-badge-stripe gacks-badge-stripe-2" />
         </div>
         <div className="gacks-badge-content">
-          <h4 className="gacks-badge-title">GACKS</h4>
+          <h4 className="gacks-badge-title">INSIGHT</h4>
           <span className="gacks-badge-motto">BUILT FOR A SMARTER TOMORROW</span>
         </div>
       </div>

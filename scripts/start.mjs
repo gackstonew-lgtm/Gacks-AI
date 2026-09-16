@@ -117,8 +117,8 @@ if (port) {
 
 vendorWasm()
 
-console.log('\nGACKS P.A starting — the brain and the face.\n')
-run('bridge', 'node', ['bridge/server.mjs'], '36', bridgeEnv)
+console.log('\nGACKS P.A V2 starting — Agent Runtime (Brain) and Dashboard (Face).\n')
+run('agent', process.execPath, ['node_modules/tsx/dist/cli.mjs', 'server/index.ts'], '36', bridgeEnv)
 // npm is a shell script on most systems; call the vite binary directly so we do
 // not need shell:true (which would break the argument handling above).
 run('face', process.execPath, ['node_modules/vite/bin/vite.js'], '35', {})
