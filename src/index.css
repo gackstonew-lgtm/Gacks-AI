@@ -4,42 +4,82 @@
 
 :root {
   /* =========================================================================
-     DESIGN TOKENS — PREMIUM DARK-MODE DEVELOPER PLATFORM (REFERENCE: #18181A)
+     DESIGN TOKENS — QUANTUM-LEVEL PREMIUM AI OPERATING SYSTEM
+     Upgraded: deep navy surfaces, gradient system, timing tokens, glow tokens
      ========================================================================= */
-  --bg-base: #121214;
-  --bg-surface: #18181A;
-  --bg-surface-elevated: #202024;
-  --bg-surface-hover: #26262B;
-  --bg-surface-active: #2C2C33;
 
+  /* ── Surface System — Deep Navy-Blue Professional Palette ─────────────── */
+  --bg-base: #080d1c;
+  --bg-surface: #0d1426;
+  --bg-surface-elevated: #141d38;
+  --bg-surface-hover: #1a2444;
+  --bg-surface-active: #1e2a50;
+
+  /* ── Borders ──────────────────────────────────────────────────────────── */
   --border-subtle: rgba(255, 255, 255, 0.04);
   --border-neutral: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.16);
-  --border-active: rgba(255, 255, 255, 0.24);
-  --border-focus: #00A3FF;
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --border-active: rgba(255, 255, 255, 0.22);
+  --border-focus: #287cff;
 
-  --text-primary: #EDEDEF;
-  --text-secondary: #A1A1A6;
-  --text-tertiary: #71717A;
-  --text-dim: #52525B;
+  /* ── Text ─────────────────────────────────────────────────────────────── */
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-dim: #475569;
 
-  --accent-cyan: #00A3FF;
+  /* ── Primary Accent — Electric Blue (Quantum POS: #287cff) ───────────── */
+  --accent-primary: #287cff;
+  --accent-primary-rgb: 40, 124, 255;
+  --accent-primary-subtle: rgba(40, 124, 255, 0.10);
+  --accent-primary-glow: rgba(40, 124, 255, 0.28);
+
+  /* ── Cyan Accent (secondary) ─────────────────────────────────────────── */
+  --accent-cyan: #22d3ee;
+  --accent-cyan-legacy: #00A3FF;
   --accent-cyan-hover: #38BDF8;
-  --accent-cyan-subtle: rgba(0, 163, 255, 0.08);
-  --accent-cyan-glow: rgba(0, 163, 255, 0.25);
+  --accent-cyan-subtle: rgba(34, 211, 238, 0.08);
+  --accent-cyan-glow: rgba(34, 211, 238, 0.22);
 
+  /* ── Semantic Colors ─────────────────────────────────────────────────── */
   --accent-red: #FF453A;
   --accent-red-hover: #FF6961;
   --accent-red-subtle: rgba(255, 69, 58, 0.12);
-
   --accent-amber: #F59E0B;
-  --accent-emerald: #10B981;
+  --accent-emerald: #22c55e;
 
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Chakra Petch', sans-serif;
+  /* ── Gradient System ─────────────────────────────────────────────────── */
+  --gradient-primary: linear-gradient(135deg, #287cff 0%, #22d3ee 100%);
+  --gradient-primary-45: linear-gradient(45deg, #287cff 0%, #22d3ee 100%);
+  --gradient-surface: linear-gradient(135deg, rgba(40,124,255,0.06) 0%, rgba(34,211,238,0.03) 100%);
+
+  /* ── Glow Tokens ─────────────────────────────────────────────────────── */
+  --glow-primary: 0 0 20px rgba(40, 124, 255, 0.28), 0 4px 12px rgba(0,0,0,0.4);
+  --glow-primary-lg: 0 0 40px rgba(40, 124, 255, 0.22), 0 8px 30px rgba(0,0,0,0.5);
+  --glow-cyan: 0 0 16px rgba(34, 211, 238, 0.22);
+  --glow-hover: 0 8px 40px rgba(40, 124, 255, 0.12), 0 4px 16px rgba(0,0,0,0.4);
+
+  /* ── Transition Timing ───────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow:   350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-reveal: 600ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Backward-compatibility bridge for HUD */
-  --interface: #00A3FF;
+  /* ── Radius ──────────────────────────────────────────────────────────── */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-2xl:  24px;
+  --radius-pill: 9999px;
+
+  /* ── Backward-compatibility bridge for HUD & existing code ───────────── */
+  --interface: #287cff;
   --accent: var(--interface);
   --bg: var(--bg-base);
   font-family: var(--font-sans);

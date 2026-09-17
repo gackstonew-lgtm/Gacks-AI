@@ -278,6 +278,281 @@ export interface FilePreviewResult {
   truncated: boolean
 }
 
+// ===========================================================================
+// Multi-Model AI OS Types (Phase 3-5, 21-22, 31-32, 46-47)
+// ===========================================================================
+
+export type ModelRole = 'GENERAL' | 'REASONING' | 'CODING' | 'VISION' | 'FAST' | 'LOCAL' | 'AGENT' | 'EMBEDDING' | 'SPEECH' | 'VOICE' | 'IMAGE'
+export type ModelCapability = 'text_generation' | 'tool_calling' | 'code_completion' | 'vision' | 'embedding' | 'streaming' | 'long_context' | 'reasoning' | 'multi_turn' | 'json_mode' | 'image_generation' | 'speech_to_text' | 'text_to_speech'
+export type RoutingMode = 'AUTO' | 'LOCAL_ONLY' | 'CLOUD_ONLY' | 'OFFLINE'
+export type PrivacyPolicy = 'LOCAL_ONLY' | 'HYBRID' | 'CLOUD_ALLOWED'
+
+export interface ModelDescriptor {
+  id: string
+  displayName: string
+  provider: string
+  modelName: string
+  roles: ModelRole[]
+  capabilities: ModelCapability[]
+  contextWindow: number
+  maxOutputTokens: number
+  license: string
+  isLocal: boolean
+  requiresGpu: boolean
+  minVramGb: number
+  quantization?: string
+  sizeGb?: number
+  costPerMillionTokens?: number
+  defaultTemperature: number
+  defaultTopP: number
+  defaultMaxTokens: number
+  tags: string[]
+  description: string
+  version?: string
+  deprecated?: boolean
+  enabled?: boolean
+  priority?: number
+  fallbackOrder?: number
+  custom?: boolean
+  parameters?: {
+    temperature?: number
+    maxTokens?: number
+    topP?: number
+  }
+}
+
+export interface ModelTestResult {
+  modelId: string
+  provider: string
+  status: 'CONNECTED' | 'DEGRADED' | 'NOT_CONFIGURED' | 'ERROR'
+  latencyMs: number
+  sampleResponse?: string
+  error?: string
+  testedAt: number
+}
+
+export interface BudgetConfig {
+  dailyLimitUsd?: number
+  monthlyLimitUsd?: number
+  maxCostPerRequestUsd?: number
+  alertThresholdPercent?: number
+  enforceStrictLimits?: boolean
+}
+
+export interface AIUserPreferences {
+  preferredModelId?: string
+  routingMode: RoutingMode
+  privacyPolicy: PrivacyPolicy
+  allowCloudFallback: boolean
+  preferLocalWhenAvailable: boolean
+}
+
+export interface AIRoutingResult {
+  selectedModel: ModelDescriptor
+  fallbackChain: ModelDescriptor[]
+  rationale: string
+  routingMode: RoutingMode
+}
+
+export interface ModelDiscoveryResult {
+  ollama: { reachable: boolean; models: string[]; registered: number }
+  llamacpp: { reachable: boolean; models: string[]; registered: number }
+  totalDiscovered: number
+  discoveredAt: number
+}
+
+export interface HardwareProfile {
+  totalRamGb: number
+  availableRamGb: number
+  gpuVramGb: number
+  hasGpu: boolean
+  cpuCores: number
+  cpuModel: string
+  canRunLocal: boolean
+  recommendedMaxModelSizeGb: number
+}
+
+export interface ModelRecommendation {
+  model: ModelDescriptor
+  reason: string
+  fitScore: number
+  canRun: boolean
+}
+
+export interface HardwareCompatibilityReport {
+  profile: HardwareProfile
+  recommendations: ModelRecommendation[]
+  recommendedLocalModel: ModelDescriptor | null
+  cloudFallbackAdvised: boolean
+}
+
+export interface ModelHealthReport {
+  cloud: Array<{ name: string; available: boolean; latencyMs: number; recentErrors: number; lastChecked: number }>
+  local: {
+    ollama: { name: string; available: boolean }
+    llamacpp: { name: string; available: boolean }
+  }
+}
+
+export interface ModelTelemetryEntry {
+  id: string
+  timestamp: number
+  provider: string
+  model: string
+  profile: string
+  latencyMs: number
+  estimatedTokens: number
+  estimatedCostUsd: number
+  success: boolean
+  fallbackEvents: number
+  error?: string
+  isLocal?: boolean
+  routingMode?: string
+}
+
+export type WebHuntPipelineStatus =
+  | 'NEW'
+  | 'QUALIFIED'
+  | 'CONTACTED'
+  | 'INTERESTED'
+  | 'NEGOTIATION'
+  | 'CLOSED'
+  | 'NOT_INTERESTED'
+  | 'SAVED'
+  | 'PREPARING'
+  | 'APPLIED'
+  | 'INTERVIEW'
+  | 'OFFER'
+  | 'REJECTED'
+  | 'WITHDRAWN'
+  | 'ARCHIVED'
+
+export interface WebHuntPhysicalLead {
+  id: string
+  type: 'physical'
+  businessName: string
+  phone: string
+  phoneFormatted: string
+  phoneStatus: 'verified' | 'unverified' | 'unavailable'
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  category?: string | null
+  rating?: number | null
+  reviewCount?: number | null
+  hasWebsite: boolean
+  noWebsiteConfidence: 'High' | 'Medium' | 'Verified'
+  sourceProvider: string
+  status: WebHuntPipelineStatus
+  estimatedValue: number
+  notes?: string | null
+  tags?: string[]
+  contactedAt?: string | null
+  createdAt?: string | Date
+  email?: string | null
+  whatsapp?: string | null
+  contactPageUrl?: string | null
+  bookingUrl?: string | null
+  socialProfiles?: {
+    facebook?: string | null
+    instagram?: string | null
+    linkedin?: string | null
+    twitter?: string | null
+  }
+}
+
+export interface WebHuntRemoteJob {
+  id: string
+  type: 'online'
+  title: string
+  company: string
+  location: string
+  country: string
+  isRemote: boolean
+  remoteType: string
+  category?: string | null
+  tags: string[]
+  url: string
+  postedDate: string
+  salary: string
+  source: string
+  status: WebHuntPipelineStatus
+  estimatedValue: number
+  notes?: string | null
+  email?: string | null
+  whatsapp?: string | null
+  contactPageUrl?: string | null
+  createdAt?: string | Date
+}
+
+export type WebHuntLeadItem = WebHuntPhysicalLead | WebHuntRemoteJob
+
+export interface WebHuntSearchResult {
+  leads: WebHuntLeadItem[]
+  totalFetched: number
+  qualifiedLeads: number
+  searchId?: string
+  cached?: boolean
+}
+
+export interface WebHuntGeneratedProposal {
+  templateType: string
+  title: string
+  subject: string
+  greeting: string
+  body: string
+  callToAction: string
+  candidateName: string
+  candidateTitle: string
+  matchedSkills?: string[]
+  unmatchedSkills?: string[]
+  leadContext?: {
+    businessName: string
+    category?: string
+    location?: string
+    hasWebsite?: boolean
+    phone?: string
+    email?: string
+  }
+}
+
+export interface WebHuntUser {
+  id: string
+  email: string
+  name?: string | null
+  role: string
+  status?: string
+  isVerified?: boolean
+  profile?: any
+}
+
+export interface WebHuntAuthResponse {
+  success: boolean
+  authenticated?: boolean
+  token?: string
+  user?: WebHuntUser
+  subscription?: {
+    hasActiveSubscription: boolean
+    plan?: string
+    status?: string
+  }
+  error?: string
+}
+
+export interface WebHuntIntegrationStatus {
+  connected: boolean
+  baseUrl: string
+  authenticated: boolean
+  userEmail?: string
+  userId?: string
+  userName?: string
+  plan?: string
+  role?: string
+  hasActiveSubscription?: boolean
+  latencyMs: number
+  sourceOfTruth: 'PRODUCTION_API' | 'LOCAL_FALLBACK'
+}
+
 class ApiClient {
   private baseUrl = BRIDGE_HTTP_URL
   private isGatewayOnline: boolean | null = null
@@ -684,6 +959,304 @@ class ApiClient {
         timeoutMs: 4000,
       },
     )
+  }
+
+  // ===========================================================================
+  // Multi-Model AI OS API Methods (Phase 21-24, 33, 41-43, 46-47)
+  // ===========================================================================
+
+  public async getModels(
+    filter?: 'local' | 'cloud' | 'all',
+    role?: string,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ models: ModelDescriptor[]; total: number }>> {
+    const qs = new URLSearchParams()
+    if (filter) qs.set('filter', filter)
+    if (role) qs.set('role', role)
+    const q = qs.toString() ? `?${qs.toString()}` : ''
+    return this.request<{ models: ModelDescriptor[]; total: number }>(
+      `/api/v1/models${q}`,
+      { method: 'GET', signal, timeoutMs: 5000 },
+    )
+  }
+
+  public async getModelById(
+    modelId: string,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<ModelDescriptor>> {
+    return this.request<ModelDescriptor>(
+      `/api/v1/models/${encodeURIComponent(modelId)}`,
+      { method: 'GET', signal, timeoutMs: 3000 },
+    )
+  }
+
+  public async routeModel(
+    request: { profile?: string; routingMode?: RoutingMode; privacyPolicy?: PrivacyPolicy; preferredModelId?: string; requiresVision?: boolean },
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<AIRoutingResult>> {
+    return this.request<AIRoutingResult>(
+      '/api/v1/models/route',
+      { method: 'POST', body: JSON.stringify(request), signal, timeoutMs: 5000 },
+    )
+  }
+
+  public async discoverLocalModels(signal?: AbortSignal): Promise<ApiResponse<ModelDiscoveryResult>> {
+    return this.request<ModelDiscoveryResult>(
+      '/api/v1/models/discover',
+      { method: 'POST', body: '{}', signal, timeoutMs: 15000 },
+    )
+  }
+
+  public async getDiscoveryStatus(signal?: AbortSignal): Promise<ApiResponse<ModelDiscoveryResult>> {
+    return this.request<ModelDiscoveryResult>(
+      '/api/v1/models/discovery/status',
+      { method: 'GET', signal, timeoutMs: 3000 },
+    )
+  }
+
+  public async getHardwareCompatibility(signal?: AbortSignal): Promise<ApiResponse<HardwareCompatibilityReport>> {
+    return this.request<HardwareCompatibilityReport>(
+      '/api/v1/models/hardware',
+      { method: 'GET', signal, timeoutMs: 8000 },
+    )
+  }
+
+  public async installModel(
+    modelId: string,
+    provider: string,
+    userConsented: true,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ status: string; modelId: string; message: string }>> {
+    return this.request<{ status: string; modelId: string; message: string }>(
+      '/api/v1/models/install',
+      {
+        method: 'POST',
+        body: JSON.stringify({ modelId, provider, userConsented }),
+        signal,
+        timeoutMs: 10000,
+      },
+    )
+  }
+
+  public async getModelPreferences(userId = 'default', signal?: AbortSignal): Promise<ApiResponse<AIUserPreferences>> {
+    return this.request<AIUserPreferences>(
+      `/api/v1/models/preferences?userId=${encodeURIComponent(userId)}`,
+      { method: 'GET', signal, timeoutMs: 3000 },
+    )
+  }
+
+  public async updateModelPreferences(
+    prefs: Partial<AIUserPreferences> & { userId?: string },
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ success: boolean; preferences: AIUserPreferences }>> {
+    return this.request<{ success: boolean; preferences: AIUserPreferences }>(
+      '/api/v1/models/preferences',
+      { method: 'PATCH', body: JSON.stringify(prefs), signal, timeoutMs: 3000 },
+    )
+  }
+
+  public async getModelTelemetry(limit = 50, signal?: AbortSignal): Promise<ApiResponse<{ telemetry: ModelTelemetryEntry[]; routerSummary: Record<string, unknown> }>> {
+    return this.request<{ telemetry: ModelTelemetryEntry[]; routerSummary: Record<string, unknown> }>(
+      `/api/v1/models/telemetry?limit=${limit}`,
+      { method: 'GET', signal, timeoutMs: 5000 },
+    )
+  }
+
+  public async getModelHealth(signal?: AbortSignal): Promise<ApiResponse<ModelHealthReport>> {
+    return this.request<ModelHealthReport>(
+      '/api/v1/models/health',
+      { method: 'GET', signal, timeoutMs: 10000 },
+    )
+  }
+
+  public async testModel(
+    modelId: string,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<ModelTestResult>> {
+    return this.request<ModelTestResult>(
+      '/api/v1/models/test',
+      { method: 'POST', body: JSON.stringify({ modelId }), signal, timeoutMs: 15000 },
+    )
+  }
+
+  public async updateModel(
+    modelId: string,
+    updates: Partial<ModelDescriptor>,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ success: boolean; model: ModelDescriptor }>> {
+    return this.request<{ success: boolean; model: ModelDescriptor }>(
+      `/api/v1/models/${encodeURIComponent(modelId)}`,
+      { method: 'PATCH', body: JSON.stringify(updates), signal, timeoutMs: 5000 },
+    )
+  }
+
+  public async registerCustomModel(
+    data: Partial<ModelDescriptor> & { id: string; displayName: string; provider: string; modelName: string },
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ success: boolean; model: ModelDescriptor }>> {
+    return this.request<{ success: boolean; model: ModelDescriptor }>(
+      '/api/v1/models/custom',
+      { method: 'POST', body: JSON.stringify(data), signal, timeoutMs: 5000 },
+    )
+  }
+
+  public async deleteCustomModel(
+    modelId: string,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ success: boolean; message: string }>> {
+    return this.request<{ success: boolean; message: string }>(
+      `/api/v1/models/${encodeURIComponent(modelId)}`,
+      { method: 'DELETE', signal, timeoutMs: 5000 },
+    )
+  }
+
+  public async getBudget(signal?: AbortSignal): Promise<ApiResponse<BudgetConfig>> {
+    return this.request<BudgetConfig>(
+      '/api/v1/models/budget',
+      { method: 'GET', signal, timeoutMs: 4000 },
+    )
+  }
+
+  public async updateBudget(
+    updates: Partial<BudgetConfig>,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ success: boolean; budget: BudgetConfig }>> {
+    return this.request<{ success: boolean; budget: BudgetConfig }>(
+      '/api/v1/models/budget',
+      { method: 'PATCH', body: JSON.stringify(updates), signal, timeoutMs: 4000 },
+    )
+  }
+
+  public async compareModels(
+    idA: string,
+    idB: string,
+    signal?: AbortSignal,
+  ): Promise<ApiResponse<{ modelA: ModelDescriptor; modelB: ModelDescriptor; differences: Record<string, unknown> }>> {
+    return this.request<{ modelA: ModelDescriptor; modelB: ModelDescriptor; differences: Record<string, unknown> }>(
+      `/api/v1/models/compare?a=${encodeURIComponent(idA)}&b=${encodeURIComponent(idB)}`,
+      { method: 'GET', signal, timeoutMs: 5000 },
+    )
+  }
+
+  // ---------------------------------------------------------------------------
+  // WebHunt Delta Intelligence & CRM Client Methods
+  // ---------------------------------------------------------------------------
+
+  public async webHuntLogin(
+    email: string,
+    password: string,
+    signal?: AbortSignal
+  ): Promise<ApiResponse<WebHuntAuthResponse>> {
+    return this.request<WebHuntAuthResponse>('/api/v1/webhunt/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      signal,
+      timeoutMs: 8000,
+    })
+  }
+
+  public async webHuntLogout(signal?: AbortSignal): Promise<ApiResponse<{ success: boolean; message: string }>> {
+    return this.request<{ success: boolean; message: string }>('/api/v1/webhunt/auth/logout', {
+      method: 'POST',
+      signal,
+      timeoutMs: 4000,
+    })
+  }
+
+  public async webHuntGetMe(signal?: AbortSignal): Promise<ApiResponse<WebHuntAuthResponse>> {
+    return this.request<WebHuntAuthResponse>('/api/v1/webhunt/auth/me', {
+      method: 'GET',
+      signal,
+      timeoutMs: 6000,
+    })
+  }
+
+  public async webHuntGetStatus(signal?: AbortSignal): Promise<ApiResponse<WebHuntIntegrationStatus>> {
+    return this.request<WebHuntIntegrationStatus>('/api/v1/webhunt/status', { method: 'GET', signal, timeoutMs: 6000 })
+  }
+
+  public async webHuntSearchPhysical(
+    params: { niche: string; location?: string; country?: string; radius?: number },
+    signal?: AbortSignal
+  ): Promise<ApiResponse<WebHuntSearchResult>> {
+    const qs = new URLSearchParams({
+      niche: params.niche,
+      country: params.country || 'KE',
+      radius: String(params.radius || 25),
+    })
+    if (params.location) qs.set('location', params.location)
+    return this.request<WebHuntSearchResult>(`/api/v1/webhunt/radar/physical?${qs.toString()}`, { method: 'GET', signal, timeoutMs: 20000 })
+  }
+
+  public async webHuntSearchRemote(
+    params: { query: string; category?: string },
+    signal?: AbortSignal
+  ): Promise<ApiResponse<WebHuntSearchResult>> {
+    const qs = new URLSearchParams({ query: params.query })
+    if (params.category) qs.set('category', params.category)
+    return this.request<WebHuntSearchResult>(`/api/v1/webhunt/radar/remote?${qs.toString()}`, { method: 'GET', signal, timeoutMs: 20000 })
+  }
+
+  public async webHuntGetLeads(
+    params?: { status?: string; search?: string; pipelineType?: string },
+    signal?: AbortSignal
+  ): Promise<ApiResponse<{ success: boolean; count: number; leads: WebHuntLeadItem[] }>> {
+    const qs = new URLSearchParams()
+    if (params?.status) qs.set('status', params.status)
+    if (params?.search) qs.set('search', params.search)
+    if (params?.pipelineType) qs.set('pipelineType', params.pipelineType)
+    const url = `/api/v1/webhunt/crm/leads${qs.toString() ? `?${qs.toString()}` : ''}`
+    return this.request<{ success: boolean; count: number; leads: WebHuntLeadItem[] }>(url, { method: 'GET', signal, timeoutMs: 6000 })
+  }
+
+  public async webHuntGetLead(id: string, signal?: AbortSignal): Promise<ApiResponse<{ success: boolean; lead: WebHuntLeadItem }>> {
+    return this.request<{ success: boolean; lead: WebHuntLeadItem }>(`/api/v1/webhunt/crm/leads/${encodeURIComponent(id)}`, { method: 'GET', signal, timeoutMs: 6000 })
+  }
+
+  public async webHuntSaveLead(lead: Partial<WebHuntLeadItem>, signal?: AbortSignal): Promise<ApiResponse<{ success: boolean; leadId?: string; error?: string }>> {
+    return this.request<{ success: boolean; leadId?: string; error?: string }>('/api/v1/webhunt/crm/leads', {
+      method: 'POST',
+      body: JSON.stringify({ lead }),
+      signal,
+      timeoutMs: 8000,
+    })
+  }
+
+  public async webHuntUpdateLead(
+    id: string,
+    updates: { status?: WebHuntPipelineStatus; notes?: string; estimatedValue?: number },
+    signal?: AbortSignal
+  ): Promise<ApiResponse<{ success: boolean; error?: string }>> {
+    return this.request<{ success: boolean; error?: string }>(`/api/v1/webhunt/crm/leads/${encodeURIComponent(id)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+      signal,
+      timeoutMs: 6000,
+    })
+  }
+
+  public async webHuntDeleteLead(id: string, signal?: AbortSignal): Promise<ApiResponse<{ success: boolean; error?: string }>> {
+    return this.request<{ success: boolean; error?: string }>(`/api/v1/webhunt/crm/leads/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      signal,
+      timeoutMs: 6000,
+    })
+  }
+
+  public async webHuntGeneratePitch(
+    payload: { leadId?: string; lead?: WebHuntLeadItem; templateType?: string; profile?: any },
+    signal?: AbortSignal
+  ): Promise<ApiResponse<{ success: boolean; proposal: WebHuntGeneratedProposal }>> {
+    return this.request<{ success: boolean; proposal: WebHuntGeneratedProposal }>('/api/v1/webhunt/pitch/generate', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      signal,
+      timeoutMs: 8000,
+    })
+  }
+
+  public async webHuntGetSearches(signal?: AbortSignal): Promise<ApiResponse<{ success: boolean; history: any[]; saved: any[] }>> {
+    return this.request<{ success: boolean; history: any[]; saved: any[] }>('/api/v1/webhunt/searches', { method: 'GET', signal, timeoutMs: 6000 })
   }
 }
 

@@ -7,7 +7,15 @@ import { Ignition } from './ui/Ignition'
 import { Diagnostics } from './ui/Diagnostics'
 import { GacksVoiceVisualization } from './ui/voice/GacksVoiceVisualization'
 import { useStore } from './store'
-import { startVoice, type Voice, type VoiceMode } from './lib/voice'
+import {
+  startVoice,
+  type Voice,
+  type VoiceMode,
+  type UserSpeechInputEvent,
+  isEcho,
+  isMeaninglessUtterance,
+  isDuplicateUtterance,
+} from './lib/voice'
 import { createSpeaker, cycleVoice, currentVoiceName } from './lib/tts'
 import * as sfx from './lib/sfx'
 import * as music from './lib/music'
@@ -132,9 +140,14 @@ export default function App() {
 
   // -- one turn -------------------------------------------------------------
 
-  const respond = async (said: string): Promise<void> => {
+  const respond = async (said: string, origin: 'voice' | 'query' | 'wake' = 'voice'): Promise<void> => {
+    const clean = said.trim()
+    if (!clean || isMeaninglessUtterance(clean)) return
+
     const mine = ++turn.current
     const stale = () => mine !== turn.current
+
+    console.log(`[GACKS AI Turn] Initiating turn (origin=${origin}, turn=${mine}): "${clean.slice(0, 60)}"`)
 
     clearIdle()
     const s = store.getState()
@@ -143,7 +156,7 @@ export default function App() {
     s.clearPanels()
     s.clearBlades()
     s.setCaption('')
-    s.pushTurn({ id: newId(), role: 'user', text: said })
+    s.pushTurn({ id: newId(), role: 'user', text: clean })
     s.setPhase('thinking')
 
     const spk = createSpeaker()
@@ -156,7 +169,7 @@ export default function App() {
     let filled = false
 
     try {
-      const { text } = await ask(said, history.current, {
+      const { text } = await ask(clean, history.current, {
         onText: (delta) => {
           if (stale()) return
           if (!started) {
@@ -174,16 +187,10 @@ export default function App() {
         onTool: (name) => {
           if (stale()) return
           // Only claim the tooling phase while he has nothing to say yet.
-          // Setting it unconditionally pinned the machine in 'tooling' for the
-          // rest of any answer that called a tool after it started talking,
-          // which also broke the reactor's lip-sync for the remainder.
           if (!started) store.getState().setPhase('tooling')
           store.getState().setActiveTool(name)
           sfx.play('tool')
           music.working(true)
-          // Say something the moment work starts — a tool can take ten seconds
-          // and silence that long reads as a crash. Once per turn only; a
-          // chain of five tools shouldn't produce five apologies.
           if (!filled && !started) {
             filled = true
             spk.say(forTool(name))
@@ -196,7 +203,7 @@ export default function App() {
       // The bridge keeps conversation state in its own session, so history is
       // only threaded through on the direct path.
       if (!usingBridge) {
-        history.current.push({ role: 'user', content: said })
+        history.current.push({ role: 'user', content: clean })
         history.current.push({ role: 'assistant', content: text || '…' })
         if (history.current.length > 16) {
           history.current = history.current.slice(-16)
@@ -226,8 +233,6 @@ export default function App() {
         music.duck(false)
         store.getState().setActiveTool(null)
         music.working(false)
-        // Stay open. Having to say his name again to add one more sentence is
-        // the difference between a conversation and a vending machine.
         listen(FOLLOW_UP_MS)
       }
     }
@@ -258,18 +263,13 @@ export default function App() {
     store.getState().setError(null)
     sfx.play('wake')
 
-    // "Jarvis, what's happening in AI this week" in one breath. Waiting for a
-    // greeting he didn't need is the most common way an assistant wastes time.
-    if (trailing) {
-      void respond(trailing)
+    if (trailing && !isMeaninglessUtterance(trailing)) {
+      void respond(trailing, 'wake')
       return
     }
 
     store.getState().setPhase('waking')
 
-    // Answer to his name. Deliberately NOT awaited any more: the microphone is
-    // already open and the echo filter knows his voice, so the user can talk
-    // straight over the greeting instead of waiting it out.
     const greeting = createSpeaker()
     speaker.current = greeting
     greeting.say(attention())
@@ -292,8 +292,6 @@ export default function App() {
 
     silence()
     if (wasBusy) {
-      // Abandon the answer in flight. The turn counter moves in respond()'s
-      // replacement; bumping it here covers the case where nothing replaces it.
       turn.current++
       interrupt()
       store.getState().setActiveTool(null)
@@ -304,26 +302,48 @@ export default function App() {
     store.getState().setPhase('listening')
   }
 
-  const onUtterance = (text: string) => {
+  const onUtterance = (text: string, event?: UserSpeechInputEvent) => {
     const phase = store.getState().phase
     if (phase === 'offline' || phase === 'boot' || phase === 'dormant') return
 
-    // People keep using his name as a vocative once they're already talking to
-    // him. Strip it rather than sending "jarvis" to the model as a question.
+    // Strict Source-of-Truth validation: reject any non-user events
+    if (event && event.source !== 'user') {
+      console.warn('[GACKS Voice] Dropped non-user utterance event:', event)
+      return
+    }
+
+    if (isMeaninglessUtterance(text)) {
+      return
+    }
+
+    // Shield against microphone hearing assistant TTS output
+    if (isEcho(text)) {
+      console.log('[GACKS Voice] Suppressed assistant voice echo utterance:', text)
+      return
+    }
+
+    // Handle bare name ("Jarvis", "Hey Jarvis")
     if (BARE_NAME.test(text)) {
       listen(AWAIT_SPEECH_MS)
       return
     }
+
     const said = text.replace(LEADING_NAME, '').trim()
-    if (!said) {
+    if (!said || isMeaninglessUtterance(said)) {
       listen(AWAIT_SPEECH_MS)
       return
     }
 
-    void respond(said)
+    if (isDuplicateUtterance(said)) {
+      console.log('[GACKS Voice] Suppressed duplicate utterance:', said)
+      return
+    }
+
+    void respond(said, 'voice')
   }
 
   const onPartial = (text: string) => {
+    // Presentation channel only — isolated from conversation input pipeline
     store.getState().setCaption(text)
   }
 

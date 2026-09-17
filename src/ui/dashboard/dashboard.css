@@ -1,52 +1,80 @@
 /* =========================================================================
-   GACKS P.A DASHBOARD — REFERENCE-DRIVEN REFINED DESIGN SYSTEM
-   Visual Reference Target: media_1789450001805.png
-   Palette: #18181A Dark Charcoal, 1px Neutral Borders, Electric Cyan (#00A3FF),
-            Vivid Red/Orange (#FF453A), Soft White Typography (#EDEDEF)
+   GACKS AI OPERATING SYSTEM — QUANTUM-LEVEL DESIGN SYSTEM
+   Visual Reference: Quantum POS (pos.quantumcode.co.ke/landing.html)
+   Surfaces: Deep navy-blue · Gradient primary · Consistent timing · Glow tokens
    ========================================================================= */
 
 :root {
-  /* Surface System — Pure Dark Charcoal SaaS Palette */
-  --gacks-bg-base: #121214;
-  --gacks-bg-panel: #18181A;
-  --gacks-bg-panel-hover: #1E1E22;
-  --gacks-bg-elevated: #202024;
-  --gacks-bg-elevated-hover: #26262B;
-  --gacks-bg-chip: #222227;
+  /* ── Surface System — Deep Navy-Blue Professional Palette ─────────────── */
+  --gacks-bg-base:           #080d1c;
+  --gacks-bg-panel:          #0d1426;
+  --gacks-bg-panel-hover:    #111a33;
+  --gacks-bg-elevated:       #141d38;
+  --gacks-bg-elevated-hover: #1a2444;
+  --gacks-bg-chip:           #0f1830;
 
-  /* Borders — 1px Low-Contrast Neutral Grays */
-  --gacks-border-dim: rgba(255, 255, 255, 0.07);
+  /* ── Borders ──────────────────────────────────────────────────────────── */
+  --gacks-border-dim:    rgba(255, 255, 255, 0.07);
   --gacks-border-subtle: rgba(255, 255, 255, 0.04);
   --gacks-border-medium: rgba(255, 255, 255, 0.12);
-  --gacks-border-bright: rgba(255, 255, 255, 0.22);
-  --gacks-border-cyan: #00A3FF;
-  --gacks-border-red: #FF453A;
+  --gacks-border-bright: rgba(255, 255, 255, 0.20);
+  --gacks-border-cyan:   #287cff;
+  --gacks-border-red:    #FF453A;
 
-  /* Accents — Restrained & Purposeful */
-  --gacks-cyan: #00A3FF;
-  --gacks-cyan-glow: rgba(0, 163, 255, 0.25);
-  --gacks-cyan-subtle: rgba(0, 163, 255, 0.08);
-  --gacks-red: #FF453A;
-  --gacks-red-subtle: rgba(255, 69, 58, 0.12);
-  --gacks-orange: #FF5A36;
-  --gacks-amber: #F59E0B;
-  --gacks-emerald: #10B981;
+  /* ── Primary Accent — Electric Blue ──────────────────────────────────── */
+  --gacks-primary:          #287cff;
+  --gacks-primary-rgb:      40, 124, 255;
+  --gacks-primary-subtle:   rgba(40, 124, 255, 0.10);
+  --gacks-primary-glow:     rgba(40, 124, 255, 0.28);
 
-  /* Typography Hierarchy */
-  --gacks-text-white: #EDEDEF;
-  --gacks-text-primary: #EDEDEF;
-  --gacks-text-muted: #A1A1A6;
-  --gacks-text-dim: #71717A;
-  --gacks-font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Chakra Petch', sans-serif;
-  --gacks-font-mono: 'JetBrains Mono', monospace;
+  /* ── Cyan Accent (secondary, brand color) ────────────────────────────── */
+  --gacks-cyan:        #22d3ee;
+  --gacks-cyan-glow:   rgba(34, 211, 238, 0.22);
+  --gacks-cyan-subtle: rgba(34, 211, 238, 0.08);
 
-  /* Geometry & Shadows */
-  --gacks-radius-sm: 8px;
-  --gacks-radius-md: 12px;
-  --gacks-radius-lg: 16px;
+  /* ── Semantic ─────────────────────────────────────────────────────────── */
+  --gacks-red:         #FF453A;
+  --gacks-red-subtle:  rgba(255, 69, 58, 0.12);
+  --gacks-orange:      #FF5A36;
+  --gacks-amber:       #F59E0B;
+  --gacks-emerald:     #22c55e;
+
+  /* ── Gradient System ──────────────────────────────────────────────────── */
+  --gacks-gradient:       linear-gradient(135deg, #287cff 0%, #22d3ee 100%);
+  --gacks-gradient-45:    linear-gradient(45deg,  #287cff 0%, #22d3ee 100%);
+  --gacks-gradient-radial: radial-gradient(circle at 50% 0%, rgba(40,124,255,0.18) 0%, transparent 65%);
+
+  /* ── Glow Tokens ──────────────────────────────────────────────────────── */
+  --gacks-glow-primary: 0 0 20px rgba(40, 124, 255, 0.28), 0 4px 12px rgba(0,0,0,0.4);
+  --gacks-glow-primary-lg: 0 0 40px rgba(40, 124, 255, 0.22), 0 8px 30px rgba(0,0,0,0.5);
+  --gacks-glow-cyan: 0 0 16px rgba(34, 211, 238, 0.22);
+  --gacks-glow-hover: 0 8px 40px rgba(40, 124, 255, 0.10), 0 4px 16px rgba(0,0,0,0.45);
+
+  /* ── Transition Timing ────────────────────────────────────────────────── */
+  --gacks-ease:              cubic-bezier(0.4, 0, 0.2, 1);
+  --gacks-transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --gacks-transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --gacks-transition-slow:   350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --gacks-transition-reveal: 600ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Typography ───────────────────────────────────────────────────────── */
+  --gacks-text-white:   #e2e8f0;
+  --gacks-text-primary: #e2e8f0;
+  --gacks-text-muted:   #94a3b8;
+  --gacks-text-dim:     #64748b;
+  --gacks-font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --gacks-font-mono:    'JetBrains Mono', monospace;
+
+  /* ── Geometry & Shadows ───────────────────────────────────────────────── */
+  --gacks-radius-sm:   8px;
+  --gacks-radius-md:   12px;
+  --gacks-radius-lg:   16px;
+  --gacks-radius-xl:   20px;
+  --gacks-radius-2xl:  24px;
   --gacks-radius-pill: 9999px;
-  --gacks-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.35);
-  --gacks-shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --gacks-shadow-card:     0 4px 24px rgba(0, 0, 0, 0.45);
+  --gacks-shadow-elevated: 0 8px 40px rgba(0, 0, 0, 0.6);
+  --gacks-shadow-glow:     0 4px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(40,124,255,0.10);
 }
 
 /* -------------------------------------------------------------------------
@@ -4725,3 +4753,1849 @@
 }
 
 
+/* =========================================================================
+   CHAT PAGE — ZEROPOINT REDESIGN
+   Reference: Grok ZeroPoint / Gacks AI visual spec
+   Colors: #20D8D0 cyan · #319CFF blue · #7167FF purple
+   Surfaces: #050B16 base · #0D1118 primary · #111722 secondary · #151B26 elevated
+   ========================================================================= */
+
+/* ── Chat page root ─────────────────────────────────────────────────────── */
+.gacks-chat-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* ── Welcome / empty root ───────────────────────────────────────────────── */
+.gacks-chat-welcome-root {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  padding: 28px 24px 40px;
+  position: relative;
+}
+
+/* Atmospheric background glow */
+.gacks-chat-atmo-glow {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 340px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(32, 216, 208, 0.12) 0%, rgba(49, 156, 255, 0.07) 45%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Brand orb icon */
+.gacks-chat-brand-orb {
+  position: relative;
+  z-index: 1;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(32, 216, 208, 0.06);
+  border: 1.5px solid rgba(32, 216, 208, 0.30);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow:
+    0 0 0 8px rgba(32, 216, 208, 0.05),
+    0 0 32px rgba(32, 216, 208, 0.18),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Welcome heading */
+.gacks-chat-welcome-heading {
+  position: relative;
+  z-index: 1;
+  font-size: 32px;
+  font-weight: 700;
+  color: #F4F7FA;
+  text-align: center;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.gacks-chat-brand-accent {
+  color: #20D8D0;
+  background: linear-gradient(90deg, #20D8D0, #319CFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Tagline */
+.gacks-chat-welcome-tag {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  color: #8B95A7;
+  text-align: center;
+  max-width: 560px;
+  line-height: 1.6;
+  margin: 0 0 28px 0;
+}
+
+/* ── Welcome composer wrapper ───────────────────────────────────────────── */
+.gacks-chat-welcome-composer-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 680px;
+  background: #0D1118;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow:
+    0 0 0 1px rgba(32, 216, 208, 0.04),
+    0 8px 40px rgba(0, 0, 0, 0.55),
+    0 0 60px rgba(32, 216, 208, 0.05);
+  overflow: hidden;
+  margin-bottom: 36px;
+}
+
+.gacks-chat-welcome-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.gacks-chat-welcome-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 8px;
+}
+
+.gacks-chat-welcome-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #F4F7FA;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 4px 8px;
+  min-height: 36px;
+}
+
+.gacks-chat-welcome-input::placeholder {
+  color: #5F6979;
+}
+
+.gacks-welcome-mic,
+.gacks-welcome-send {
+  border-radius: 10px !important;
+}
+
+/* Toolbar pills row */
+.gacks-composer-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 14px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.gacks-composer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 9999px;
+  color: #8B95A7;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: default;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+.gacks-composer-pill:hover {
+  background: rgba(32, 216, 208, 0.07);
+  border-color: rgba(32, 216, 208, 0.25);
+  color: #C8D0DC;
+}
+
+/* ── Feature cards ──────────────────────────────────────────────────────── */
+.gacks-chat-feature-cards {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 28px;
+}
+
+.gacks-chat-feature-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 18px 22px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gacks-chat-feature-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(32, 216, 208, 0.15);
+  box-shadow: 0 4px 24px rgba(32, 216, 208, 0.06);
+}
+
+.gacks-feature-card-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.gacks-feature-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #F4F7FA;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.gacks-feature-card-desc {
+  font-size: 11.5px;
+  color: #8B95A7;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Suggested prompts (welcome state) ──────────────────────────────────── */
+.gacks-welcome-suggestions {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 680px;
+}
+
+/* ── Conversation stream refinements ────────────────────────────────────── */
+.gacks-chat-has-turns {
+  background: #0D1118 !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 14px !important;
+}
+
+.gacks-chat-has-turns .gacks-turn-user .gacks-turn-bubble {
+  background: linear-gradient(135deg, #0D4F8C 0%, #0A3D70 100%);
+  color: #F4F7FA;
+  border: 1px solid rgba(49, 156, 255, 0.25);
+  border-bottom-right-radius: 2px;
+}
+
+.gacks-chat-has-turns .gacks-turn-assistant .gacks-turn-bubble {
+  background: #111722;
+  color: #F4F7FA;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom-left-radius: 2px;
+}
+
+/* Pulse dot (thinking indicator) */
+.gacks-pulse-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #20D8D0;
+  animation: gacks-pulse-beat 1s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes gacks-pulse-beat {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ── Active conversation composer ───────────────────────────────────────── */
+.gacks-chat-composer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #0D1118;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow:
+    0 0 30px rgba(32, 216, 208, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.5);
+  margin-top: 8px;
+}
+
+/* ── Sidebar active accent — ZeroPoint teal ─────────────────────────────── */
+.gacks-nav-item-active .gacks-nav-icon {
+  color: #20D8D0;
+}
+
+.gacks-nav-active-pill {
+  background: #20D8D0;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .gacks-chat-feature-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .gacks-chat-welcome-heading {
+    font-size: 24px;
+  }
+
+  .gacks-chat-welcome-tag {
+    font-size: 12px;
+  }
+
+  .gacks-chat-feature-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .gacks-chat-welcome-composer-wrap {
+    border-radius: 14px;
+  }
+
+  .gacks-composer-toolbar {
+    gap: 5px;
+  }
+
+  .gacks-composer-pill {
+    font-size: 10px;
+    padding: 4px 9px;
+  }
+}
+
+
+/* =========================================================================
+   QUANTUM DESIGN SYSTEM UPGRADE
+   Phases 3–14: Background · Sidebar · TopBar · Cards · Buttons · Hero
+                Typography · Animations · Inputs · Pages · Responsive · Light
+   All rules cascade over existing ones (appended = last wins at equal specificity)
+   ========================================================================= */
+
+
+/* ── Phase 3: Dashboard Root & Background ────────────────────────────────── */
+
+.gacks-dashboard-root {
+  background-color: var(--gacks-bg-base);
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgba(40, 124, 255, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 90%,  rgba(34, 211, 238, 0.05) 0%, transparent 45%),
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+}
+
+
+/* ── Phase 4: Sidebar Upgrade ────────────────────────────────────────────── */
+
+.gacks-sidebar {
+  background: #080d1c;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gacks-sidebar-brand {
+  transition: opacity var(--gacks-transition-fast);
+}
+
+.gacks-sidebar-brand:hover { opacity: 0.85; }
+
+/* Brand logo wrap — gradient border ring */
+.gacks-brand-logo-wrap {
+  background: #0d1426;
+  border: 1px solid rgba(40, 124, 255, 0.20);
+  box-shadow: 0 0 12px rgba(40, 124, 255, 0.10);
+  transition: border-color var(--gacks-transition-normal), box-shadow var(--gacks-transition-normal);
+}
+
+.gacks-brand-logo-wrap:hover {
+  border-color: rgba(40, 124, 255, 0.45);
+  box-shadow: 0 0 20px rgba(40, 124, 255, 0.20);
+}
+
+.gacks-brand-title {
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  background: var(--gacks-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gacks-brand-subtitle {
+  color: var(--gacks-cyan);
+  letter-spacing: 0.22em;
+  opacity: 1;
+}
+
+/* Nav items — Quantum POS level polish */
+.gacks-nav-item {
+  transition: all var(--gacks-transition-normal);
+  border-left: 2px solid transparent;
+}
+
+.gacks-nav-item:hover {
+  background: rgba(40, 124, 255, 0.06);
+  border-color: rgba(40, 124, 255, 0.20);
+  color: var(--gacks-text-white);
+  transform: translateX(2px);
+}
+
+.gacks-nav-item-active {
+  background: rgba(40, 124, 255, 0.10);
+  border-color: var(--gacks-primary);
+  color: #ffffff;
+  box-shadow: 0 2px 12px rgba(40, 124, 255, 0.12);
+}
+
+.gacks-nav-item-active .gacks-nav-icon {
+  color: var(--gacks-primary);
+}
+
+.gacks-nav-active-pill {
+  background: var(--gacks-gradient);
+  box-shadow: var(--gacks-glow-cyan);
+}
+
+.gacks-status-pill {
+  background: rgba(40, 124, 255, 0.05);
+  border-color: rgba(40, 124, 255, 0.12);
+  border-radius: var(--gacks-radius-md);
+}
+
+.gacks-status-dot-online {
+  background: var(--gacks-emerald);
+  box-shadow: 0 0 8px var(--gacks-emerald), 0 0 16px rgba(34, 197, 94, 0.3);
+}
+
+.gacks-status-dot-standby {
+  background: var(--gacks-amber);
+  box-shadow: 0 0 8px var(--gacks-amber);
+}
+
+.gacks-motto-words {
+  color: var(--gacks-text-dim);
+  letter-spacing: 0.22em;
+}
+
+.gacks-motto-sep {
+  color: var(--gacks-primary);
+  opacity: 0.8;
+}
+
+/* Sidebar collapse btn */
+.gacks-sidebar-collapse-btn {
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-sidebar-collapse-btn:hover {
+  background: rgba(40, 124, 255, 0.08);
+  border-color: rgba(40, 124, 255, 0.20);
+}
+
+
+/* ── Phase 5: TopBar Upgrade ─────────────────────────────────────────────── */
+
+.gacks-topbar {
+  background: rgba(8, 13, 28, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.gacks-command-form {
+  background: rgba(13, 20, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  transition: all var(--gacks-transition-normal);
+}
+
+.gacks-command-form:focus-within {
+  border-color: var(--gacks-primary);
+  box-shadow: 0 0 0 3px rgba(40, 124, 255, 0.18);
+  background: rgba(13, 20, 38, 1);
+}
+
+.gacks-command-input {
+  color: var(--gacks-text-white);
+  font-size: 13px;
+}
+
+.gacks-command-input::placeholder {
+  color: var(--gacks-text-dim);
+}
+
+.gacks-command-shortcut {
+  background: rgba(40, 124, 255, 0.06);
+  border-color: rgba(40, 124, 255, 0.18);
+  color: var(--gacks-text-dim);
+}
+
+.gacks-weather-pill {
+  background: rgba(13, 20, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-weather-pill:hover {
+  border-color: rgba(40, 124, 255, 0.25);
+  background: rgba(13, 20, 38, 1);
+}
+
+.gacks-profile-pill {
+  background: rgba(13, 20, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  transition: all var(--gacks-transition-normal);
+}
+
+.gacks-profile-pill:hover {
+  background: rgba(20, 29, 56, 0.9);
+  border-color: rgba(40, 124, 255, 0.30);
+  box-shadow: 0 0 0 2px rgba(40, 124, 255, 0.10);
+}
+
+.gacks-profile-avatar {
+  border: 1px solid rgba(40, 124, 255, 0.40);
+  background: rgba(40, 124, 255, 0.08);
+}
+
+.gacks-profile-initial {
+  color: var(--gacks-primary);
+}
+
+.gacks-profile-sub {
+  color: var(--gacks-primary);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+}
+
+.gacks-clock-time {
+  font-weight: 700;
+  color: var(--gacks-text-white);
+}
+
+.gacks-mobile-menu-btn {
+  background: rgba(13, 20, 38, 0.8);
+  border-color: rgba(255, 255, 255, 0.08);
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-mobile-menu-btn:hover {
+  background: rgba(40, 124, 255, 0.10);
+  border-color: rgba(40, 124, 255, 0.25);
+}
+
+
+/* ── Phase 6: Card System — Highest Impact ───────────────────────────────── */
+
+.gacks-card {
+  background-color: var(--gacks-bg-panel);
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(40,124,255,0.04) 0%, transparent 40%),
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px, 28px 28px;
+  border: 1px solid var(--gacks-border-dim);
+  border-radius: var(--gacks-radius-lg);
+  box-shadow: var(--gacks-shadow-card);
+  transition:
+    transform     var(--gacks-transition-normal),
+    border-color  var(--gacks-transition-normal),
+    box-shadow    var(--gacks-transition-normal);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Gradient top-accent line — Quantum POS feature-card style */
+.gacks-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gacks-gradient);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--gacks-transition-slow);
+  z-index: 1;
+  border-radius: var(--gacks-radius-lg) var(--gacks-radius-lg) 0 0;
+}
+
+.gacks-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(40, 124, 255, 0.22);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(40, 124, 255, 0.08),
+    0 0 30px rgba(40, 124, 255, 0.06);
+}
+
+.gacks-card:hover::before {
+  transform: scaleX(1);
+}
+
+.gacks-card-header {
+  padding: 13px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 2;
+}
+
+.gacks-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gacks-text-muted);
+}
+
+/* Section badge — Quantum POS inspired */
+.gacks-section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--gacks-radius-pill);
+  background: var(--gacks-primary-subtle);
+  border: 1px solid rgba(40, 124, 255, 0.22);
+  color: var(--gacks-primary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gacks-card-header-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--gacks-radius-pill);
+  background: var(--gacks-primary-subtle);
+  border: 1px solid rgba(40, 124, 255, 0.18);
+  color: var(--gacks-primary);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-card-header-link:hover {
+  background: rgba(40, 124, 255, 0.18);
+  border-color: var(--gacks-primary);
+  color: #ffffff;
+}
+
+.gacks-orange-bullet {
+  background: var(--gacks-primary);
+  box-shadow: 0 0 6px var(--gacks-primary);
+}
+
+/* Dashboard content */
+.gacks-dashboard-content {
+  scrollbar-color: rgba(40, 124, 255, 0.20) rgba(8, 13, 28, 0.6);
+}
+
+.gacks-dashboard-content::-webkit-scrollbar-thumb {
+  background: rgba(40, 124, 255, 0.18);
+}
+
+
+/* ── Phase 7: Button System ──────────────────────────────────────────────── */
+
+/* Primary button — gradient + glow + lift */
+.gacks-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  min-height: 38px;
+  border-radius: 10px;
+  background: var(--gacks-gradient);
+  border: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--gacks-glow-primary);
+  transition: all var(--gacks-transition-normal);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.gacks-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--gacks-glow-primary-lg);
+  opacity: 0.95;
+}
+
+.gacks-btn-primary:active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.gacks-btn-primary:disabled {
+  opacity: 0.40;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Secondary button */
+.gacks-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  min-height: 38px;
+  border-radius: 10px;
+  background: rgba(13, 20, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: var(--gacks-text-white);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--gacks-transition-normal);
+  white-space: nowrap;
+}
+
+.gacks-btn-secondary:hover {
+  background: rgba(20, 29, 56, 0.9);
+  border-color: rgba(40, 124, 255, 0.30);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.gacks-btn-secondary:disabled {
+  opacity: 0.40;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Ghost button */
+.gacks-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 18px;
+  min-height: 36px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: var(--gacks-text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-btn-ghost:hover {
+  border-color: rgba(40, 124, 255, 0.30);
+  color: var(--gacks-text-white);
+  background: rgba(40, 124, 255, 0.06);
+}
+
+/* Subtle button — refined */
+.gacks-btn-subtle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  min-height: 32px;
+  border-radius: 8px;
+  background: rgba(13, 20, 38, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--gacks-text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--gacks-transition-fast);
+  white-space: nowrap;
+}
+
+.gacks-btn-subtle:hover {
+  background: rgba(40, 124, 255, 0.08);
+  border-color: rgba(40, 124, 255, 0.25);
+  color: var(--gacks-text-white);
+}
+
+/* Danger button */
+.gacks-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  min-height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 69, 58, 0.10);
+  border: 1px solid rgba(255, 69, 58, 0.25);
+  color: #FF453A;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-btn-danger:hover {
+  background: rgba(255, 69, 58, 0.20);
+  border-color: #FF453A;
+  transform: translateY(-1px);
+}
+
+/* Mode buttons on HeroPanel — upgrade to Quantum level */
+.gacks-mode-btn {
+  background: rgba(40, 124, 255, 0.06);
+  border: 1px solid rgba(40, 124, 255, 0.15);
+  border-radius: 10px;
+  color: var(--gacks-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all var(--gacks-transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.gacks-mode-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: var(--gacks-gradient);
+  transform: scaleX(0);
+  transition: transform var(--gacks-transition-normal);
+}
+
+.gacks-mode-btn:hover::before { transform: scaleX(1); }
+
+.gacks-mode-btn:hover {
+  background: rgba(40, 124, 255, 0.12);
+  border-color: rgba(40, 124, 255, 0.35);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(40, 124, 255, 0.15);
+}
+
+.gacks-mode-icon {
+  color: var(--gacks-primary);
+}
+
+/* Composer send button */
+.gacks-composer-send-btn {
+  background: var(--gacks-gradient);
+  border-radius: 10px;
+  box-shadow: var(--gacks-glow-primary);
+  transition: all var(--gacks-transition-normal);
+}
+
+.gacks-composer-send-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--gacks-glow-primary-lg);
+}
+
+.gacks-composer-send-btn:disabled {
+  background: rgba(255,255,255,0.08);
+  box-shadow: none;
+}
+
+/* Floating voice mic */
+.gacks-floating-mic-btn {
+  background: var(--gacks-gradient);
+  box-shadow: var(--gacks-glow-primary);
+  transition: all var(--gacks-transition-normal);
+}
+
+.gacks-floating-mic-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: var(--gacks-glow-primary-lg);
+}
+
+/* Action tiles */
+.gacks-action-tile {
+  background: rgba(13, 20, 38, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  transition: all var(--gacks-transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.gacks-action-tile::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1.5px;
+  background: var(--gacks-gradient);
+  transform: scaleX(0);
+  transition: transform var(--gacks-transition-normal);
+}
+
+.gacks-action-tile:hover::before { transform: scaleX(1); }
+
+.gacks-action-tile:hover {
+  background: rgba(40, 124, 255, 0.08);
+  border-color: rgba(40, 124, 255, 0.28);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(40, 124, 255, 0.12);
+}
+
+.gacks-action-icon-wrap {
+  background: rgba(40, 124, 255, 0.08);
+  border: 1px solid rgba(40, 124, 255, 0.15);
+  border-radius: 10px;
+}
+
+.gacks-action-icon {
+  color: var(--gacks-primary);
+}
+
+.gacks-action-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gacks-text-white);
+}
+
+.gacks-action-desc {
+  font-size: 9px;
+  color: var(--gacks-text-dim);
+}
+
+
+/* ── Phase 8: Hero Panel Upgrade ─────────────────────────────────────────── */
+
+.gacks-hero-panel {
+  background-color: var(--gacks-bg-panel);
+  background-image:
+    radial-gradient(ellipse at 0% 50%, rgba(40, 124, 255, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 0%,  rgba(34, 211, 238, 0.04) 0%, transparent 45%),
+    linear-gradient(rgba(255, 255, 255, 0.010) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.010) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+  border: 1px solid rgba(40, 124, 255, 0.12);
+  border-radius: var(--gacks-radius-lg);
+  box-shadow:
+    var(--gacks-shadow-card),
+    0 0 0 1px rgba(40, 124, 255, 0.04) inset;
+  transition: all var(--gacks-transition-normal);
+}
+
+.gacks-hero-panel:hover {
+  border-color: rgba(40, 124, 255, 0.22);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.55),
+    0 0 30px rgba(40, 124, 255, 0.07);
+}
+
+/* Hero avatar */
+.gacks-hero-avatar-container {
+  border: 1.5px solid rgba(40, 124, 255, 0.35);
+  background: #080d1c;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(40, 124, 255, 0.15);
+  padding: 0;
+  overflow: hidden;
+  transition: border-color var(--gacks-transition-normal), box-shadow var(--gacks-transition-normal);
+}
+
+.gacks-hero-avatar-container:hover {
+  border-color: rgba(40, 124, 255, 0.65);
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.6),
+    0 0 28px rgba(40, 124, 255, 0.28);
+}
+
+.gacks-hero-avatar-glow {
+  background: radial-gradient(circle, rgba(40, 124, 255, 0.18) 0%, transparent 75%);
+}
+
+.gacks-hero-avatar-video {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: inherit;
+  display: block;
+  pointer-events: none;
+}
+
+.gacks-hero-avatar-container .gacks-hero-avatar-img {
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+/* Hero title — Quantum POS section-title level */
+.gacks-hero-title {
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: var(--gacks-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gacks-hero-tagline {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gacks-text-white);
+  letter-spacing: -0.01em;
+}
+
+.gacks-hero-description {
+  font-size: 12px;
+  color: var(--gacks-text-muted);
+  line-height: 1.6;
+}
+
+.gacks-hero-status-pill {
+  background: rgba(40, 124, 255, 0.07);
+  border: 1px solid rgba(40, 124, 255, 0.15);
+  border-radius: 10px;
+  padding: 7px 14px;
+}
+
+.gacks-hero-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gacks-primary);
+  box-shadow: 0 0 8px var(--gacks-primary), 0 0 16px rgba(40,124,255,0.3);
+  animation: gacks-quantum-pulse 2s ease-in-out infinite;
+}
+
+.gacks-hero-greeting-line {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gacks-text-white);
+}
+
+.gacks-hero-subline {
+  font-size: 10px;
+  color: var(--gacks-text-muted);
+}
+
+/* Timeline events */
+.gacks-timeline-event {
+  background: rgba(40, 124, 255, 0.05);
+  border-left: 2px solid var(--gacks-primary);
+  border-radius: 8px;
+  transition: background var(--gacks-transition-fast);
+}
+
+.gacks-timeline-event:hover {
+  background: rgba(40, 124, 255, 0.09);
+}
+
+/* System status tiles */
+.gacks-gauge-wrap {
+  background: rgba(13, 20, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.gacks-gauge-bg {
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+/* Market tiles */
+.gacks-market-tile {
+  background: rgba(13, 20, 38, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-market-tile:hover {
+  background: rgba(40, 124, 255, 0.07);
+  border-color: rgba(40, 124, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Activity rows */
+.gacks-activity-row {
+  background: rgba(13, 20, 38, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-activity-row:hover {
+  background: rgba(40, 124, 255, 0.06);
+  border-color: rgba(40, 124, 255, 0.18);
+}
+
+.gacks-activity-badge {
+  background: var(--gacks-primary-subtle);
+  border-color: rgba(40, 124, 255, 0.22);
+  color: var(--gacks-primary);
+}
+
+
+/* ── Phase 9: Typography Scale ───────────────────────────────────────────── */
+
+/* Display — hero-level headings */
+.gacks-display-heading {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  line-height: 1.10;
+  letter-spacing: -0.025em;
+  color: var(--gacks-text-white);
+}
+
+/* Page heading */
+.gacks-page-title {
+  font-size: clamp(13px, 1.4vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gacks-text-white);
+}
+
+/* Section/card heading */
+.gacks-section-heading {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gacks-text-muted);
+}
+
+/* Body text */
+.gacks-body {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--gacks-text-white);
+}
+
+/* Supporting text */
+.gacks-text-support {
+  font-size: 12px;
+  color: var(--gacks-text-muted);
+  line-height: 1.55;
+}
+
+/* Label */
+.gacks-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--gacks-text-dim);
+}
+
+/* Metric value */
+.gacks-metric {
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--gacks-text-white);
+  font-family: var(--gacks-font-mono);
+}
+
+/* Gradient text utility */
+.gacks-gradient-text {
+  background: var(--gacks-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Page header improvements */
+.gacks-page-header {
+  background: rgba(8, 13, 28, 0.70);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--gacks-radius-md) var(--gacks-radius-md) 0 0;
+  padding: 12px 20px;
+  position: relative;
+}
+
+.gacks-page-header::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gacks-primary), transparent);
+  opacity: 0.3;
+}
+
+.gacks-page-subtitle,
+.gacks-page-desc {
+  font-size: 12px;
+  color: var(--gacks-text-muted);
+}
+
+.gacks-page-icon-badge {
+  background: rgba(40, 124, 255, 0.10);
+  border: 1px solid rgba(40, 124, 255, 0.20);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(40, 124, 255, 0.10);
+}
+
+
+/* ── Phase 10: Animation System ──────────────────────────────────────────── */
+
+/* Quantum entrance reveal */
+.gacks-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity    var(--gacks-transition-reveal),
+    transform  var(--gacks-transition-reveal);
+}
+
+.gacks-reveal.gacks-is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gacks-reveal-delay-1 { transition-delay: 0.08s; }
+.gacks-reveal-delay-2 { transition-delay: 0.16s; }
+.gacks-reveal-delay-3 { transition-delay: 0.24s; }
+.gacks-reveal-delay-4 { transition-delay: 0.32s; }
+.gacks-reveal-delay-5 { transition-delay: 0.40s; }
+
+/* Quantum pulse — status dots */
+@keyframes gacks-quantum-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--gacks-primary), 0 0 16px rgba(40,124,255,0.3); }
+  50%       { opacity: 0.7; box-shadow: 0 0 4px var(--gacks-primary), 0 0 8px rgba(40,124,255,0.15); }
+}
+
+/* Gradient-shift for backgrounds */
+@keyframes gacks-gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Slide-in for dropdowns & modals */
+@keyframes gacks-enter-up {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+@keyframes gacks-enter-down {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes gacks-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Apply entrance to dropdown */
+.gacks-profile-dropdown {
+  animation: gacks-enter-up var(--gacks-transition-normal) var(--gacks-ease);
+  background: #0d1426;
+  border-color: rgba(40, 124, 255, 0.18);
+  border-radius: var(--gacks-radius-md);
+}
+
+.gacks-dropdown-item {
+  color: var(--gacks-text-white);
+  border-radius: 8px;
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-dropdown-item:hover {
+  background: rgba(40, 124, 255, 0.08);
+  color: #ffffff;
+}
+
+/* Pulse for existing status dots */
+@keyframes gacks-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+/* Tool chip */
+.gacks-tool-active-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: var(--gacks-radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  color: #c084fc;
+  animation: gacks-fade-in var(--gacks-transition-fast) var(--gacks-ease);
+}
+
+
+/* ── Phase 11: Input Upgrade ─────────────────────────────────────────────── */
+
+/* Tasks input */
+.gacks-tasks-input-hero {
+  background: rgba(13, 20, 38, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: var(--gacks-text-white);
+  font-size: 13px;
+  transition: all var(--gacks-transition-normal);
+}
+
+.gacks-tasks-input-hero:focus {
+  border-color: var(--gacks-primary);
+  box-shadow: 0 0 0 3px rgba(40, 124, 255, 0.18);
+  background: rgba(13, 20, 38, 0.95);
+  outline: none;
+}
+
+/* Add task input */
+.gacks-add-task-input {
+  background: rgba(13, 20, 38, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  color: var(--gacks-text-white);
+  transition: all var(--gacks-transition-normal);
+}
+
+.gacks-add-task-input:focus {
+  border-color: var(--gacks-primary);
+  box-shadow: 0 0 0 2px rgba(40, 124, 255, 0.15);
+  outline: none;
+}
+
+.gacks-add-task-btn {
+  background: var(--gacks-primary-subtle);
+  border: 1px solid rgba(40, 124, 255, 0.25);
+  color: var(--gacks-primary);
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-add-task-btn:hover {
+  background: var(--gacks-primary);
+  color: #ffffff;
+  box-shadow: var(--gacks-glow-primary);
+}
+
+/* Chat composer input */
+.gacks-chat-welcome-input {
+  color: var(--gacks-text-white);
+}
+
+.gacks-chat-welcome-input::placeholder {
+  color: var(--gacks-text-dim);
+}
+
+/* Global focus rings */
+.gacks-dashboard-root button:focus-visible,
+.gacks-dashboard-root a:focus-visible,
+.gacks-dashboard-root input:focus-visible,
+.gacks-dashboard-root select:focus-visible,
+.gacks-dashboard-root textarea:focus-visible {
+  outline: 2px solid var(--gacks-primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+
+/* ── Phase 12: Page Sections Upgrade ─────────────────────────────────────── */
+
+/* All inner pages — consistent container */
+.gacks-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  padding: 2px 0;
+}
+
+/* Chat turn bubbles — upgrade for Quantum surfaces */
+.gacks-turn-user .gacks-turn-bubble {
+  background: linear-gradient(135deg, rgba(40,124,255,0.30) 0%, rgba(34,211,238,0.18) 100%);
+  border: 1px solid rgba(40, 124, 255, 0.30);
+  color: #e2e8f0;
+}
+
+.gacks-turn-assistant .gacks-turn-bubble {
+  background: rgba(13, 20, 38, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--gacks-text-white);
+}
+
+.gacks-thinking-bubble {
+  background: rgba(40, 124, 255, 0.06);
+  border: 1px solid rgba(40, 124, 255, 0.15);
+}
+
+.gacks-turn-avatar {
+  background: rgba(13, 20, 38, 0.8);
+  border: 1px solid rgba(40, 124, 255, 0.18);
+}
+
+/* Turn sender labels */
+.gacks-turn-sender {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--gacks-text-dim);
+}
+
+.gacks-turn-user .gacks-turn-sender {
+  color: rgba(40, 124, 255, 0.75);
+}
+
+.gacks-turn-assistant .gacks-turn-sender {
+  color: rgba(34, 211, 238, 0.75);
+}
+
+/* Tasks filter tabs */
+.gacks-filter-tab {
+  background: rgba(13, 20, 38, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  color: var(--gacks-text-muted);
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-filter-tab:hover {
+  background: rgba(40, 124, 255, 0.07);
+  border-color: rgba(40, 124, 255, 0.22);
+  color: var(--gacks-text-white);
+}
+
+.gacks-filter-tab-active {
+  background: rgba(40, 124, 255, 0.12);
+  border-color: rgba(40, 124, 255, 0.35);
+  color: var(--gacks-primary);
+}
+
+/* Task item cards */
+.gacks-task-item-card {
+  background: rgba(13, 20, 38, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-task-item-card:hover {
+  background: rgba(40, 124, 255, 0.06);
+  border-color: rgba(40, 124, 255, 0.20);
+  transform: translateX(2px);
+}
+
+/* Chat caption bar */
+.gacks-chat-caption-bar {
+  background: rgba(34, 211, 238, 0.08);
+  border: 1px solid rgba(34, 211, 238, 0.20);
+  border-radius: 10px;
+}
+
+/* Floating caption */
+.gacks-floating-caption {
+  background: rgba(8, 13, 28, 0.90);
+  border: 1px solid rgba(40, 124, 255, 0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--gacks-radius-md);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 20px rgba(40,124,255,0.06);
+}
+
+.gacks-caption-dot {
+  background: var(--gacks-primary);
+  box-shadow: 0 0 8px var(--gacks-primary);
+  animation: gacks-quantum-pulse 2s ease-in-out infinite;
+}
+
+/* Market tabs */
+.gacks-market-tab {
+  background: rgba(13, 20, 38, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  color: var(--gacks-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  transition: all var(--gacks-transition-fast);
+}
+
+.gacks-market-tab-active {
+  background: var(--gacks-gradient);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: var(--gacks-glow-primary);
+}
+
+/* Suggestion pills */
+.gacks-suggestion-pill {
+  background: rgba(13, 20, 38, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--gacks-text-muted);
+  transition: all var(--gacks-transition-normal);
+  border-radius: 10px;
+}
+
+.gacks-suggestion-pill:hover {
+  background: rgba(40, 124, 255, 0.09);
+  border-color: rgba(40, 124, 255, 0.28);
+  color: var(--gacks-text-white);
+  transform: translateY(-1px);
+}
+
+/* Page-level stat boxes */
+.gacks-tasks-stat-box {
+  background: rgba(13, 20, 38, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.gacks-tasks-progress-fill {
+  background: var(--gacks-gradient);
+  border-radius: 9999px;
+}
+
+
+/* ── Phase 13: Light Theme Sync ──────────────────────────────────────────── */
+
+[data-theme="light"] {
+  --gacks-bg-base:           #f1f5f9;
+  --gacks-bg-panel:          #ffffff;
+  --gacks-bg-panel-hover:    #f8fafc;
+  --gacks-bg-elevated:       #f1f5f9;
+  --gacks-bg-elevated-hover: #e2e8f0;
+  --gacks-bg-chip:           #e2e8f0;
+  --gacks-text-white:        #0f172a;
+  --gacks-text-primary:      #0f172a;
+  --gacks-text-muted:        #475569;
+  --gacks-text-dim:          #64748b;
+  --gacks-border-dim:        rgba(0, 0, 0, 0.07);
+  --gacks-border-subtle:     rgba(0, 0, 0, 0.04);
+  --gacks-border-medium:     rgba(0, 0, 0, 0.12);
+  --gacks-glow-primary: 0 0 20px rgba(40, 124, 255, 0.15), 0 4px 12px rgba(0,0,0,0.08);
+  --gacks-glow-hover: 0 8px 40px rgba(40, 124, 255, 0.08), 0 4px 16px rgba(0,0,0,0.08);
+  --gacks-shadow-card:     0 4px 24px rgba(0, 0, 0, 0.08);
+  --gacks-shadow-elevated: 0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .gacks-sidebar {
+  background: #ffffff;
+  border-right-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .gacks-topbar {
+  background: rgba(255, 255, 255, 0.90);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .gacks-command-form {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.10);
+}
+
+[data-theme="light"] .gacks-command-form:focus-within {
+  border-color: var(--gacks-primary);
+  background: #ffffff;
+}
+
+[data-theme="light"] .gacks-card {
+  background-color: #ffffff;
+  background-image: none;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .gacks-card:hover {
+  border-color: rgba(40, 124, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 0 20px rgba(40,124,255,0.05);
+}
+
+[data-theme="light"] .gacks-nav-item-active {
+  background: rgba(40, 124, 255, 0.08);
+}
+
+[data-theme="light"] .gacks-hero-panel {
+  background-color: #ffffff;
+  background-image: none;
+  border-color: rgba(40, 124, 255, 0.12);
+}
+
+[data-theme="light"] .gacks-action-tile {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .gacks-action-tile:hover {
+  background: rgba(40, 124, 255, 0.05);
+  border-color: rgba(40, 124, 255, 0.20);
+}
+
+[data-theme="light"] .gacks-market-tile {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .gacks-market-tile:hover {
+  background: rgba(40, 124, 255, 0.04);
+  border-color: rgba(40, 124, 255, 0.18);
+}
+
+[data-theme="light"] .gacks-dashboard-root {
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(40,124,255,0.07) 0%, transparent 55%),
+    none;
+}
+
+[data-theme="light"] .gacks-hero-title {
+  background: var(--gacks-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .gacks-profile-pill {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.09);
+}
+
+[data-theme="light"] .gacks-profile-pill:hover {
+  background: #f1f5f9;
+  border-color: rgba(40, 124, 255, 0.25);
+}
+
+[data-theme="light"] .gacks-weather-pill {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.09);
+}
+
+[data-theme="light"] .gacks-turn-assistant .gacks-turn-bubble {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+}
+
+[data-theme="light"] .gacks-turn-user .gacks-turn-bubble {
+  color: #ffffff;
+}
+
+[data-theme="light"] .gacks-suggestion-pill {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #475569;
+}
+
+[data-theme="light"] .gacks-suggestion-pill:hover {
+  background: rgba(40, 124, 255, 0.06);
+  border-color: rgba(40, 124, 255, 0.22);
+  color: #0f172a;
+}
+
+[data-theme="light"] .gacks-filter-tab {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #475569;
+}
+
+[data-theme="light"] .gacks-filter-tab-active {
+  background: rgba(40, 124, 255, 0.10);
+  border-color: rgba(40, 124, 255, 0.30);
+  color: var(--gacks-primary);
+}
+
+[data-theme="light"] .gacks-task-item-card {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .gacks-task-item-card:hover {
+  background: rgba(40, 124, 255, 0.04);
+  border-color: rgba(40, 124, 255, 0.18);
+}
+
+[data-theme="light"] .gacks-chat-welcome-composer-wrap {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .gacks-chat-welcome-input {
+  color: #0f172a;
+}
+
+[data-theme="light"] .gacks-chat-welcome-input::placeholder {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .gacks-chat-feature-card {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .gacks-chat-feature-card:hover {
+  background: rgba(40, 124, 255, 0.04);
+  border-color: rgba(40, 124, 255, 0.18);
+}
+
+[data-theme="light"] .gacks-feature-card-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .gacks-feature-card-desc {
+  color: #475569;
+}
+
+[data-theme="light"] .gacks-page-header {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom-color: rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .gacks-mode-btn {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.09);
+  color: #374151;
+}
+
+[data-theme="light"] .gacks-mode-btn:hover {
+  background: rgba(40, 124, 255, 0.08);
+  border-color: rgba(40, 124, 255, 0.25);
+  color: #0f172a;
+}
+
+[data-theme="light"] .gacks-gauge-wrap {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.09);
+}
+
+/* ── Phase 14: Accessibility — Reduced Motion ────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .gacks-dashboard-root *,
+  .gacks-dashboard-root *::before,
+  .gacks-dashboard-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .gacks-card:hover,
+  .gacks-action-tile:hover,
+  .gacks-mode-btn:hover,
+  .gacks-btn-primary:hover,
+  .gacks-btn-secondary:hover,
+  .gacks-floating-mic-btn:hover {
+    transform: none;
+  }
+}
+
+/* ── Phase 14: Responsive Final Pass ─────────────────────────────────────── */
+
+@media (max-width: 1200px) {
+  .gacks-grid-top-row    { grid-template-columns: 3fr 2fr; }
+  .gacks-grid-bottom-row { grid-template-columns: 3fr 2fr; }
+}
+
+@media (max-width: 960px) {
+  .gacks-grid-top-row,
+  .gacks-grid-middle-row,
+  .gacks-grid-bottom-row {
+    grid-template-columns: 1fr;
+  }
+
+  .gacks-system-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .gacks-card::before {
+    /* Disable lift animation on touch devices to prevent flicker */
+    transition: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .gacks-topbar {
+    padding: 0 14px;
+  }
+
+  .gacks-dashboard-content {
+    padding: 12px 14px 80px 14px;
+  }
+
+  .gacks-system-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .gacks-quickactions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gacks-hero-panel {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gacks-hero-modes {
+    flex-wrap: wrap;
+  }
+
+  .gacks-mode-btn {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gacks-topbar-right .gacks-clock-widget,
+  .gacks-topbar-right .gacks-weather-pill {
+    display: none;
+  }
+
+  .gacks-hero-title {
+    font-size: 16px;
+  }
+
+  .gacks-system-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gacks-quickactions-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

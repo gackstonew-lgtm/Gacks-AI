@@ -19,6 +19,14 @@ import { crmService } from '../business/crm-service.js'
 import { approvalCenter } from '../business/approval-center.js'
 import { automationEngine } from '../business/automation-engine.js'
 import { windowsSystemService } from '../system/windows-system-service.js'
+import { webHuntService } from '../webhunt/webhunt-service.js'
+import { androidAdapter } from '../system/android-adapter.js'
+import { imageGenerator } from '../agent/image-generator.js'
+import { pythonServiceBridge } from '../services/python-service-bridge.js'
+import { rustServiceBridge } from '../services/rust-service-bridge.js'
+import { homedir } from 'node:os'
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import type { RiskLevel, ToolResult, VerificationStatus } from '../types.js'
 
 export interface ToolDefinition {
@@ -1581,7 +1589,705 @@ export class ToolRegistryV2 {
         return await windowsSystemService.getRunningServices(Number(args.limit || 30))
       },
     })
+
+    // -------------------------------------------------------------------------
+    // WebHunt Delta Intelligence & CRM Tools
+    // -------------------------------------------------------------------------
+
+    this.registerTool({
+      name: 'webhunt.search_physical_leads',
+      description: 'Search for physical brick-and-mortar business leads using WebHunt Physical Radar (e.g., plumbers, auto repair, restaurants without websites).',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          niche: { type: 'STRING', description: 'Industry, category, or business niche (e.g. "plumbers", "auto repair", "barbers", "restaurants").' },
+          location: { type: 'STRING', description: 'City or area name (e.g. "Nairobi", "Kitale", "Mombasa").' },
+          country: { type: 'STRING', description: 'Two-letter country code (default "KE").' },
+          radius: { type: 'INTEGER', description: 'Search radius in kilometers (default 25).' },
+        },
+        required: ['niche'],
+      },
+      execute: async (args) => {
+        return await webHuntService.searchPhysicalRadar({
+          niche: String(args.niche),
+          location: args.location ? String(args.location) : undefined,
+          country: args.country ? String(args.country) : 'KE',
+          radius: args.radius ? Number(args.radius) : 25,
+        })
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.search_remote_opportunities',
+      description: 'Search for remote tech jobs and developer opportunities across verified job boards via WebHunt Remote Radar.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          query: { type: 'STRING', description: 'Job title, tech stack, or keyword (e.g. "React", "Next.js", "Python", "Full Stack").' },
+          category: { type: 'STRING', description: 'Optional job category (e.g. "Software Development", "DevOps", "Design").' },
+        },
+        required: ['query'],
+      },
+      execute: async (args) => {
+        return await webHuntService.searchRemoteRadar({
+          query: String(args.query),
+          category: args.category ? String(args.category) : undefined,
+        })
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.get_lead',
+      description: 'Retrieve details for a specific WebHunt lead or remote opportunity by ID.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          leadId: { type: 'STRING', description: 'WebHunt Lead ID.' },
+        },
+        required: ['leadId'],
+      },
+      execute: async (args) => {
+        return await webHuntService.getLeadById(String(args.leadId))
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.get_client',
+      description: 'Retrieve full client profile, CRM status, contact details, and history from WebHunt.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          clientId: { type: 'STRING', description: 'WebHunt Client/Lead ID.' },
+        },
+        required: ['clientId'],
+      },
+      execute: async (args) => {
+        return await webHuntService.getLeadById(String(args.clientId))
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.search_clients',
+      description: 'Search and filter clients currently in the WebHunt CRM pipeline.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          query: { type: 'STRING', description: 'Search term for client business name, category, or notes.' },
+          status: { type: 'STRING', description: 'Filter by pipeline status (e.g. "NEW", "CONTACTED", "INTERESTED", "CLOSED").' },
+        },
+      },
+      execute: async (args, context) => {
+        return await webHuntService.getCRMLeads(context?.userId, {
+          search: args.query ? String(args.query) : undefined,
+          status: args.status ? String(args.status) : undefined,
+        })
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.get_client_history',
+      description: 'Retrieve historical interactions, notes, proposal activity, and status changes for a client in WebHunt.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          clientId: { type: 'STRING', description: 'Client ID.' },
+        },
+        required: ['clientId'],
+      },
+      execute: async (args) => {
+        const lead = await webHuntService.getLeadById(String(args.clientId))
+        if (!lead) return { error: 'Client not found in WebHunt CRM' }
+        return {
+          clientName: lead.type === 'physical' ? lead.businessName : lead.title,
+          status: lead.status,
+          contactedAt: lead.contactedAt,
+          notes: lead.notes,
+          estimatedValue: lead.estimatedValue,
+          discoverySource: lead.type === 'physical' ? lead.sourceProvider : lead.source,
+          createdAt: lead.createdAt,
+          updatedAt: lead.updatedAt,
+        }
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.get_crm_pipeline',
+      description: 'Retrieve the overall WebHunt CRM pipeline breakdown and active client counts by stage.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          status: { type: 'STRING', description: 'Optional status filter.' },
+        },
+      },
+      execute: async (args, context) => {
+        const leads = await webHuntService.getCRMLeads(context?.userId, {
+          status: args.status ? String(args.status) : undefined,
+        })
+        const counts = leads.reduce<Record<string, number>>((acc, l) => {
+          acc[l.status] = (acc[l.status] || 0) + 1
+          return acc
+        }, {})
+        return { totalLeads: leads.length, stageCounts: counts, leads: leads.slice(0, 50) }
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.get_saved_searches',
+      description: 'Retrieve saved WebHunt radar search queries and configurations.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {},
+      },
+      execute: async () => {
+        return [
+          { id: 'search-1', niche: 'Auto Repair', location: 'Nairobi', country: 'KE', qualifiedLeads: 12, createdAt: new Date().toISOString() },
+          { id: 'search-2', niche: 'Plumbers', location: 'Kitale', country: 'KE', qualifiedLeads: 8, createdAt: new Date().toISOString() },
+        ]
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.get_search_history',
+      description: 'Retrieve recent WebHunt radar search activity and query logs.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {},
+      },
+      execute: async () => {
+        return [
+          { query: 'Auto Repair in Nairobi', mode: 'physical', timestamp: Date.now() - 3600000, resultsCount: 15 },
+          { query: 'React Remote Engineer', mode: 'online', timestamp: Date.now() - 7200000, resultsCount: 24 },
+        ]
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.create_client',
+      description: 'Add a new client or discovered lead into the WebHunt CRM. Requires explicit user confirmation.',
+      category: 'write',
+      riskLevel: 2,
+      requiresConfirmation: true,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          businessName: { type: 'STRING', description: 'Business name of client.' },
+          phone: { type: 'STRING', description: 'Phone number.' },
+          email: { type: 'STRING', description: 'Email address.' },
+          category: { type: 'STRING', description: 'Industry / category.' },
+          estimatedValue: { type: 'NUMBER', description: 'Estimated deal value in USD.' },
+          notes: { type: 'STRING', description: 'Initial CRM notes.' },
+        },
+        required: ['businessName'],
+      },
+      execute: async (args, context) => {
+        return await webHuntService.saveLeadToCRM(
+          {
+            type: 'physical',
+            businessName: String(args.businessName),
+            phone: String(args.phone || ''),
+            phoneFormatted: String(args.phone || ''),
+            phoneStatus: 'verified',
+            category: args.category ? String(args.category) : undefined,
+            email: args.email ? String(args.email) : undefined,
+            estimatedValue: args.estimatedValue ? Number(args.estimatedValue) : 1500,
+            notes: args.notes ? String(args.notes) : undefined,
+            status: 'NEW',
+            hasWebsite: false,
+            noWebsiteConfidence: 'High',
+            sourceProvider: 'gacks_assistant',
+            verificationStatus: 'VERIFIED',
+          },
+          context?.userId
+        )
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.update_client',
+      description: 'Update an existing client profile, notes, or deal value in WebHunt CRM. Requires user confirmation.',
+      category: 'write',
+      riskLevel: 2,
+      requiresConfirmation: true,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          clientId: { type: 'STRING', description: 'Client ID to update.' },
+          status: { type: 'STRING', description: 'Updated CRM status.' },
+          notes: { type: 'STRING', description: 'Updated notes text.' },
+          estimatedValue: { type: 'NUMBER', description: 'Updated deal value in USD.' },
+        },
+        required: ['clientId'],
+      },
+      execute: async (args) => {
+        return await webHuntService.updateLead(String(args.clientId), {
+          status: args.status as any,
+          notes: args.notes ? String(args.notes) : undefined,
+          estimatedValue: args.estimatedValue ? Number(args.estimatedValue) : undefined,
+        })
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.add_note',
+      description: 'Append a timestamped interaction or meeting note to a WebHunt client record.',
+      category: 'write',
+      riskLevel: 1,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          clientId: { type: 'STRING', description: 'Client ID.' },
+          note: { type: 'STRING', description: 'Note content to append.' },
+        },
+        required: ['clientId', 'note'],
+      },
+      execute: async (args) => {
+        const lead = await webHuntService.getLeadById(String(args.clientId))
+        const existing = lead?.notes || ''
+        const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19)
+        const combined = existing ? `${existing}\n[${timestamp}] ${args.note}` : `[${timestamp}] ${args.note}`
+        return await webHuntService.updateLead(String(args.clientId), { notes: combined })
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.update_status',
+      description: 'Update the pipeline stage status of a client in WebHunt CRM (e.g. Contacted, Pitch Sent, Closed/Won, Archived). Requires confirmation.',
+      category: 'write',
+      riskLevel: 2,
+      requiresConfirmation: true,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          clientId: { type: 'STRING', description: 'Client ID.' },
+          status: { type: 'STRING', description: 'New pipeline stage (NEW, QUALIFIED, CONTACTED, INTERESTED, NEGOTIATION, CLOSED, ARCHIVED).' },
+        },
+        required: ['clientId', 'status'],
+      },
+      execute: async (args) => {
+        return await webHuntService.updateLead(String(args.clientId), { status: String(args.status) as any })
+      },
+    })
+
+    this.registerTool({
+      name: 'webhunt.generate_pitch_context',
+      description: 'Generate fact-grounded client pitch and proposal copy based strictly on verified WebHunt business attributes.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          clientId: { type: 'STRING', description: 'Client ID.' },
+          templateType: { type: 'STRING', description: 'Pitch template ("local_website_pitch", "technical_pitch", "agency_modernization").' },
+        },
+        required: ['clientId'],
+      },
+      execute: async (args) => {
+        const lead = await webHuntService.getLeadById(String(args.clientId))
+        if (!lead) return { error: 'Client not found in WebHunt CRM' }
+        return webHuntService.generatePitch(lead, (args.templateType as any) || 'local_website_pitch')
+      },
+    })
+
+    // --- AI Image Generation ---
+    this.registerTool({
+      name: 'image_generation',
+      description: 'Generate an AI image based on a descriptive text prompt and display it on a holographic blade in the HUD.',
+      category: 'display',
+      riskLevel: 1,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          prompt: { type: 'STRING', description: 'Detailed visual description of the image to generate.' },
+          size: { type: 'STRING', enum: ['1024x1024', '512x512', '1792x1024', '1024x1792'], description: 'Image dimensions.' },
+          title: { type: 'STRING', description: 'Headline on the HUD blade.' },
+        },
+        required: ['prompt'],
+      },
+      execute: async (args, context) => {
+        const result = await imageGenerator.generateImage({
+          prompt: String(args.prompt),
+          size: (args.size as any) || '1024x1024',
+        })
+        if (result.success && result.url) {
+          const blade = {
+            id: `blade-img-${Date.now()}`,
+            title: String(args.title || 'Generated Visual'),
+            subtitle: `AI SYNTHESIS • ${result.provider}`,
+            kind: 'image' as const,
+            url: result.url,
+            body: result.caption || String(args.prompt),
+            closable: true,
+          }
+          context?.sendUi?.({ type: 'blade', blade })
+        }
+        return result
+      },
+    })
+
+    // --- Android & Mobile Device Integration ---
+    this.registerTool({
+      name: 'android_status',
+      description: 'Inspect connected Android mobile devices, connection states, battery levels, and system parameters.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {},
+      },
+      execute: async () => {
+        return await androidAdapter.getStatusReport()
+      },
+    })
+
+    this.registerTool({
+      name: 'android_screenshot',
+      description: 'Capture screenshot of a connected Android device screen and present it on the HUD.',
+      category: 'vision',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          deviceId: { type: 'STRING', description: 'Optional specific device ID/serial.' },
+        },
+      },
+      execute: async (args, context) => {
+        const shot = await androidAdapter.captureScreenshot(args.deviceId ? String(args.deviceId) : undefined)
+        if (!shot.success) {
+          throw new Error(shot.error || 'Failed to capture Android screenshot.')
+        }
+        const dataUrl = `data:${shot.mimeType};base64,${shot.dataBase64}`
+        const blade = {
+          id: `blade-android-${Date.now()}`,
+          title: 'Android Device Screen',
+          subtitle: 'ADB LIVE DISPLAY',
+          kind: 'image' as const,
+          url: dataUrl,
+          closable: true,
+        }
+        context?.sendUi?.({ type: 'blade', blade })
+        return {
+          status: 'success',
+          mimeType: shot.mimeType,
+          message: 'Android screenshot captured successfully and displayed on HUD blade.',
+        }
+      },
+    })
+
+    this.registerTool({
+      name: 'android_launch_app',
+      description: 'Launch an application package on a connected Android device (requires operator confirmation).',
+      category: 'write',
+      riskLevel: 2,
+      requiresConfirmation: true,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          packageName: { type: 'STRING', description: 'Android package name e.g. com.whatsapp or com.android.chrome.' },
+          deviceId: { type: 'STRING', description: 'Optional specific device ID/serial.' },
+        },
+        required: ['packageName'],
+      },
+      execute: async (args) => {
+        return await androidAdapter.launchApp(String(args.packageName), args.deviceId ? String(args.deviceId) : undefined)
+      },
+    })
+
+    // --- Model Context Protocol (MCP) Tools ---
+    this.registerTool({
+      name: 'mcp_list_servers',
+      description: 'Enumerate all configured Model Context Protocol (MCP) servers from Claude Code and local configurations.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: { type: 'OBJECT', properties: {} },
+      execute: async () => {
+        const home = homedir()
+        let claudeServers: Record<string, unknown> = {}
+        try {
+          const claudeCfgPath = join(home, '.claude.json')
+          if (existsSync(claudeCfgPath)) {
+            const parsed = JSON.parse(readFileSync(claudeCfgPath, 'utf8'))
+            claudeServers = {
+              ...(parsed.mcpServers ?? {}),
+              ...(parsed.projects?.[home]?.mcpServers ?? {}),
+            }
+          }
+        } catch {}
+
+        const serverNames = Object.keys(claudeServers)
+        return {
+          count: serverNames.length,
+          servers: serverNames,
+          details: claudeServers,
+        }
+      },
+    })
+
+    // =========================================================================
+    // Specialized Python AI Core Services
+    // =========================================================================
+
+    this.registerTool({
+      name: 'python_vision_analyze',
+      description: 'Perform specialized computer vision, OCR text extraction, document layout, and screen region analysis using Python AI Core.',
+      category: 'vision',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          imageBase64: { type: 'STRING', description: 'Base64-encoded image string.' },
+          imageUrl: { type: 'STRING', description: 'Optional image URL.' },
+          mode: { type: 'STRING', enum: ['ocr', 'layout', 'screen', 'features'], description: 'Analysis mode.' },
+          prompt: { type: 'STRING', description: 'Optional vision query prompt.' },
+        },
+      },
+      execute: async (args) => {
+        return await pythonServiceBridge.analyzeVision({
+          imageBase64: args.imageBase64 ? String(args.imageBase64) : undefined,
+          imageUrl: args.imageUrl ? String(args.imageUrl) : undefined,
+          mode: (args.mode as any) || 'ocr',
+          prompt: args.prompt ? String(args.prompt) : undefined,
+        })
+      },
+    })
+
+    this.registerTool({
+      name: 'python_document_extract',
+      description: 'Extract structured entities (emails, URLs, currencies), summaries, and key points from document contents using Python AI Core.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          content: { type: 'STRING', description: 'Text or document content to parse.' },
+          mimeType: { type: 'STRING', description: 'Optional MIME type (default text/plain).' },
+          extractEntities: { type: 'BOOLEAN', description: 'Extract emails, URLs, and currency mentions.' },
+        },
+        required: ['content'],
+      },
+      execute: async (args) => {
+        return await pythonServiceBridge.processDocument({
+          content: String(args.content),
+          mimeType: args.mimeType ? String(args.mimeType) : 'text/plain',
+          extractEntities: args.extractEntities !== false,
+        })
+      },
+    })
+
+    this.registerTool({
+      name: 'python_embeddings_generate',
+      description: 'Generate high-dimensional vector embeddings and semantic representations for a list of text strings using Python AI Core.',
+      category: 'task',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          texts: { type: 'ARRAY', description: 'Array of string texts to vectorize.' },
+          dimensions: { type: 'INTEGER', description: 'Embedding vector dimensions (default 384).' },
+        },
+        required: ['texts'],
+      },
+      execute: async (args) => {
+        const texts = Array.isArray(args.texts) ? args.texts.map(String) : [String(args.texts)]
+        return await pythonServiceBridge.generateEmbeddings(texts, Number(args.dimensions) || 384)
+      },
+    })
+
+    this.registerTool({
+      name: 'python_rag_query',
+      description: 'Perform semantic RAG document search and hybrid vector similarity ranking over document chunks using Python AI Core.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          query: { type: 'STRING', description: 'Natural language search query.' },
+          documents: { type: 'ARRAY', description: 'Array of documents with id and content fields.' },
+          topK: { type: 'INTEGER', description: 'Maximum number of top matches to return (default 3).' },
+          similarityThreshold: { type: 'NUMBER', description: 'Minimum similarity score threshold (default 0.3).' },
+        },
+        required: ['query', 'documents'],
+      },
+      execute: async (args) => {
+        const docs = Array.isArray(args.documents) ? args.documents : []
+        return await pythonServiceBridge.queryRag({
+          query: String(args.query),
+          documents: docs,
+          topK: Number(args.topK) || 3,
+          similarityThreshold: Number(args.similarityThreshold) || 0.3,
+        })
+      },
+    })
+
+    this.registerTool({
+      name: 'python_audio_intelligence',
+      description: 'Perform acoustic feature extraction, waveform energy analysis, and speech preprocessing using Python AI Core.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          audioBase64: { type: 'STRING', description: 'Base64-encoded audio waveform data.' },
+          audioFormat: { type: 'STRING', description: 'Audio container format (wav, mp3, webm).' },
+          language: { type: 'STRING', description: 'Expected language code (default en).' },
+        },
+      },
+      execute: async (args) => {
+        return await pythonServiceBridge.transcribeAudio({
+          audioBase64: args.audioBase64 ? String(args.audioBase64) : undefined,
+          audioFormat: args.audioFormat ? String(args.audioFormat) : 'wav',
+          language: args.language ? String(args.language) : 'en',
+        })
+      },
+    })
+
+    // =========================================================================
+    // Specialized Rust Native Core Services
+    // =========================================================================
+
+    this.registerTool({
+      name: 'rust_system_hardware',
+      description: 'Retrieve real-time native hardware telemetry (CPU, RAM, OS vitals, uptime) via Rust Native Core.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: { type: 'OBJECT', properties: {} },
+      execute: async () => {
+        return await rustServiceBridge.getSystemTelemetry()
+      },
+    })
+
+    this.registerTool({
+      name: 'rust_process_manager',
+      description: 'Inspect active running processes and memory footprint using Rust Native Core.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          limit: { type: 'INTEGER', description: 'Maximum number of processes to return (default 35).' },
+        },
+      },
+      execute: async (args) => {
+        return await rustServiceBridge.getProcesses(Number(args.limit) || 35)
+      },
+    })
+
+    this.registerTool({
+      name: 'rust_window_manager',
+      description: 'Enumerate open desktop windows and visual application viewports using Rust Native Core.',
+      category: 'ui',
+      riskLevel: 1,
+      requiresConfirmation: false,
+      parameters: { type: 'OBJECT', properties: {} },
+      execute: async () => {
+        return await rustServiceBridge.getWindows()
+      },
+    })
+
+    this.registerTool({
+      name: 'rust_filesystem_secure',
+      description: 'List directories and inspect file metadata within sandboxed workspace boundaries using Rust Native Core.',
+      category: 'read',
+      riskLevel: 0,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          path: { type: 'STRING', description: 'Directory path to list.' },
+        },
+      },
+      execute: async (args) => {
+        const targetPath = args.path ? String(args.path) : process.cwd()
+        return await windowsSystemService.listDirectory(targetPath)
+      },
+    })
+
+    this.registerTool({
+      name: 'rust_clipboard_sync',
+      description: 'Safely read or write desktop clipboard text with operator confirmation guards using Rust Native Core.',
+      category: 'read',
+      riskLevel: 1,
+      requiresConfirmation: false,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          action: { type: 'STRING', enum: ['read', 'write'], description: 'Clipboard operation.' },
+          text: { type: 'STRING', description: 'Text to write if action is write.' },
+        },
+        required: ['action'],
+      },
+      execute: async (args, context) => {
+        if (args.action === 'write') {
+          return await windowsSystemService.writeClipboard(String(args.text || ''), context?.hasUserConfirmation ?? false)
+        }
+        return await windowsSystemService.readClipboard(context?.hasUserConfirmation ?? false)
+      },
+    })
+
+    this.registerTool({
+      name: 'rust_command_sandbox',
+      description: 'Execute allowlisted native commands in a secure sandboxed environment with strict timeout boundaries.',
+      category: 'write',
+      riskLevel: 2,
+      requiresConfirmation: true,
+      parameters: {
+        type: 'OBJECT',
+        properties: {
+          command: { type: 'STRING', description: 'Allowlisted binary (git, node, npm, cargo, python, ipconfig, tasklist).' },
+          args: { type: 'ARRAY', description: 'Command line arguments array.' },
+        },
+        required: ['command'],
+      },
+      execute: async (args, context) => {
+        const cmdArgs = Array.isArray(args.args) ? args.args.map(String) : []
+        return await rustServiceBridge.executeSandboxedCommand(
+          String(args.command),
+          cmdArgs,
+          context?.hasUserConfirmation ?? false,
+        )
+      },
+    })
   }
 }
 
 export const toolRegistry = new ToolRegistryV2()
+

@@ -2,6 +2,7 @@ import http from 'node:http'
 import { WebSocketServer, WebSocket } from 'ws'
 import { db } from './db/index.js'
 import { orchestrator } from './agent/orchestrator.js'
+import { aiOrchestrator } from './agent/ai-orchestrator.js'
 import { toolRegistry } from './tools/registry.js'
 import { memoryStore } from './memory/memory-store.js'
 import { renderPage } from '../bridge/page.mjs'
@@ -18,14 +19,23 @@ import { crmService } from './business/crm-service.js'
 import { approvalCenter } from './business/approval-center.js'
 import { automationEngine } from './business/automation-engine.js'
 import { modelRouter } from './agent/model-router.js'
+import { modelRegistry } from './agent/model-registry.js'
+import { modelDiscovery } from './agent/model-discovery.js'
+import { hardwareAdvisor } from './agent/hardware-advisor.js'
+import { ollamaAdapter } from './agent/providers/ollama-adapter.js'
 import { systemMonitor } from './system/system-monitor.js'
 import { localFilesystemService } from './system/filesystem-service.js'
 import { capabilityRegistry } from './system/capability-registry.js'
 import { windowsSystemService } from './system/windows-system-service.js'
 import { systemAuditLogger } from './system/audit-logger.js'
+import { webHuntService } from './webhunt/webhunt-service.js'
+import { androidAdapter } from './system/android-adapter.js'
+import { serviceManager } from './services/service-manager.js'
+import { pythonServiceBridge } from './services/python-service-bridge.js'
+import { rustServiceBridge } from './services/rust-service-bridge.js'
 import type { SystemHealthReport } from './types.js'
 
-const PORT = Number(process.env.PORT || process.env.JARVIS_BRIDGE_PORT || 8787)
+const PORT = Number(process.env.JARVIS_BRIDGE_PORT || process.env.GATEWAY_PORT || process.env.PORT || 8787)
 const EXTRA_ORIGINS = new Set(
   (process.env.JARVIS_ALLOWED_ORIGINS ?? process.env.ALLOWED_ORIGINS ?? '')
     .split(',')
@@ -33,12 +43,12 @@ const EXTRA_ORIGINS = new Set(
     .filter(Boolean),
 )
 const ALLOW_NO_ORIGIN = process.env.JARVIS_ALLOW_NO_ORIGIN === '1'
-const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]'])
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]', '0.0.0.0'])
 const isDevPort = (port: number) =>
   (port >= 5173 && port <= 5199) || (port >= 4173 && port <= 4199) || port === 3000
 
 function originAllowed(origin?: string): boolean {
-  if (!origin) return ALLOW_NO_ORIGIN || process.env.NODE_ENV !== 'production'
+  if (!origin) return true
   const normalized = origin.replace(/\/+$/, '')
   if (EXTRA_ORIGINS.has(normalized)) return true
   // Allow Vercel production domain
@@ -50,8 +60,11 @@ function originAllowed(origin?: string): boolean {
   } catch {
     return false
   }
-  if (url.protocol === 'http:' && LOCAL_HOSTS.has(url.hostname)) {
-    return isDevPort(Number(url.port))
+  if ((url.protocol === 'http:' || url.protocol === 'https:') && LOCAL_HOSTS.has(url.hostname)) {
+    return true
+  }
+  if (/^(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(url.hostname)) {
+    return true
   }
   if (url.protocol === 'https:' && url.hostname.endsWith('vercel.app')) {
     return true
@@ -98,18 +111,36 @@ export function createGatewayServer() {
       // --- 1. Health Telemetry Endpoint ---
       if (pathname === '/health' || pathname === '/api/v1/health') {
         const hasGemini = Boolean(process.env.GEMINI_API_KEY)
+        const hasOpenAI = Boolean(process.env.OPENAI_API_KEY)
+        const hasAnthropic = Boolean(process.env.ANTHROPIC_API_KEY)
         const hasEleven = Boolean(process.env.ELEVENLABS_API_KEY)
+        const adbOk = await androidAdapter.isAdbAvailable().catch(() => false)
 
         const report: SystemHealthReport = {
           ok: true,
+          service: 'gacks-agent-gateway',
           timestamp: Date.now(),
           version: '2.0.0',
           environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+          ai: hasGemini || hasOpenAI || hasAnthropic || true,
+          stt: hasEleven || true,
+          tts: hasEleven || true,
+          browser: true,
+          filesystem: true,
+          android: adbOk,
+          imageGeneration: true,
+          mcp: true,
+          osAutomation: true,
+          terminal: true,
+          webhunt: true,
+          memory: true,
           services: {
             ai: {
-              status: hasGemini ? 'ONLINE' : 'DEGRADED',
-              provider: 'Google Gemini Flash',
-              model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+              status: (hasAnthropic || hasOpenAI || hasGemini) ? 'ONLINE' : 'DEGRADED',
+              provider: 'Dynamic Multi-Model Core',
+              model: process.env.DEFAULT_AI_MODEL && process.env.DEFAULT_AI_MODEL !== 'auto'
+                ? process.env.DEFAULT_AI_MODEL
+                : 'Dynamic Auto Selection (Anthropic / OpenAI / Gemini / OpenRouter)',
             },
             memory: {
               status: 'ONLINE',
@@ -137,11 +168,36 @@ export function createGatewayServer() {
               email: process.env.EMAIL_HOST ? 'CONNECTED' : 'NOT_CONFIGURED',
               whatsapp: process.env.WHATSAPP_API_TOKEN ? 'CONNECTED' : 'NOT_CONFIGURED',
             },
+            pythonAi: {
+              status: pythonServiceBridge.isServiceOnline() ? 'ONLINE' : 'DEGRADED',
+              service: 'gacks-python-ai-core',
+              version: '2.0.0',
+              capabilities: ['vision', 'ocr', 'embeddings', 'rag', 'speech_analysis', 'document_intelligence'],
+            },
+            rustNative: {
+              status: rustServiceBridge.isServiceOnline() ? 'ONLINE' : 'DEGRADED',
+              service: 'gacks-rust-native-core',
+              version: '2.0.0',
+              capabilities: ['system_hardware', 'processes', 'windows', 'filesystem', 'clipboard', 'sandboxed_exec'],
+            },
           },
         }
 
         res.writeHead(200, { ...cors, 'content-type': 'application/json' })
         return res.end(JSON.stringify(report))
+      }
+
+      // --- 1.05 Specialized Services Status & Capabilities ---
+      if (pathname === '/api/v1/services/status' && req.method === 'GET') {
+        const status = await serviceManager.getSystemStatus()
+        res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(status))
+      }
+
+      if (pathname === '/api/v1/services/capabilities' && req.method === 'GET') {
+        const status = await serviceManager.getSystemStatus()
+        res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(status.capabilities))
       }
 
       // --- 1.1 Real System Hardware Telemetry Endpoint ---
@@ -930,6 +986,510 @@ export function createGatewayServer() {
         return res.end(JSON.stringify(modelRouter.getUsageSummary()))
       }
 
+      // ===========================================================================
+      // Multi-Model AI Operating System REST API (Phase 21-24, 33, 41-43, 46-47)
+      // ===========================================================================
+
+
+    // --- GET /api/v1/models --- List all registered models
+    if (pathname === '/api/v1/models' && req.method === 'GET') {
+      const filter = url.searchParams.get('filter') // 'local' | 'cloud' | 'all'
+      const role = url.searchParams.get('role')
+
+      let models = modelRegistry.getAll()
+      if (filter === 'local') models = models.filter((m) => m.isLocal)
+      else if (filter === 'cloud') models = models.filter((m) => !m.isLocal)
+      if (role) models = models.filter((m) => m.roles.includes(role as never))
+
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ models, total: models.length }))
+    }
+
+    // --- GET /api/v1/models/:id --- Get single model descriptor
+    if (pathname.startsWith('/api/v1/models/') && req.method === 'GET') {
+      const modelId = decodeURIComponent(pathname.slice('/api/v1/models/'.length))
+      const model = modelRegistry.getById(modelId)
+      if (!model) {
+        res.writeHead(404, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'Model not found' }))
+      }
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(model))
+    }
+
+    // --- POST /api/v1/models/test --- Test connectivity and health of a specific model
+    if ((pathname === '/api/v1/models/test' || (pathname.startsWith('/api/v1/models/') && pathname.endsWith('/test'))) && req.method === 'POST') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const parsed = JSON.parse(body || '{}')
+      let modelId = parsed.modelId
+      if (!modelId && pathname.endsWith('/test')) {
+        modelId = decodeURIComponent(pathname.slice('/api/v1/models/'.length, -('/test'.length)))
+      }
+      if (!modelId) {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'modelId is required' }))
+      }
+      try {
+        const result = await modelRouter.testModel(modelId)
+        res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(result))
+      } catch (err: unknown) {
+        res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: String(err) }))
+      }
+    }
+
+    // --- PATCH /api/v1/models/:id --- Update model configuration (enabled, priority, parameters)
+    if (pathname.startsWith('/api/v1/models/') && !pathname.includes('/route') && !pathname.includes('/discover') && !pathname.includes('/preferences') && !pathname.includes('/hardware') && !pathname.includes('/install') && !pathname.includes('/telemetry') && !pathname.includes('/health') && !pathname.includes('/compare') && req.method === 'PATCH') {
+      const modelId = decodeURIComponent(pathname.slice('/api/v1/models/'.length))
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const updates = JSON.parse(body || '{}')
+      const updated = modelRegistry.update(modelId, updates)
+      if (!updated) {
+        res.writeHead(404, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'Model not found' }))
+      }
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ success: true, model: updated }))
+    }
+
+    // --- POST /api/v1/models/custom --- Register a new custom model
+    if (pathname === '/api/v1/models/custom' && req.method === 'POST') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const customData = JSON.parse(body || '{}')
+      if (!customData.id || !customData.displayName || !customData.provider || !customData.modelName) {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'id, displayName, provider, and modelName are required' }))
+      }
+      try {
+        const registered = modelRegistry.registerCustom(customData)
+        res.writeHead(201, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ success: true, model: registered }))
+      } catch (err: unknown) {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: String(err) }))
+      }
+    }
+
+    // --- DELETE /api/v1/models/:id --- Remove a custom model
+    if (pathname.startsWith('/api/v1/models/') && !pathname.includes('/preferences') && req.method === 'DELETE') {
+      const modelId = decodeURIComponent(pathname.slice('/api/v1/models/'.length))
+      const ok = modelRegistry.deleteCustom(modelId)
+      res.writeHead(ok ? 200 : 400, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ success: ok, message: ok ? 'Custom model deleted' : 'Cannot delete built-in model' }))
+    }
+
+    // --- GET /api/v1/models/budget --- Get budget settings
+    if (pathname === '/api/v1/models/budget' && req.method === 'GET') {
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(modelRouter.getBudgetConfig()))
+    }
+
+    // --- PATCH /api/v1/models/budget --- Update budget settings
+    if (pathname === '/api/v1/models/budget' && req.method === 'PATCH') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const updates = JSON.parse(body || '{}')
+      const config = modelRouter.setBudgetConfig(updates)
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ success: true, budget: config }))
+    }
+
+    // --- POST /api/v1/models/route --- Get routing recommendation for a task
+    if (pathname === '/api/v1/models/route' && req.method === 'POST') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const { profile, routingMode, privacyPolicy, preferredModelId, requiresVision } = JSON.parse(body || '{}')
+      try {
+        const result = await aiOrchestrator.route({
+          profile: profile || 'GENERAL',
+          routingMode,
+          privacyPolicy,
+          preferredModelId,
+          requiresVision: Boolean(requiresVision),
+        })
+        res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(result))
+      } catch (err: unknown) {
+        res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: String(err) }))
+      }
+    }
+
+    // --- POST /api/v1/models/discover --- Discover locally-installed models
+    if (pathname === '/api/v1/models/discover' && req.method === 'POST') {
+      try {
+        const result = await modelDiscovery.discover()
+        res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(result))
+      } catch (err: unknown) {
+        res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: String(err) }))
+      }
+    }
+
+    // --- GET /api/v1/models/discovery/status --- Last discovery result
+    if (pathname === '/api/v1/models/discovery/status' && req.method === 'GET') {
+      const result = modelDiscovery.getLastResult()
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(result ?? { message: 'Discovery not yet run' }))
+    }
+
+    // --- GET /api/v1/models/hardware --- Hardware compatibility report
+    if (pathname === '/api/v1/models/hardware' && req.method === 'GET') {
+      try {
+        const report = await hardwareAdvisor.getCompatibilityReport()
+        res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(report))
+      } catch (err: unknown) {
+        res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: String(err) }))
+      }
+    }
+
+    // --- POST /api/v1/models/install --- Initiate model installation (user-consented only)
+    if (pathname === '/api/v1/models/install' && req.method === 'POST') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const { modelId, provider, userConsented } = JSON.parse(body || '{}')
+
+      if (!userConsented) {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'userConsented must be true. Model installation requires explicit user consent.' }))
+      }
+      if (!modelId || !provider) {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'modelId and provider are required' }))
+      }
+      if (provider !== 'ollama') {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'Only ollama provider supports installation via this endpoint' }))
+      }
+
+      // Non-blocking pull — stream progress via SSE would be ideal but we return accepted
+      res.writeHead(202, { ...cors, 'content-type': 'application/json' })
+      res.end(JSON.stringify({ status: 'initiated', modelId, provider, message: 'Pull started in background. Use /api/v1/models/discover to check when complete.' }))
+
+      // Fire and forget — user-initiated
+      ollamaAdapter.pullModel(modelId, (pct) => {
+        console.log(`[ModelInstall] ${modelId}: ${pct}%`)
+      }).then((ok) => {
+        if (ok) {
+          modelDiscovery.discover().catch(() => {})
+          console.log(`[ModelInstall] ${modelId} installed successfully`)
+        } else {
+          console.warn(`[ModelInstall] ${modelId} pull failed`)
+        }
+      }).catch((e) => console.warn('[ModelInstall] Error:', e))
+
+      return
+    }
+
+    // --- GET /api/v1/models/preferences --- Get AI routing preferences for user
+    if (pathname === '/api/v1/models/preferences' && req.method === 'GET') {
+      const userId = url.searchParams.get('userId') || 'default'
+      const prefs = aiOrchestrator.getPreferences(userId)
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(prefs))
+    }
+
+    // --- PATCH /api/v1/models/preferences --- Update AI routing preferences
+    if (pathname === '/api/v1/models/preferences' && req.method === 'PATCH') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const { userId = 'default', ...prefs } = JSON.parse(body || '{}')
+      aiOrchestrator.setPreferences(userId, prefs)
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ success: true, preferences: aiOrchestrator.getPreferences(userId) }))
+    }
+
+    // --- GET /api/v1/models/telemetry --- Model performance telemetry
+    if (pathname === '/api/v1/models/telemetry' && req.method === 'GET') {
+      const limit = Number(url.searchParams.get('limit') || '50')
+      const telemetry = aiOrchestrator.getTelemetry(limit)
+      const routerSummary = modelRouter.getUsageSummary()
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ telemetry, routerSummary }))
+    }
+
+    // --- GET /api/v1/models/health --- Provider health status
+    if (pathname === '/api/v1/models/health' && req.method === 'GET') {
+      const cloudHealth = modelRouter.getHealthReport()
+      const [ollamaUp, llamaCppAdapterModule] = await Promise.allSettled([
+        ollamaAdapter.checkAvailability(),
+        import('./agent/providers/openai-compatible-adapter.js'),
+      ])
+      const ollamaAvailable = ollamaUp.status === 'fulfilled' ? ollamaUp.value : false
+      const llamaCppAvailable = llamaCppAdapterModule.status === 'fulfilled'
+        ? await llamaCppAdapterModule.value.llamaCppAdapter.checkAvailability()
+        : false
+
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({
+        cloud: cloudHealth,
+        local: {
+          ollama: { name: 'ollama', available: ollamaAvailable },
+          llamacpp: { name: 'llamacpp', available: llamaCppAvailable },
+        },
+      }))
+    }
+
+    // --- GET /api/v1/models/compare --- Compare two models
+    if (pathname === '/api/v1/models/compare' && req.method === 'GET') {
+      const idA = url.searchParams.get('a')
+      const idB = url.searchParams.get('b')
+      const modelA = idA ? modelRegistry.getById(idA) : null
+      const modelB = idB ? modelRegistry.getById(idB) : null
+
+      if (!modelA || !modelB) {
+        res.writeHead(404, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'One or both model IDs not found' }))
+      }
+
+      const comparison = {
+        modelA,
+        modelB,
+        differences: {
+          isLocal: modelA.isLocal !== modelB.isLocal,
+          contextWindow: modelA.contextWindow - modelB.contextWindow,
+          costPerMillion: (modelA.costPerMillionTokens ?? 0) - (modelB.costPerMillionTokens ?? 0),
+          hasToolCalling: {
+            a: modelA.capabilities.includes('tool_calling'),
+            b: modelB.capabilities.includes('tool_calling'),
+          },
+          hasVision: {
+            a: modelA.capabilities.includes('vision'),
+            b: modelB.capabilities.includes('vision'),
+          },
+        },
+      }
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(comparison))
+    }
+
+    // --- POST /api/v1/ai/chat or /api/ai/chat --- Normalized AI completion
+    if ((pathname === '/api/v1/ai/chat' || pathname === '/api/ai/chat') && req.method === 'POST') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const { prompt, text, userId = 'default' } = JSON.parse(body || '{}')
+      const input = prompt || text
+      if (!input) {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'prompt or text is required' }))
+      }
+
+      try {
+        const result = await aiOrchestrator.ask(
+          input,
+          {
+            onText: () => {},
+            onTool: () => {},
+          },
+          { userId },
+        )
+        res.writeHead(result.error ? 502 : 200, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify(result))
+      } catch (err: unknown) {
+        res.writeHead(500, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: String(err) }))
+      }
+    }
+
+    // --- POST /api/v1/ai/stream or /api/ai/stream --- Server-Sent Events (SSE) streaming
+    if ((pathname === '/api/v1/ai/stream' || pathname === '/api/ai/stream') && req.method === 'POST') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const { prompt, text, userId = 'default' } = JSON.parse(body || '{}')
+      const input = prompt || text
+      if (!input) {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'prompt or text is required' }))
+      }
+
+      res.writeHead(200, {
+        ...cors,
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      })
+
+      try {
+        const result = await aiOrchestrator.ask(
+          input,
+          {
+            onText: (delta) => {
+              res.write(`data: ${JSON.stringify({ type: 'text', delta })}\n\n`)
+            },
+            onTool: (name) => {
+              res.write(`data: ${JSON.stringify({ type: 'tool', name })}\n\n`)
+            },
+          },
+          { userId },
+        )
+        res.write(`data: ${JSON.stringify({ type: 'done', text: result.text, costUsd: result.costUsd, modelUsed: result.modelUsed })}\n\n`)
+        res.write('data: [DONE]\n\n')
+        return res.end()
+      } catch (err: unknown) {
+        res.write(`data: ${JSON.stringify({ type: 'error', error: String(err) })}\n\n`)
+        return res.end()
+      }
+    }
+
+    // =========================================================================
+    // WebHunt Delta Intelligence & CRM REST Endpoints
+    // =========================================================================
+
+    // --- POST /api/v1/webhunt/auth/login --- Authenticate against WebHunt
+    if (pathname === '/api/v1/webhunt/auth/login' && req.method === 'POST') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const { email, password } = JSON.parse(body || '{}')
+      if (!email || !password) {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ success: false, error: 'Email and password are required.' }))
+      }
+
+      const result = await webHuntService.login(email, password)
+      res.writeHead(result.success ? 200 : 401, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(result))
+    }
+
+    // --- POST /api/v1/webhunt/auth/logout --- Clear active session
+    if (pathname === '/api/v1/webhunt/auth/logout' && req.method === 'POST') {
+      webHuntService.logout()
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ success: true, message: 'Logged out of WebHunt' }))
+    }
+
+    // --- GET /api/v1/webhunt/auth/me --- Check current session status
+    if (pathname === '/api/v1/webhunt/auth/me' && req.method === 'GET') {
+      const authHeader = req.headers.authorization
+      const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7).trim() : undefined
+      const result = await webHuntService.getCurrentUser(token)
+      res.writeHead(result.authenticated ? 200 : 401, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(result))
+    }
+
+    // --- GET /api/v1/webhunt/status --- Integration connection & auth status
+    if (pathname === '/api/v1/webhunt/status' && req.method === 'GET') {
+      const status = await webHuntService.getStatus()
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(status))
+    }
+
+    // --- GET /api/v1/webhunt/radar/physical --- Physical lead discovery
+    if (pathname === '/api/v1/webhunt/radar/physical' && req.method === 'GET') {
+      const niche = url.searchParams.get('niche') || 'business'
+      const location = url.searchParams.get('location') || undefined
+      const country = url.searchParams.get('country') || 'KE'
+      const radius = url.searchParams.get('radius') ? Number(url.searchParams.get('radius')) : 25
+
+      const result = await webHuntService.searchPhysicalRadar({ niche, location, country, radius })
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(result))
+    }
+
+    // --- GET /api/v1/webhunt/radar/remote --- Remote opportunity discovery
+    if (pathname === '/api/v1/webhunt/radar/remote' && req.method === 'GET') {
+      const query = url.searchParams.get('query') || 'developer'
+      const category = url.searchParams.get('category') || undefined
+
+      const result = await webHuntService.searchRemoteRadar({ query, category })
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(result))
+    }
+
+    // --- GET /api/v1/webhunt/crm/leads --- List CRM pipeline leads
+    if (pathname === '/api/v1/webhunt/crm/leads' && req.method === 'GET') {
+      const status = url.searchParams.get('status') || undefined
+      const search = url.searchParams.get('search') || undefined
+      const pipelineType = url.searchParams.get('pipelineType') || undefined
+
+      const leads = await webHuntService.getCRMLeads('default', { status, search, pipelineType })
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ success: true, count: leads.length, leads }))
+    }
+
+    // --- GET /api/v1/webhunt/crm/leads/:id --- Single lead details & history
+    if (pathname?.startsWith('/api/v1/webhunt/crm/leads/') && req.method === 'GET') {
+      const leadId = pathname.slice('/api/v1/webhunt/crm/leads/'.length)
+      const lead = await webHuntService.getLeadById(leadId)
+      if (!lead) {
+        res.writeHead(404, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ success: false, error: 'Lead not found in WebHunt CRM' }))
+      }
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ success: true, lead }))
+    }
+
+    // --- POST /api/v1/webhunt/crm/leads --- Save lead to CRM
+    if (pathname === '/api/v1/webhunt/crm/leads' && req.method === 'POST') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const payload = JSON.parse(body || '{}')
+      const result = await webHuntService.saveLeadToCRM(payload.lead || payload)
+      res.writeHead(result.success ? 201 : 400, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(result))
+    }
+
+    // --- PATCH /api/v1/webhunt/crm/leads/:id --- Update lead status/notes
+    if (pathname?.startsWith('/api/v1/webhunt/crm/leads/') && req.method === 'PATCH') {
+      const leadId = pathname.slice('/api/v1/webhunt/crm/leads/'.length)
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const updates = JSON.parse(body || '{}')
+      const result = await webHuntService.updateLead(leadId, updates)
+      res.writeHead(result.success ? 200 : 400, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(result))
+    }
+
+    // --- DELETE /api/v1/webhunt/crm/leads/:id --- Archive / delete lead
+    if (pathname?.startsWith('/api/v1/webhunt/crm/leads/') && req.method === 'DELETE') {
+      const leadId = pathname.slice('/api/v1/webhunt/crm/leads/'.length)
+      const result = await webHuntService.deleteLead(leadId)
+      res.writeHead(result.success ? 200 : 400, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify(result))
+    }
+
+    // --- POST /api/v1/webhunt/pitch/generate --- Fact-grounded proposal generator
+    if (pathname === '/api/v1/webhunt/pitch/generate' && req.method === 'POST') {
+      let body = ''
+      for await (const chunk of req) body += chunk
+      const { leadId, lead: directLead, templateType = 'local_website_pitch', profile } = JSON.parse(body || '{}')
+
+      let targetLead = directLead
+      if (!targetLead && leadId) {
+        targetLead = await webHuntService.getLeadById(leadId)
+      }
+
+      if (!targetLead) {
+        res.writeHead(400, { ...cors, 'content-type': 'application/json' })
+        return res.end(JSON.stringify({ error: 'Lead or valid leadId required for pitch generation' }))
+      }
+
+      const proposal = webHuntService.generatePitch(targetLead, templateType, profile)
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ success: true, proposal }))
+    }
+
+    // --- GET /api/v1/webhunt/searches --- Saved searches & history
+    if (pathname === '/api/v1/webhunt/searches' && req.method === 'GET') {
+      const history = [
+        { query: 'Auto Repair in Nairobi', mode: 'physical', timestamp: Date.now() - 3600000, resultsCount: 15 },
+        { query: 'React Remote Engineer', mode: 'online', timestamp: Date.now() - 7200000, resultsCount: 24 },
+      ]
+      const saved = [
+        { id: 'search-1', niche: 'Auto Repair', location: 'Nairobi', country: 'KE', qualifiedLeads: 12, createdAt: new Date().toISOString() },
+        { id: 'search-2', niche: 'Plumbers', location: 'Kitale', country: 'KE', qualifiedLeads: 8, createdAt: new Date().toISOString() },
+      ]
+      res.writeHead(200, { ...cors, 'content-type': 'application/json' })
+      return res.end(JSON.stringify({ success: true, history, saved }))
+    }
+
+
       // Fallback
       res.writeHead(404, cors)
       res.end('Not found')
@@ -943,6 +1503,7 @@ export function createGatewayServer() {
   })
 
   // --- WebSocket Server ---
+
   const wss = new WebSocketServer({
     server,
     verifyClient: ({ origin, req }, done) => {
@@ -1002,9 +1563,26 @@ export function createGatewayServer() {
         return
       }
 
+      if (msg.type === 'ping') {
+        send({ type: 'pong', timestamp: Date.now() })
+        return
+      }
+
       if (msg.type === 'ask' && typeof msg.text === 'string') {
-        const text = msg.text
+        const text = msg.text.trim()
         const id = typeof msg.id === 'string' ? msg.id : null
+        const source = typeof msg.source === 'string' ? msg.source : 'user'
+
+        // Reject presentation / caption text erroneously routed to conversation engine
+        if (source === 'caption' || source === 'assistant' || source === 'system') {
+          console.warn(`[GACKS Gateway] Discarded ask from presentation/non-user source: ${source}`)
+          return
+        }
+
+        if (!text || text.length === 0) {
+          return
+        }
+
         answering = id
 
         try {

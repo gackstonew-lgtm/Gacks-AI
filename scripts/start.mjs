@@ -108,12 +108,21 @@ process.on('SIGTERM', () => shutdown(0))
  * somewhere neither half reports. Passing the port through closes that gap
  * without widening what the bridge trusts by default.
  */
-const port = process.env.PORT
+const clientPort = Number(process.env.VITE_PORT || process.env.CLIENT_PORT || 5173)
+const bridgePort = Number(process.env.JARVIS_BRIDGE_PORT || 8787)
 const bridgeEnv = writes ? { JARVIS_ALLOW_WRITES: '1' } : {}
-if (port) {
-  bridgeEnv.JARVIS_ALLOWED_ORIGINS = `http://localhost:${port},http://127.0.0.1:${port}`
-  console.log(`  serving the face on port ${port}; the bridge will accept it.\n`)
-}
+const extraOrigins = [
+  `http://localhost:${clientPort}`,
+  `http://127.0.0.1:${clientPort}`,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  process.env.JARVIS_ALLOWED_ORIGINS,
+  process.env.ALLOWED_ORIGINS,
+].filter(Boolean).join(',')
+
+bridgeEnv.JARVIS_ALLOWED_ORIGINS = extraOrigins
+bridgeEnv.JARVIS_BRIDGE_PORT = String(bridgePort)
+console.log(`  serving the face on port ${clientPort}; the agent gateway is on port ${bridgePort}.\n`)
 
 vendorWasm()
 

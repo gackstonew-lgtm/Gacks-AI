@@ -1,6 +1,12 @@
 import { BRIDGE_HTTP_URL } from '../config'
 import { getMic } from './audio'
-import { speakingNow, speakingSince } from './tts'
+import {
+  speakingNow,
+  speakingSince,
+  isAssistantSpeaking,
+  wasAssistantSpeakingRecently,
+  getRecentSpokenText,
+} from './tts'
 import { startVad, type Vad } from './vad'
 import { caps } from './capabilities'
 import { tracer } from './diag'
@@ -12,17 +18,6 @@ import { tracer } from './diag'
  * a turn, and that single fact is most of what separates this from a kiosk:
  * the microphone is still open while JARVIS is talking, so you can cut him off
  * the way you would cut off a person.
- *
- * The obvious design — one recogniser hunting for the wake word, a second one
- * capturing the command, stopping the first to start the second because the
- * browser only hands out one at a time — is what this replaces. It works, but
- * nothing is listening during an answer, so barge-in is impossible, and every
- * restart leaves a quarter-second of deafness that eats whole wake words.
- *
- * Keeping the mic open costs one thing: JARVIS hears himself through the
- * speakers. That is handled here in text rather than in acoustics — see
- * `isEcho` — because the browser gives SpeechRecognition its own capture and
- * won't let us put a canceller in front of it.
  */
 
 export type VoiceMode =
@@ -35,19 +30,67 @@ export type VoiceMode =
   /** Something is playing that must not be transcribed at all. */
   | 'deaf'
 
+export type VoiceEventSource = 'user' | 'assistant' | 'caption' | 'system'
+
+export interface VoiceEventBase {
+  type: string
+  source: VoiceEventSource
+  timestamp: number
+}
+
+export interface UserSpeechInputEvent extends VoiceEventBase {
+  type: 'USER_SPEECH_INPUT'
+  source: 'user'
+  text: string
+  final: boolean
+  id: string
+  confidence?: number
+}
+
+export interface AssistantResponseEvent extends VoiceEventBase {
+  type: 'ASSISTANT_RESPONSE'
+  source: 'assistant'
+  text: string
+  id: string
+}
+
+export interface AssistantTTSOutputEvent extends VoiceEventBase {
+  type: 'ASSISTANT_TTS_OUTPUT'
+  source: 'assistant'
+  text: string
+  id: string
+}
+
+export interface CaptionUpdateEvent extends VoiceEventBase {
+  type: 'CAPTION_UPDATE'
+  source: 'caption'
+  text: string
+}
+
+export interface SystemVoiceEvent extends VoiceEventBase {
+  type: 'SYSTEM_EVENT'
+  source: 'system'
+  text: string
+}
+
+export type VoiceEvent =
+  | UserSpeechInputEvent
+  | AssistantResponseEvent
+  | AssistantTTSOutputEvent
+  | CaptionUpdateEvent
+  | SystemVoiceEvent
+
 export type VoiceHandlers = {
   /** Read fresh on every result, so the app never has to re-subscribe. */
   mode: () => VoiceMode
-  /** Fired on his name, from a partial — waiting for endpointing feels slow.
-   *  `trailing` is whatever followed it, so "Jarvis, what's the weather" is
-   *  one breath rather than two turns. */
+  /** Fired on his name, from a partial — waiting for endpointing feels slow. */
   onWake: (trailing: string) => void
   /** The user has genuinely started talking. This is the barge-in trigger. */
   onSpeechStart: () => void
-  /** Live transcript, for the caption under the reactor. */
+  /** Live transcript, for presentation only. */
   onPartial: (text: string) => void
-  /** A complete, endpointed utterance. */
-  onUtterance: (text: string) => void
+  /** A complete, endpointed utterance from validated user speech. */
+  onUtterance: (text: string, event?: UserSpeechInputEvent) => void
   /** The recogniser is unusable. Distinct from the user saying nothing. */
   onError: (message: string) => void
 }
@@ -255,7 +298,7 @@ function makeAssembler(h: {
 // Hearing himself
 // ---------------------------------------------------------------------------
 
-const norm = (s: string) =>
+export const norm = (s: string) =>
   s
     .toLowerCase()
     .replace(/[^a-z0-9' ]+/g, ' ')
@@ -267,19 +310,57 @@ const norm = (s: string) =>
  * he happens to be saying. Suppressing "stop" because he just said "stop"
  * would be the single most infuriating failure this file could have.
  */
-const OVERRIDE =
-  /\b(stop|wait|jarvis|cancel|enough|quiet|hold on|shut up|never ?mind|forget it|no)\b/i
+export const OVERRIDE =
+  /\b(stop|wait|jarvis|gacks|cancel|enough|quiet|hold on|shut up|never ?mind|forget it|no|halt|pause)\b/i
+
+/**
+ * Filler-only sounds that should never trigger an AI conversational response.
+ */
+const FILLER_ONLY = /^(?:uh+|um+|mm+|ah+|eh+|er+|erm+|hmm+|huh+)[,.!?\s]*$/i
+const BARE_FILLER_WORDS = new Set(['uh', 'um', 'mm', 'ah', 'eh', 'er', 'erm', 'hmm', 'huh'])
+
+export function isMeaninglessUtterance(text: string): boolean {
+  const trimmed = text.trim()
+  if (!trimmed) return true
+  if (FILLER_ONLY.test(trimmed)) return true
+  const words = norm(trimmed).split(' ').filter(Boolean)
+  if (words.length === 0) return true
+  if (words.length === 1 && BARE_FILLER_WORDS.has(words[0])) return true
+  return false
+}
+
+/**
+ * Utterance Deduplication Engine
+ * Prevents identical spoken utterances from triggering multiple AI turns
+ * within a short time window (3000ms).
+ */
+const RECENT_UTTERANCE_WINDOW_MS = 3000
+const recentUtterances = new Map<string, number>()
+
+export function isDuplicateUtterance(text: string): boolean {
+  const key = norm(text)
+  if (!key) return true
+  const now = Date.now()
+  const lastTime = recentUtterances.get(key)
+  if (lastTime && now - lastTime < RECENT_UTTERANCE_WINDOW_MS) {
+    return true
+  }
+  recentUtterances.set(key, now)
+  // Prune old entries
+  for (const [k, t] of recentUtterances.entries()) {
+    if (now - t > 15000) recentUtterances.delete(k)
+  }
+  return false
+}
+
+export function resetUtteranceDeduplication(): void {
+  recentUtterances.clear()
+}
 
 /**
  * Words too common to be evidence of anything.
- *
- * This set is the difference between a usable filter and an infuriating one.
- * "What about the second one?" is a perfectly ordinary follow-up, and every
- * word in it is likely to appear somewhere in the answer it follows — so a
- * naive bag-of-words match suppresses the user's real question as an echo.
- * Only distinctive words count as proof he is hearing himself.
  */
-const STOP = new Set(
+export const STOP = new Set(
   ('a an the and or but so of to in on at by for with from is are was were be ' +
     'it its this that these those i you he she we they me him her them my your ' +
     'our their what which who how why when where do does did can could would ' +
@@ -291,31 +372,43 @@ const STOP = new Set(
 /**
  * Is this the microphone hearing the speakers?
  *
- * Compared as bags of words rather than by string distance: the recogniser
- * mangles its own playback badly enough that a substring match rarely holds,
- * but the *words* survive.
+ * Checks against the active speech, recent sentence tail, and historical
+ * buffer across both single words and multi-word phrases.
  */
-function isEcho(heard: string, spoken: string): boolean {
-  if (!spoken) return false
+export function isEcho(heard: string, spoken?: string): boolean {
+  if (!heard) return false
   if (OVERRIDE.test(heard)) return false
 
-  const all = norm(heard).split(' ').filter(Boolean)
+  const heardNorm = norm(heard)
+  if (!heardNorm) return true
+
+  const fullSpoken = `${spoken ?? ''} ${speakingNow()} ${getRecentSpokenText()}`.trim()
+  const spokenNorm = norm(fullSpoken)
+  if (!spokenNorm) return false
+
+  // Direct substring match for longer phrases
+  if (spokenNorm.includes(heardNorm) && heardNorm.length >= 6) {
+    return true
+  }
+
+  const all = heardNorm.split(' ').filter(Boolean)
   if (!all.length) return true
 
-  const mine = new Set(norm(spoken).split(' '))
+  const mine = new Set(spokenNorm.split(' ').filter(Boolean))
   const content = all.filter((w) => !STOP.has(w))
 
-  // Nothing distinctive was said at all, so there is no strong evidence either
-  // way. Demand a total match before discarding it — the cost of dropping a
-  // real question is much higher than the cost of one stray echo getting in.
+  // If nothing distinctive was said:
   if (content.length < 2) {
     if (all.length < 2) return false
     return all.every((w) => mine.has(w))
   }
 
   let hits = 0
-  for (const w of content) if (mine.has(w)) hits++
-  return hits / content.length >= 0.6
+  for (const w of content) {
+    if (mine.has(w)) hits++
+  }
+
+  return hits / content.length >= 0.5
 }
 
 // ---------------------------------------------------------------------------
@@ -444,43 +537,38 @@ async function startElevenVoice(
   let lastWake = 0
   let vad: Vad | null = null
 
-  /**
-   * Segments waiting for the transcriber, oldest first.
-   *
-   * This was a boolean — `if (transcribing) return` — and that single line was
-   * the worst bug in the pause story. Segments arrive faster than Scribe
-   * answers whenever someone speaks in bursts, which is exactly what pausing
-   * mid-sentence looks like, so the second half of the thought was not merely
-   * mis-timed, it was silently discarded. Queue instead: nothing a person says
-   * out loud gets thrown away because the network was busy.
-   *
-   * Order is preserved because the drain is single-flight, which matters —
-   * "London" arriving before "what's the weather in" is worse than either.
-   */
   const pendingAudio: Blob[] = []
   let draining = false
 
-  /**
-   * Transcripts become turns here rather than one-per-segment.
-   * See makeAssembler for why.
-   */
   const assemble = makeAssembler({
     emit: (text) => {
+      const clean = text.trim()
+      if (isMeaninglessUtterance(clean)) {
+        drop('meaningless filler utterance')
+        return
+      }
+      if (isDuplicateUtterance(clean)) {
+        drop('duplicate voice utterance')
+        return
+      }
       diag.dropped = ''
       diag.accepted++
       diag.holding = ''
-      h.onUtterance(text)
+      const event: UserSpeechInputEvent = {
+        type: 'USER_SPEECH_INPUT',
+        source: 'user',
+        text: clean,
+        final: true,
+        id: `utt_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
+        timestamp: Date.now(),
+      }
+      h.onUtterance(clean, event)
     },
     partial: (text) => h.onPartial(text),
   })
 
   /**
    * Send one captured segment to the bridge and act on the words.
-   *
-   * The mode is re-read here, not at capture time, because a barge-in flips the
-   * machine from 'guard' to 'listening' between the segment starting and its
-   * transcript arriving — and the transcript belongs to the mode the user is in
-   * now, not the one they interrupted.
    */
   const transcribe = async (blob: Blob) => {
     const mode = h.mode()
@@ -509,10 +597,14 @@ async function startElevenVoice(
         return
       }
 
-      // His own voice, come back through the microphone. The raised guard
-      // threshold stops most of it at the door; this catches the rest.
+      // His own voice, come back through the microphone.
       if (isEcho(said, speakingNow())) {
         drop('echo of his own voice')
+        return
+      }
+
+      if (isMeaninglessUtterance(said) && mode !== 'wake') {
+        drop('meaningless filler sound')
         return
       }
 
@@ -532,8 +624,6 @@ async function startElevenVoice(
         return
       }
 
-      // Not a turn yet — a piece of one. The assembler decides when the thought
-      // is finished, reading the words and whether the room is still noisy.
       assemble.feed(said, vad?.meter().speaking ?? false)
     } catch (err) {
       diag.restarts++
@@ -562,15 +652,10 @@ async function startElevenVoice(
       diag.mode = mode
       diag.sessions++
       if (mode === 'deaf') return
-      // Standing down mid-thought throws the thought away with it. Otherwise
-      // held text would surface as the opening of the *next* conversation.
       if (mode === 'wake') assemble.cancel()
-      // The barge-in. In guard mode the user has started talking over him, and
-      // because the guard threshold is high this is a real interruption rather
-      // than leaked playback — so cut him off now, do not wait for the words.
       if (mode === 'guard') {
         const since = speakingSince()
-        if (since && Date.now() - since < SELF_GUARD_MS) {
+        if (since && Date.now() - since < 750) {
           diag.selfGuarded++
           return
         }
@@ -582,13 +667,8 @@ async function startElevenVoice(
       void drain()
     },
     onLevel: (v) => {
-      // Only paint the live level while actually listening for a command, so a
-      // dormant reactor stays calm and does not twitch at every room noise.
       const mode = h.mode()
       if (mode !== 'command') return
-      // Never over the assembled text. This used to run unconditionally and
-      // overwrote a half-built sentence with an ellipsis sixty times a second,
-      // so a pause looked like the interface had forgotten what you just said.
       if (assemble.held()) return
       h.onPartial(v > 0.04 ? '…' : '')
     },
@@ -600,16 +680,9 @@ async function startElevenVoice(
   })
   diag.running = vad.live()
 
-  // Raise the trigger bar exactly while he speaks. The mode is polled rather
-  // than pushed because nothing in the app pushes phase changes here, and a
-  // 200ms lag on the echo gate is imperceptible.
   const guardPoll = setInterval(() => {
     const mode = h.mode()
     vad?.setGuard(mode === 'guard')
-    // He has stood down — by Escape, by the idle timeout, or by dropping back
-    // to the wake word. Anything half-said belonged to a conversation that is
-    // over, and letting the hold expire later would open the next one with a
-    // fragment of the last.
     if ((mode === 'wake' || mode === 'deaf') && assemble.held()) assemble.cancel()
   }, 200)
 
@@ -628,16 +701,6 @@ async function startElevenVoice(
 /* Browser fallback: SpeechRecognition                                        */
 /* -------------------------------------------------------------------------- */
 
-/**
- * The keyless path. Uses the browser's own SpeechRecognition for both detection
- * and transcription, so a student who has configured nothing still gets voice.
- *
- * It is the flakier engine — Chrome throttles it and it can go silent with no
- * event to catch — so a heartbeat watches it and forces a fresh session
- * whenever it stops showing signs of life. That single guard is the difference
- * between "the wake word stopped working halfway through the lesson" and an
- * assistant that keeps listening.
- */
 function startBrowserVoice(h: VoiceHandlers): Voice {
   const Ctor =
     (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition
@@ -657,13 +720,29 @@ function startBrowserVoice(h: VoiceHandlers): Voice {
   let lastAlive = Date.now()
   let silenceTimer: ReturnType<typeof setTimeout> | null = null
 
-  /** Same assembly rules as the premium path — a pause is not a full stop. */
   const assemble = makeAssembler({
     emit: (text) => {
+      const clean = text.trim()
+      if (isMeaninglessUtterance(clean)) {
+        drop('meaningless filler utterance')
+        return
+      }
+      if (isDuplicateUtterance(clean)) {
+        drop('duplicate voice utterance')
+        return
+      }
       diag.dropped = ''
       diag.accepted++
       diag.holding = ''
-      h.onUtterance(text)
+      const event: UserSpeechInputEvent = {
+        type: 'USER_SPEECH_INPUT',
+        source: 'user',
+        text: clean,
+        final: true,
+        id: `utt_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
+        timestamp: Date.now(),
+      }
+      h.onUtterance(clean, event)
     },
     partial: (text) => h.onPartial(text),
   })
@@ -694,6 +773,10 @@ function startBrowserVoice(h: VoiceHandlers): Voice {
       drop('echo of his own voice')
       return
     }
+    if (isMeaninglessUtterance(text) && mode !== 'wake') {
+      drop('meaningless filler sound')
+      return
+    }
     diag.heard = text
     diag.heardAt = Date.now()
     if (mode === 'wake') {
@@ -709,16 +792,11 @@ function startBrowserVoice(h: VoiceHandlers): Voice {
       }
       return
     }
-    // The recogniser has already endpointed on its own 900ms gap; the assembler
-    // decides whether that gap actually ended the thought. `false` because a
-    // result only reaches here once the recogniser has gone quiet.
     assemble.feed(text, false)
   }
 
   const bumpSilence = () => {
     clearSilence()
-    // Endpoint on a short quiet gap; the ElevenLabs path tunes this more
-    // finely, but a fixed window is plenty for the fallback.
     silenceTimer = setTimeout(emit, 900)
   }
 
@@ -761,34 +839,37 @@ function startBrowserVoice(h: VoiceHandlers): Voice {
     settled += fresh
     const full = `${settled} ${interim}`.replace(/\s+/g, ' ').trim()
     if (!started || (mode === 'guard' && !barged)) {
-      const words = full.split(/\s+/).filter(Boolean).length
       if (mode === 'guard') {
-        // An override word cuts through everything below it — "stop" has to
-        // work on the first syllable or it is not a stop button.
-        if (!OVERRIDE.test(full)) {
-          // His own first syllable, same as the premium path. This engine has
-          // no energy gate, so without the clock the only defence is the word
-          // count below, and a single clear word is exactly what leaks first.
+        if (OVERRIDE.test(full)) {
+          // Intentional override word ("stop", "wait", etc.) cuts through immediately
+          started = true
+          barged = true
+          h.onSpeechStart()
+        } else {
+          // Regular speech during guard mode
+          if (isAssistantSpeaking() || isEcho(full, speakingNow())) {
+            return
+          }
           const since = speakingSince()
-          if (since && Date.now() - since < SELF_GUARD_MS) {
+          if (since && Date.now() - since < 750) {
             diag.selfGuarded++
             return
           }
-          // Two words before this engine believes an interruption. The energy
-          // path can be instant because it triggers on loudness the canceller
-          // has already had a pass at; here the evidence is a transcript of
-          // audio that includes his own playback, and one word of that is not
-          // evidence of anything.
-          if (words < 2) return
+          const nonStopWords = full
+            .split(/\s+/)
+            .filter((w) => !STOP.has(norm(w))).length
+          if (nonStopWords < 2) return
+
+          started = true
+          barged = true
+          h.onSpeechStart()
         }
+      } else {
+        started = true
+        h.onSpeechStart()
       }
-      started = true
-      if (mode === 'guard') barged = true
-      h.onSpeechStart()
     }
     diag.dropped = ''
-    // Show the whole thought, not just the fragment being spoken now — there
-    // may be an earlier half of it held by the assembler.
     const carried = assemble.held()
     h.onPartial(carried ? `${carried} ${full}` : full)
     bumpSilence()
@@ -832,8 +913,6 @@ function startBrowserVoice(h: VoiceHandlers): Voice {
 
   spin()
 
-  // The heartbeat. If nothing has been heard from the engine for a while it has
-  // gone quiet on us — tear it down and build a fresh one.
   const health = setInterval(() => {
     if (stopped) return
     const idle = Date.now() - lastAlive
@@ -842,9 +921,7 @@ function startBrowserVoice(h: VoiceHandlers): Voice {
     diag.restarts++
     try {
       rec?.abort()
-    } catch {
-      /* already gone */
-    }
+    } catch {}
     rec = null
     running = false
     diag.running = false
@@ -861,9 +938,7 @@ function startBrowserVoice(h: VoiceHandlers): Voice {
       diag.running = false
       try {
         rec?.abort()
-      } catch {
-        /* noop */
-      }
+      } catch {}
     },
     live: () => running,
   }

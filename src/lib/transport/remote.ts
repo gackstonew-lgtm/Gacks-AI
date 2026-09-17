@@ -4,6 +4,7 @@ import type {
   CaptureRequest,
   CaptureResult,
   ConnectionState,
+  GatewayStatus,
 } from './types'
 import type { Blade, Panel } from '../../store'
 import { BRIDGE_WS_URL } from '../../config'
@@ -26,6 +27,28 @@ type Frame = {
   when?: string
   servers?: Array<string | { name?: string }>
   mission?: any
+  costUsd?: number
+}
+
+export type GatewayErrorCode =
+  | 'GATEWAY_NOT_CONFIGURED'
+  | 'GATEWAY_NOT_RUNNING'
+  | 'GATEWAY_CONNECTION_REFUSED'
+  | 'GATEWAY_TIMEOUT'
+  | 'GATEWAY_AUTH_FAILED'
+  | 'GATEWAY_CLOSED'
+  | 'GATEWAY_PROTOCOL_ERROR'
+  | 'GATEWAY_RUNTIME_ERROR'
+
+export class GatewayError extends Error {
+  constructor(
+    public readonly code: GatewayErrorCode,
+    message: string,
+    public readonly cause?: unknown,
+  ) {
+    super(message)
+    this.name = 'GatewayError'
+  }
 }
 
 export class RemoteAgentTransport implements AgentTransport {
@@ -33,6 +56,9 @@ export class RemoteAgentTransport implements AgentTransport {
   private socket: WebSocket | null = null
   private connecting: Promise<WebSocket> | null = null
   private servers: string[] = []
+  private status: GatewayStatus = 'disconnected'
+  private statusListeners: Set<(s: GatewayStatus) => void> = new Set()
+
   private onServers: ((s: string[]) => void) | null = null
   private onPanel: ((panel: Panel) => void) | null = null
   private onBlade: ((blade: Blade) => void) | null = null
@@ -45,8 +71,12 @@ export class RemoteAgentTransport implements AgentTransport {
   private firstReady = this.deferred()
   private everConnected = false
   private attempt = 0
-  private reconnectTimer = 0
-  private readonly RECONNECT_DELAYS = [500, 1000, 2000, 4000, 8000]
+  private reconnectTimer: number | null = null
+  private readonly RECONNECT_DELAYS = [1000, 2000, 4000, 8000, 15000, 30000]
+
+  private heartbeatTimer: number | null = null
+  private heartbeatAwaitingPong = false
+  private readonly HEARTBEAT_INTERVAL_MS = 25000
 
   private pending: { finish: (fallback?: string) => void } | null = null
 
@@ -56,6 +86,26 @@ export class RemoteAgentTransport implements AgentTransport {
       resolve = r
     })
     return { promise, resolve }
+  }
+
+  public getStatus(): GatewayStatus {
+    return this.status
+  }
+
+  public watchStatus(fn: (s: GatewayStatus) => void): () => void {
+    this.statusListeners.add(fn)
+    fn(this.status)
+    return () => this.statusListeners.delete(fn)
+  }
+
+  private setStatus(newStatus: GatewayStatus) {
+    if (this.status === newStatus) return
+    this.status = newStatus
+    this.statusListeners.forEach((fn) => {
+      try {
+        fn(newStatus)
+      } catch {}
+    })
   }
 
   public isConnected(): boolean {
@@ -99,16 +149,57 @@ export class RemoteAgentTransport implements AgentTransport {
     this.onMission = fn
   }
 
+  private startHeartbeat(ws: WebSocket) {
+    this.stopHeartbeat()
+    this.heartbeatAwaitingPong = false
+    this.heartbeatTimer = window.setInterval(() => {
+      if (ws.readyState !== WebSocket.OPEN) {
+        this.stopHeartbeat()
+        return
+      }
+      if (this.heartbeatAwaitingPong) {
+        console.warn('[GACKS Gateway] Heartbeat timeout — terminating stale socket')
+        this.stopHeartbeat()
+        try {
+          ws.close()
+        } catch {}
+        return
+      }
+      this.heartbeatAwaitingPong = true
+      try {
+        ws.send(JSON.stringify({ type: 'ping', timestamp: Date.now() }))
+      } catch {
+        this.stopHeartbeat()
+      }
+    }, this.HEARTBEAT_INTERVAL_MS)
+  }
+
+  private stopHeartbeat() {
+    if (this.heartbeatTimer !== null) {
+      clearInterval(this.heartbeatTimer)
+      this.heartbeatTimer = null
+    }
+    this.heartbeatAwaitingPong = false
+  }
+
   private scheduleReconnect() {
     if (!BRIDGE_WS_URL) return
-    if (this.attempt >= this.RECONNECT_DELAYS.length) {
-      console.warn('[GACKS Transport] Gateway auto-reconnect paused after maximum attempts.')
-      return
+    if (this.reconnectTimer !== null) {
+      clearTimeout(this.reconnectTimer)
+      this.reconnectTimer = null
     }
-    const delay = this.RECONNECT_DELAYS[this.attempt]
+
+    const delayIndex = Math.min(this.attempt, this.RECONNECT_DELAYS.length - 1)
+    const baseDelay = this.RECONNECT_DELAYS[delayIndex]
+    const jitter = Math.floor(Math.random() * 500)
+    const delay = baseDelay + jitter
+
     this.attempt += 1
-    clearTimeout(this.reconnectTimer)
+    this.setStatus('reconnecting')
+    console.log(`[GACKS Gateway] Reconnecting in ${delay}ms (attempt ${this.attempt})...`)
+
     this.reconnectTimer = window.setTimeout(() => {
+      this.reconnectTimer = null
       void this.connect().catch(() => {})
     }, delay)
   }
@@ -119,6 +210,11 @@ export class RemoteAgentTransport implements AgentTransport {
       try {
         msg = JSON.parse(e.data as string)
       } catch {
+        return
+      }
+
+      if (msg.type === 'pong') {
+        this.heartbeatAwaitingPong = false
         return
       }
 
@@ -176,59 +272,88 @@ export class RemoteAgentTransport implements AgentTransport {
     })
   }
 
-  private connect(): Promise<WebSocket> {
+  public connect(): Promise<WebSocket> {
     if (this.socket?.readyState === WebSocket.OPEN) return Promise.resolve(this.socket)
     if (this.connecting) return this.connecting
 
     if (!BRIDGE_WS_URL) {
+      this.setStatus('disconnected')
       this.onConnection?.('lost')
-      return Promise.reject(new Error('GACKS Agent Gateway URL is unconfigured. In production, configure VITE_BRIDGE_URL.'))
+      const err = new GatewayError(
+        'GATEWAY_NOT_CONFIGURED',
+        'GACKS Agent Gateway URL is unconfigured. In production, configure VITE_BRIDGE_URL.',
+      )
+      return Promise.reject(err)
     }
 
+    this.setStatus('connecting')
     this.firstReady = this.deferred()
 
     this.connecting = new Promise<WebSocket>((resolve, reject) => {
       let ws: WebSocket
       try {
+        console.log(`[GACKS Gateway] Target: ${BRIDGE_WS_URL}`)
         ws = new WebSocket(BRIDGE_WS_URL)
       } catch (err) {
         this.connecting = null
-        return reject(err)
+        this.setStatus('error')
+        return reject(
+          new GatewayError('GATEWAY_CONNECTION_REFUSED', `Failed to construct WebSocket: ${String(err)}`, err),
+        )
       }
 
       let settled = false
 
-      const settle = (err: Error | null) => {
+      const settle = (err: GatewayError | null) => {
         if (settled) return
         settled = true
         clearTimeout(timer)
         this.connecting = null
-        if (err) reject(err)
-        else resolve(ws)
+        if (err) {
+          this.setStatus('error')
+          reject(err)
+        } else {
+          this.setStatus('connected')
+          resolve(ws)
+        }
       }
 
-      const timer = setTimeout(() => {
-        ws.close()
-        settle(new Error('GACKS Agent Gateway not responding'))
+      const timer = window.setTimeout(() => {
+        try {
+          ws.close()
+        } catch {}
+        settle(new GatewayError('GATEWAY_TIMEOUT', `GACKS Agent Gateway not responding at ${BRIDGE_WS_URL}`))
       }, 7000)
 
       ws.onopen = () => {
+        console.log('[GACKS Gateway] Connected successfully.')
         this.socket = ws
         this.attempt = 0
+        this.startHeartbeat(ws)
         this.dispatch(ws)
         settle(null)
         this.onConnection?.(this.everConnected ? 'reconnected' : 'open')
         this.everConnected = true
       }
 
-      ws.onerror = () => {
-        settle(new Error(`Cannot connect to GACKS Agent Gateway at ${BRIDGE_WS_URL}`))
+      ws.onerror = (evt) => {
+        console.warn('[GACKS Gateway] WebSocket error encountered.')
+        settle(
+          new GatewayError(
+            'GATEWAY_CONNECTION_REFUSED',
+            `Cannot connect to GACKS Agent Gateway at ${BRIDGE_WS_URL}`,
+            evt,
+          ),
+        )
       }
 
       ws.onclose = () => {
-        settle(new Error('GACKS Agent connection closed.'))
+        this.stopHeartbeat()
+        settle(new GatewayError('GATEWAY_CLOSED', 'GACKS Agent connection closed.'))
         if (this.socket === ws) {
           this.socket = null
+          console.log('[GACKS Gateway] Disconnected from gateway.')
+          this.setStatus('disconnected')
           this.onConnection?.('lost')
           this.scheduleReconnect()
         }
@@ -247,7 +372,7 @@ export class RemoteAgentTransport implements AgentTransport {
         new Promise<void>((resolve) => setTimeout(resolve, 2500)),
       ])
     } catch {
-      // Warm up failure silently swallowed
+      // Warm up failure silently swallowed to not disturb boot sequence
     }
   }
 
@@ -309,7 +434,7 @@ export class RemoteAgentTransport implements AgentTransport {
       const arm = () => {
         clearTimeout(timer)
         timer = window.setTimeout(() => {
-          fail(new Error('The agent gateway went quiet — turn timed out.'))
+          fail(new GatewayError('GATEWAY_TIMEOUT', 'The agent gateway went quiet — turn timed out.'))
         }, 120_000)
       }
 
@@ -342,7 +467,7 @@ export class RemoteAgentTransport implements AgentTransport {
               break
 
             case 'error':
-              fail(new Error(msg.message ?? 'Agent runtime reported an error.'))
+              fail(new GatewayError('GATEWAY_RUNTIME_ERROR', msg.message ?? 'Agent runtime reported an error.'))
               break
           }
         } catch (err) {
@@ -351,10 +476,10 @@ export class RemoteAgentTransport implements AgentTransport {
       }
 
       const onClose = () => {
-        fail(new Error('Gateway disconnected during answer.'))
+        fail(new GatewayError('GATEWAY_CLOSED', 'Gateway disconnected during answer.'))
       }
-      const onError = () => {
-        fail(new Error('Gateway connection error.'))
+      const onError = (evt: Event) => {
+        fail(new GatewayError('GATEWAY_CONNECTION_REFUSED', 'Gateway connection error during turn.', evt))
       }
 
       this.pending = { finish }
@@ -376,6 +501,21 @@ export class RemoteAgentTransport implements AgentTransport {
       this.socket.send(JSON.stringify({ type: 'interrupt' }))
     }
     this.pending?.finish()
+  }
+
+  public disconnect(): void {
+    this.stopHeartbeat()
+    if (this.reconnectTimer !== null) {
+      clearTimeout(this.reconnectTimer)
+      this.reconnectTimer = null
+    }
+    if (this.socket) {
+      try {
+        this.socket.close()
+      } catch {}
+      this.socket = null
+    }
+    this.setStatus('disconnected')
   }
 }
 

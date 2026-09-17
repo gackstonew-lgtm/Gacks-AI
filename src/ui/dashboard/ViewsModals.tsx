@@ -422,15 +422,15 @@ export const ViewsModals: React.FC<ViewsModalsProps> = ({
                 <div className="flex flex-col gap-1.5 text-xs text-gray-300">
                   <div>
                     <span className="text-gray-400">Provider:</span>{' '}
-                    <span className="text-white font-semibold">Google Gemini API</span>
+                    <span className="text-white font-semibold">Dynamic Multi-Model Core</span>
                   </div>
                   <div>
                     <span className="text-gray-400">Model:</span>{' '}
-                    <span className="text-orange-400 font-mono">gemini-3.6-flash</span>
+                    <span className="text-orange-400 font-mono">Auto / User-Selected</span>
                   </div>
                   <div>
                     <span className="text-gray-400">Tier:</span>{' '}
-                    <span className="text-emerald-400 font-semibold">High-Speed Flash Core (Rate-Limit Optimized)</span>
+                    <span className="text-emerald-400 font-semibold">Multi-Provider Dynamic Reasoning</span>
                   </div>
                   <div>
                     <span className="text-gray-400">Bridge Status:</span>{' '}

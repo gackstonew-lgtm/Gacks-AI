@@ -25,10 +25,12 @@ import {
   Settings,
   Lock,
   Bot,
+  Radar,
 } from 'lucide-react'
 import { useStore, type NavRoute } from '../../store'
 import { apiClient } from '../../lib/api-client'
 import insightLogo from '../../assets/insight-logo.jpeg'
+import { WebHuntPage } from './WebHuntPage'
 
 interface MorningBriefingData {
   executiveGreeting: string
@@ -103,7 +105,7 @@ interface MetaAdAccount {
   status: string
 }
 
-type SuiteTab = 'briefing' | 'approvals' | 'crm' | 'forex' | 'marketing' | 'meta_ads' | 'automations'
+type SuiteTab = 'briefing' | 'webhunt' | 'approvals' | 'crm' | 'forex' | 'marketing' | 'meta_ads' | 'automations'
 
 export const BusinessSuitePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SuiteTab>('briefing')
@@ -278,6 +280,7 @@ export const BusinessSuitePage: React.FC = () => {
 
   const suiteNavItems: { id: SuiteTab; label: string; icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; badge?: number }[] = [
     { id: 'briefing', label: 'Executive Briefing', icon: TrendingUp },
+    { id: 'webhunt', label: 'WebHunt Delta', icon: Radar },
     { id: 'approvals', label: 'Approval Center', icon: ShieldCheck, badge: approvals.length },
     { id: 'crm', label: 'CRM & Customer Care', icon: Users, badge: customers.length },
     { id: 'meta_ads', label: 'Meta Ads Manager', icon: Layers },
@@ -620,6 +623,11 @@ export const BusinessSuitePage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* ========================================================================= */}
+      {/* VIEW 0: WebHunt Delta Business Radar, Remote & CRM Intelligence */}
+      {/* ========================================================================= */}
+      {activeTab === 'webhunt' && <WebHuntPage />}
 
       {/* ========================================================================= */}
       {/* VIEW 1: Executive Briefing & Growth */}

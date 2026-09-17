@@ -1,6 +1,7 @@
 import type { Blade, Panel } from '../../store'
 
 export type ConnectionState = 'open' | 'lost' | 'reconnected'
+export type GatewayStatus = 'connecting' | 'connected' | 'disconnected' | 'reconnecting' | 'error'
 
 export interface AskHandlers {
   onText: (delta: string) => void

@@ -40,7 +40,7 @@ export class PolicyEngine {
     }
 
     // External side effect / Governed execution (Level 2)
-    if (/(send_email|send_whatsapp|post_message|publish|tweet|outbound|launch_app|send_notification)/i.test(name)) {
+    if (/(send_email|send_whatsapp|post_message|publish|tweet|outbound|launch_app|send_notification|webhunt\.(create_client|update_client|update_status))/i.test(name)) {
       return RiskLevels.EXTERNAL_SIDE_EFFECT
     }
 

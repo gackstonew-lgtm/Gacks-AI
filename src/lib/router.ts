@@ -26,6 +26,7 @@ const ROUTE_MAP: Record<string, NavRoute> = {
   '/search': 'websearch',
   '/websearch': 'websearch',
   '/system': 'system',
+  '/models': 'models',
   '/settings': 'settings',
 }
 
@@ -74,6 +75,8 @@ export function getPathForRoute(route: NavRoute, category?: SettingsCategory): s
       return '/search'
     case 'system':
       return '/system'
+    case 'models':
+      return '/models'
     case 'settings':
       return category && category !== 'general' ? `/settings?category=${category}` : '/settings'
     default:

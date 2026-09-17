@@ -13,8 +13,10 @@ import { FilesPage } from './pages/FilesPage'
 import { CalendarPage } from './pages/CalendarPage'
 import { SearchPage } from './pages/SearchPage'
 import { SystemPage } from './pages/SystemPage'
+import ModelHubPage from './pages/ModelHubPage'
 import { SettingsPage } from './pages/settings/SettingsPage'
 import { BusinessSuitePage } from './pages/BusinessSuitePage'
+import { WebHuntPage } from './pages/WebHuntPage'
 import { useStore, type NavRoute } from '../store'
 import { initRouter, navigate, type SettingsCategory } from '../lib/router'
 import { Mic, Volume2 } from 'lucide-react'
@@ -112,12 +114,14 @@ export const GacksDashboard: React.FC<GacksDashboardProps> = ({
           )}
 
           {activeNav === 'business' && <BusinessSuitePage />}
+          {activeNav === 'webhunt' && <WebHuntPage />}
           {activeNav === 'chat' && <ChatPage onToggleVoice={onToggleVoice} />}
           {activeNav === 'tasks' && <TasksPage />}
           {activeNav === 'files' && <FilesPage />}
           {activeNav === 'calendar' && <CalendarPage />}
           {activeNav === 'websearch' && <SearchPage />}
           {activeNav === 'system' && <SystemPage />}
+          {activeNav === 'models' && <ModelHubPage />}
           {activeNav === 'settings' && <SettingsPage onToggleVoice={onToggleVoice} />}
         </div>
       </main>

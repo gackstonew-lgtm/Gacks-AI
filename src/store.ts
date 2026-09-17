@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { ENABLE_SCREEN_CAPTIONS } from './config'
 
 export type Phase =
   | 'offline'   // waiting for the click that unlocks audio
@@ -63,12 +64,14 @@ export type Turn = {
 export type NavRoute =
   | 'dashboard'
   | 'business'
+  | 'webhunt'
   | 'chat'
   | 'tasks'
   | 'files'
   | 'calendar'
   | 'websearch'
   | 'system'
+  | 'models'
   | 'settings'
 
 export type FocusTask = {
@@ -298,10 +301,11 @@ export interface AppSettings {
     speechSpeed: number
     wakeWordEnabled: boolean
     readAloud: boolean
+    screenCaptionsEnabled: boolean
   }
   performance: {
     responseSpeed: 'Fast' | 'Balanced' | 'Thorough'
-    defaultModel: 'gemini-2.5-flash' | 'gemini-1.5-pro' | 'claude-3-5-sonnet'
+    defaultModel: string
     autoModelRouting: boolean
     taskSpecificModels: boolean
     fallbackModel: string
@@ -399,10 +403,11 @@ export const DEFAULT_SETTINGS: AppSettings = {
     speechSpeed: 1.0,
     wakeWordEnabled: true,
     readAloud: true,
+    screenCaptionsEnabled: ENABLE_SCREEN_CAPTIONS,
   },
   performance: {
     responseSpeed: 'Fast',
-    defaultModel: 'gemini-2.5-flash',
+    defaultModel: 'auto',
     autoModelRouting: true,
     taskSpecificModels: true,
     fallbackModel: 'claude-3-5-sonnet',
@@ -847,7 +852,11 @@ export const useStore = create<State>((set) => ({
   expandBlade: (expandedBlade) => set({ expandedBlade }),
   setPhase: (phase) => set({ phase }),
   setLevel: (level) => set({ level }),
-  setCaption: (caption) => set({ caption }),
+  setCaption: (caption) =>
+    set((s) => {
+      const enabled = s.settings.ai?.screenCaptionsEnabled ?? ENABLE_SCREEN_CAPTIONS
+      return { caption: enabled ? caption : '' }
+    }),
   setActiveTool: (activeTool) => set({ activeTool }),
   setError: (error) => set({ error }),
   setConnected: (connected) => set({ connected }),
@@ -950,7 +959,7 @@ export function accentFor(phase: Phase, ui: UiState): string {
 //   __jarvis.addOrbit({ id: 'moon', src: '/vite.svg', radius: 0.6, speed: 8,
 //                       size: 90, tilt: 25, opacity: 1, phase: 0 })
 //   __jarvis.fireEffect('glitch'); __jarvis.resetUi()
-if (import.meta.env.DEV) {
+if (typeof import.meta !== 'undefined' && (import.meta as any).env?.DEV && typeof window !== 'undefined') {
   // Not `useStore.getState()` directly: zustand replaces the state object on
   // every set, so a captured snapshot's *actions* keep working while every
   // data field reads forever as it was at module load. `__jarvis.phase` said

@@ -688,18 +688,22 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onToggleVoice }) => 
               <SettingsCard title="Model Selection & Routing" description="Core LLM intelligence provider and fallback parameters">
                 <SettingsSelect
                   label="Primary Model Provider"
-                  description="Default high-speed model used for primary planning and chat"
+                  description="Default reasoning core used for planning, agent execution, and chat"
                   value={draft.performance.defaultModel}
                   options={[
-                    { value: 'gemini-2.5-flash', label: 'Google Gemini 2.5 Flash (Recommended · Fast Tier)' },
-                    { value: 'gemini-1.5-pro', label: 'Google Gemini 1.5 Pro (Deep Context)' },
-                    { value: 'claude-3-5-sonnet', label: 'Anthropic Claude 3.5 Sonnet (Direct High Reasoning)' },
+                    { value: 'auto', label: 'Dynamic Auto Routing (Recommended · Best Match per Task)' },
+                    { value: 'claude-3-5-sonnet-20241022', label: 'Anthropic Claude 3.5 Sonnet (Direct High Reasoning)' },
+                    { value: 'gpt-4o', label: 'OpenAI GPT-4o (Multimodal & Coding)' },
+                    { value: 'gemini-2.5-flash', label: 'Google Gemini 2.5 Flash (Fast Tier)' },
+                    { value: 'gemini-2.5-pro', label: 'Google Gemini 2.5 Pro (Deep Context)' },
+                    { value: 'openrouter:anthropic/claude-3.5-sonnet', label: 'OpenRouter Claude 3.5 Sonnet' },
+                    { value: 'local', label: 'Local Offline Model (Ollama / llama.cpp)' },
                   ]}
                   onChange={(val) => updateField('performance', 'defaultModel', val as any)}
                 />
                 <SettingsToggle
                   label="Automatic Model Routing"
-                  description="Route coding and deep architecture tasks to Claude while keeping general queries on Gemini"
+                  description="Dynamically select the optimal model per workload (Coding, Reasoning, Vision, Fast, Research)"
                   checked={draft.performance.autoModelRouting}
                   onChange={(val) => updateField('performance', 'autoModelRouting', val)}
                 />

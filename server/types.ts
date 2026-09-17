@@ -143,13 +143,183 @@ export type ModelProfile =
   | 'DOCUMENT'
   | 'LOW_COST'
 
-export type AIProviderName =
+/** Functional role of a model — determines routing priority */
+export type ModelRole =
+  | 'GENERAL'
+  | 'REASONING'
+  | 'CODING'
+  | 'VISION'
+  | 'FAST'
+  | 'LOCAL'
+  | 'AGENT'
+  | 'EMBEDDING'
+  | 'SPEECH'
+  | 'VOICE'
+  | 'IMAGE'
+
+/** Fine-grained capabilities a model may possess */
+export type ModelCapability =
+  | 'text_generation'
+  | 'tool_calling'
+  | 'code_completion'
+  | 'vision'
+  | 'embedding'
+  | 'streaming'
+  | 'long_context'
+  | 'reasoning'
+  | 'multi_turn'
+  | 'json_mode'
+  | 'image_generation'
+  | 'speech_to_text'
+  | 'text_to_speech'
+
+/** How the router is allowed to dispatch requests */
+export type RoutingMode = 'AUTO' | 'LOCAL_ONLY' | 'CLOUD_ONLY' | 'OFFLINE'
+
+/** Privacy policy governing where data may flow */
+export type PrivacyPolicy = 'LOCAL_ONLY' | 'HYBRID' | 'CLOUD_ALLOWED'
+
+/** License category for a model */
+export type ModelLicense =
+  | 'proprietary'
+  | 'apache-2.0'
+  | 'mit'
+  | 'llama-community'
+  | 'gpl'
+  | 'cc-by-4.0'
+  | 'other'
+
+/** Cloud AI providers */
+export type CloudProviderName =
   | 'gemini'
   | 'anthropic'
   | 'openai'
+  | 'deepseek'
+  | 'azure'
+  | 'bedrock'
   | 'groq'
   | 'mistral'
   | 'openrouter'
+  | 'litellm'
+
+/** Local AI providers (self-hosted) */
+export type LocalProviderName = 'ollama' | 'llamacpp'
+
+/** Union of all provider names */
+export type AIProviderName = CloudProviderName | LocalProviderName
+
+/** Full descriptor for a registered AI model */
+export interface ModelDescriptor {
+  id: string                        // unique stable ID e.g. "gemini-2.5-flash"
+  displayName: string               // human-readable name
+  provider: AIProviderName
+  modelName: string                 // exact API model name
+  roles: ModelRole[]
+  capabilities: ModelCapability[]
+  contextWindow: number             // max tokens in context
+  maxOutputTokens: number
+  license: ModelLicense
+  isLocal: boolean                  // true = runs locally, no data leaves device
+  requiresGpu: boolean
+  minVramGb: number                 // 0 if CPU-only
+  quantization?: string             // e.g. "Q4_K_M", "Q8_0", undefined for cloud
+  sizeGb?: number                   // download size for local models
+  costPerMillionTokens?: number     // undefined for local/free
+  defaultTemperature: number
+  defaultTopP: number
+  defaultMaxTokens: number
+  tags: string[]
+  description: string
+  version?: string
+  deprecated?: boolean
+  enabled?: boolean                 // enabled status in Model Hub
+  priority?: number                // priority score / routing weight (higher is preferred)
+  fallbackOrder?: number           // order in fallback chain
+  custom?: boolean                 // true if added dynamically by user
+  parameters?: {
+    temperature?: number
+    maxTokens?: number
+    topP?: number
+  }
+}
+
+export interface ModelTestResult {
+  modelId: string
+  provider: string
+  status: 'CONNECTED' | 'DEGRADED' | 'NOT_CONFIGURED' | 'ERROR'
+  latencyMs: number
+  sampleResponse?: string
+  error?: string
+  testedAt: number
+}
+
+export interface BudgetConfig {
+  dailyLimitUsd?: number
+  monthlyLimitUsd?: number
+  maxCostPerRequestUsd?: number
+  alertThresholdPercent?: number
+  enforceStrictLimits?: boolean
+}
+
+/** Routing request passed to AIOrchestrator */
+export interface AIRoutingRequest {
+  profile: ModelProfile
+  routingMode?: RoutingMode
+  privacyPolicy?: PrivacyPolicy
+  preferredModelId?: string         // user-pinned model
+  taskClassification?: string
+  estimatedTokens?: number
+  requiresVision?: boolean
+  requiresToolCalling?: boolean
+}
+
+/** Result of model routing/selection */
+export interface AIRoutingResult {
+  selectedModel: ModelDescriptor
+  fallbackChain: ModelDescriptor[]
+  rationale: string
+  routingMode: RoutingMode
+}
+
+/** Request to install a local model (must be user-initiated) */
+export interface ModelInstallRequest {
+  modelId: string
+  provider: LocalProviderName
+  userConsented: boolean
+  consentTimestamp: number
+}
+
+/** Status of a model installation */
+export interface ModelInstallStatus {
+  modelId: string
+  provider: LocalProviderName
+  status: 'pending' | 'downloading' | 'verifying' | 'installed' | 'failed' | 'cancelled'
+  progressPercent?: number
+  errorMessage?: string
+  installedAt?: number
+}
+
+/** Normalized AI error codes across all providers */
+export type AIErrorCode =
+  | 'QUOTA_EXCEEDED'
+  | 'AUTH_ERROR'
+  | 'MODEL_NOT_FOUND'
+  | 'CONTEXT_TOO_LONG'
+  | 'CONTENT_FILTERED'
+  | 'TIMEOUT'
+  | 'NETWORK_ERROR'
+  | 'PROVIDER_OFFLINE'
+  | 'OOM'
+  | 'UNKNOWN'
+
+export interface NormalizedAIError {
+  code: AIErrorCode
+  provider: AIProviderName
+  model: string
+  message: string
+  retryable: boolean
+  raw?: string
+}
 
 export interface ProviderHealth {
   name: string
@@ -172,6 +342,8 @@ export interface ModelTelemetryRecord {
   success: boolean
   fallbackEvents: number
   error?: string
+  isLocal?: boolean
+  routingMode?: RoutingMode
 }
 
 export interface BusinessGoal {
@@ -283,9 +455,22 @@ export interface AuditEvent {
 
 export interface SystemHealthReport {
   ok: boolean
+  service?: string
   timestamp: number
   version: string
   environment: 'development' | 'production'
+  ai?: boolean
+  stt?: boolean
+  tts?: boolean
+  browser?: boolean
+  filesystem?: boolean
+  android?: boolean
+  imageGeneration?: boolean
+  mcp?: boolean
+  osAutomation?: boolean
+  terminal?: boolean
+  webhunt?: boolean
+  memory?: boolean
   services: {
     ai: { status: 'ONLINE' | 'DEGRADED' | 'OFFLINE'; provider: string; model: string }
     memory: { status: 'ONLINE' | 'OFFLINE'; engine: string; count: number }
@@ -298,5 +483,8 @@ export interface SystemHealthReport {
       email: 'CONNECTED' | 'NOT_CONFIGURED'
       whatsapp: 'CONNECTED' | 'NOT_CONFIGURED'
     }
+    pythonAi?: { status: 'ONLINE' | 'OFFLINE' | 'DEGRADED'; service: string; version: string; capabilities: string[] }
+    rustNative?: { status: 'ONLINE' | 'OFFLINE' | 'DEGRADED'; service: string; version: string; capabilities: string[] }
   }
 }
+

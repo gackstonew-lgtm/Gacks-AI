@@ -63,6 +63,42 @@ export const HeroPanel: React.FC<HeroPanelProps> = ({
     }
   }
 
+  const videoRef = React.useRef<HTMLVideoElement>(null)
+  const [videoError, setVideoError] = useState(false)
+
+  // Ensure autoplay on mount and when returning to view
+  React.useEffect(() => {
+    const video = videoRef.current
+    if (!video || videoError) return
+
+    video.muted = true
+    video.defaultMuted = true
+
+    const attemptPlay = () => {
+      const playPromise = video.play()
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Autoplay policy retry with explicit mute
+          video.muted = true
+          video.play().catch(() => {})
+        })
+      }
+    }
+
+    attemptPlay()
+
+    // Resume video playback when tab becomes visible again
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        attemptPlay()
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [videoError])
+
   return (
     <section className="gacks-hero-panel" aria-label="Insight Business Suite">
       {/* Visual Left: Official Insight Business Suite Scalable Logo / Avatar */}
@@ -75,11 +111,41 @@ export const HeroPanel: React.FC<HeroPanelProps> = ({
           >
             <div className="gacks-hero-avatar-glow" />
             <div className="gacks-hero-avatar-container">
-              <img
-                src={userProfile.avatar || insightLogo}
-                alt="Insight Business Suite"
-                className="gacks-hero-avatar-img"
-              />
+              {!videoError ? (
+                <video
+                  ref={videoRef}
+                  src="/video/Dashboard%20hero.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  className="gacks-hero-avatar-video"
+                  aria-hidden="true"
+                  tabIndex={-1}
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  onError={() => setVideoError(true)}
+                  onLoadedData={() => {
+                    if (videoRef.current) {
+                      videoRef.current.play().catch(() => {})
+                    }
+                  }}
+                >
+                  <source src="/video/Dashboard%20hero.mp4" type="video/mp4" />
+                  <img
+                    src={userProfile.avatar || insightLogo}
+                    alt="Insight Business Suite"
+                    className="gacks-hero-avatar-img"
+                  />
+                </video>
+              ) : (
+                <img
+                  src={userProfile.avatar || insightLogo}
+                  alt="Insight Business Suite"
+                  className="gacks-hero-avatar-img"
+                />
+              )}
               {/* Subtle glowing visor & HUD overlay effect */}
               <div className="gacks-hero-hud-arcs" />
               {phase === 'listening' && (

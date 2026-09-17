@@ -22,10 +22,34 @@ export type Capabilities = {
   stt: boolean
   /** ElevenLabs text-to-speech is reachable via the bridge. */
   tts: boolean
+  /** AI model/reasoning engine is available */
+  ai?: boolean
+  /** Browser automation is available */
+  browser?: boolean
+  /** Filesystem access is available */
+  filesystem?: boolean
+  /** Android device bridge is available */
+  android?: boolean
+  /** Image generation engine is available */
+  imageGeneration?: boolean
+  /** MCP server integration is available */
+  mcp?: boolean
+  /** OS automation is available */
+  osAutomation?: boolean
 }
 
 /** Browser-only until the probe says otherwise. Safe default: the app works. */
-let current: Capabilities = { stt: false, tts: false }
+let current: Capabilities = {
+  stt: false,
+  tts: false,
+  ai: true,
+  browser: true,
+  filesystem: true,
+  android: false,
+  imageGeneration: true,
+  mcp: true,
+  osAutomation: true,
+}
 let probed = false
 
 /** The last known capabilities. Read synchronously by the voice and speech
@@ -47,7 +71,17 @@ export function capabilitiesProbed(): boolean {
 export async function probeCapabilities(): Promise<Capabilities> {
   if (BACKEND !== 'bridge') {
     // No bridge to ask. Direct mode has no server-side speech, so browser only.
-    current = { stt: false, tts: false }
+    current = {
+      stt: false,
+      tts: false,
+      ai: true,
+      browser: true,
+      filesystem: true,
+      android: false,
+      imageGeneration: true,
+      mcp: false,
+      osAutomation: false,
+    }
     probed = true
     return current
   }
@@ -56,8 +90,20 @@ export async function probeCapabilities(): Promise<Capabilities> {
       signal: AbortSignal.timeout(3000),
     })
     if (res.ok) {
-      const h = (await res.json()) as { stt?: boolean; tts?: boolean }
-      current = { stt: Boolean(h.stt), tts: Boolean(h.tts) }
+      const h = (await res.json()) as Record<string, any>
+      const voiceStt = h.stt ?? h.services?.voice?.stt ?? false
+      const voiceTts = h.tts ?? h.services?.voice?.tts ?? false
+      current = {
+        stt: Boolean(voiceStt),
+        tts: Boolean(voiceTts),
+        ai: Boolean(h.ai ?? true),
+        browser: Boolean(h.browser ?? true),
+        filesystem: Boolean(h.filesystem ?? true),
+        android: Boolean(h.android ?? false),
+        imageGeneration: Boolean(h.imageGeneration ?? true),
+        mcp: Boolean(h.mcp ?? true),
+        osAutomation: Boolean(h.osAutomation ?? true),
+      }
     }
   } catch {
     // Bridge down or slow — stay on the browser engines rather than blocking

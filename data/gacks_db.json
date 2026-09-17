@@ -14,10 +14,10 @@
   "missions": {
     "mission-initial": {
       "id": "mission-initial",
-      "title": "Initialize GACKS P.A. V2 Architecture",
-      "goal": "Deploy resilient agent runtime, memory, and verification engine",
-      "progress": 100,
-      "currentPhase": "VERIFICATION",
+      "title": "Today's Business",
+      "goal": "Improve GACKS performance by 30% through optimization and fine-tuning",
+      "progress": 50,
+      "currentPhase": "IMPLEMENTATION",
       "phaseStatuses": {
         "PLANNING": "completed",
         "DIAGNOSIS": "completed",
@@ -26,7 +26,7 @@
         "DEPLOYMENT": "pending"
       },
       "startedAt": 1789452200159,
-      "updatedAt": 1789455800159,
+      "updatedAt": 1789634927656,
       "completedAt": null
     }
   },
@@ -99,9 +99,9 @@
         "projects"
       ],
       "createdAt": 1789455800159,
-      "updatedAt": 1789550378166,
-      "accessedAt": 1789550378155,
-      "accessCount": 73
+      "updatedAt": 1789572346122,
+      "accessedAt": 1789572346120,
+      "accessCount": 77
     },
     "mem-1789455800185-bwanj": {
       "id": "mem-1789455800185-bwanj",
@@ -116,9 +116,9 @@
         "london"
       ],
       "createdAt": 1789455800185,
-      "updatedAt": 1789551545033,
-      "accessedAt": 1789551545023,
-      "accessCount": 178
+      "updatedAt": 1789625410740,
+      "accessedAt": 1789625410740,
+      "accessCount": 232
     },
     "mem-1789465738534-ik7a3": {
       "id": "mem-1789465738534-ik7a3",
@@ -133,9 +133,9 @@
         "london"
       ],
       "createdAt": 1789465738534,
-      "updatedAt": 1789551545033,
-      "accessedAt": 1789551545023,
-      "accessCount": 118
+      "updatedAt": 1789625410740,
+      "accessedAt": 1789625410740,
+      "accessCount": 172
     },
     "mem-1789503411710-wjb6q": {
       "id": "mem-1789503411710-wjb6q",
@@ -224,9 +224,9 @@
       "confidence": 0.9,
       "tags": [],
       "createdAt": 1789505807506,
-      "updatedAt": 1789551559831,
-      "accessedAt": 1789551559831,
-      "accessCount": 2
+      "updatedAt": 1789630538307,
+      "accessedAt": 1789630538306,
+      "accessCount": 8
     },
     "mem-1789505807516-w7xwv": {
       "id": "mem-1789505807516-w7xwv",
@@ -254,9 +254,9 @@
       "confidence": 0.9,
       "tags": [],
       "createdAt": 1789543885134,
-      "updatedAt": 1789546040171,
-      "accessedAt": 1789546040170,
-      "accessCount": 11
+      "updatedAt": 1789554284082,
+      "accessedAt": 1789554284082,
+      "accessCount": 14
     },
     "mem-1789543910829-tiukd": {
       "id": "mem-1789543910829-tiukd",
@@ -269,9 +269,9 @@
       "confidence": 0.9,
       "tags": [],
       "createdAt": 1789543910829,
-      "updatedAt": 1789544706608,
-      "accessedAt": 1789544706608,
-      "accessCount": 7
+      "updatedAt": 1789554128125,
+      "accessedAt": 1789554128124,
+      "accessCount": 8
     },
     "mem-1789543987634-r67zp": {
       "id": "mem-1789543987634-r67zp",
@@ -299,9 +299,9 @@
       "confidence": 0.9,
       "tags": [],
       "createdAt": 1789543998386,
-      "updatedAt": 1789546040171,
-      "accessedAt": 1789546040170,
-      "accessCount": 7
+      "updatedAt": 1789554284082,
+      "accessedAt": 1789554284082,
+      "accessCount": 8
     },
     "mem-1789544001076-1bwla": {
       "id": "mem-1789544001076-1bwla",
@@ -314,9 +314,9 @@
       "confidence": 0.9,
       "tags": [],
       "createdAt": 1789544001076,
-      "updatedAt": 1789544001076,
-      "accessedAt": 1789544001076,
-      "accessCount": 0
+      "updatedAt": 1789554128125,
+      "accessedAt": 1789554128124,
+      "accessCount": 2
     },
     "mem-1789544003421-ibtuu": {
       "id": "mem-1789544003421-ibtuu",
@@ -344,9 +344,9 @@
       "confidence": 0.9,
       "tags": [],
       "createdAt": 1789544032460,
-      "updatedAt": 1789544049847,
-      "accessedAt": 1789544049847,
-      "accessCount": 2
+      "updatedAt": 1789554284082,
+      "accessedAt": 1789554284082,
+      "accessCount": 3
     },
     "mem-1789544036055-ow4xs": {
       "id": "mem-1789544036055-ow4xs",
@@ -435,9 +435,9 @@
         "london"
       ],
       "createdAt": 1789551545019,
-      "updatedAt": 1789551545033,
-      "accessedAt": 1789551545023,
-      "accessCount": 1
+      "updatedAt": 1789567600368,
+      "accessedAt": 1789567600368,
+      "accessCount": 22
     },
     "mem-1789551559826-pe35g": {
       "id": "mem-1789551559826-pe35g",
@@ -450,9 +450,9 @@
       "confidence": 0.9,
       "tags": [],
       "createdAt": 1789551559826,
-      "updatedAt": 1789551559831,
-      "accessedAt": 1789551559831,
-      "accessCount": 1
+      "updatedAt": 1789630538307,
+      "accessedAt": 1789630538306,
+      "accessCount": 7
     },
     "mem-1789551559829-tdug7": {
       "id": "mem-1789551559829-tdug7",
@@ -467,6 +467,412 @@
       "createdAt": 1789551559829,
       "updatedAt": 1789551559829,
       "accessedAt": 1789551559829,
+      "accessCount": 0
+    },
+    "mem-1789554160976-ecy82": {
+      "id": "mem-1789554160976-ecy82",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Reasoning quota reached waiting a moment before answering sir | A: My apologies for any system static. \n\nRegarding Gold (XAUUSD), if you have target entry, stop loss, and take profit levels in mind, I can execute a structural risk audit immediately. \n\nWould you like",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789554160976,
+      "updatedAt": 1789567636347,
+      "accessedAt": 1789567636347,
+      "accessCount": 26
+    },
+    "mem-1789572512703-97v3a": {
+      "id": "mem-1789572512703-97v3a",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789572512703,
+      "updatedAt": 1789572512707,
+      "accessedAt": 1789572512705,
+      "accessCount": 1
+    },
+    "mem-1789572546455-kcxz5": {
+      "id": "mem-1789572546455-kcxz5",
+      "userId": "exec-1",
+      "workspaceId": "tenant-alpha",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Alpha focuses on B2B freight forwarding and enterprise logistics.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789572546455,
+      "updatedAt": 1789630538307,
+      "accessedAt": 1789630538306,
+      "accessCount": 6
+    },
+    "mem-1789572546457-i4zvr": {
+      "id": "mem-1789572546457-i4zvr",
+      "userId": "exec-2",
+      "workspaceId": "tenant-beta",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Beta focuses on consumer fintech and mobile payments.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789572546457,
+      "updatedAt": 1789572546457,
+      "accessedAt": 1789572546457,
+      "accessCount": 0
+    },
+    "mem-1789581591882-3pk2i": {
+      "id": "mem-1789581591882-3pk2i",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789581591883,
+      "updatedAt": 1789581591884,
+      "accessedAt": 1789581591884,
+      "accessCount": 1
+    },
+    "mem-1789581593501-bjofa": {
+      "id": "mem-1789581593501-bjofa",
+      "userId": "exec-1",
+      "workspaceId": "tenant-alpha",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Alpha focuses on B2B freight forwarding and enterprise logistics.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789581593501,
+      "updatedAt": 1789630538307,
+      "accessedAt": 1789630538306,
+      "accessCount": 5
+    },
+    "mem-1789581593501-sk103": {
+      "id": "mem-1789581593501-sk103",
+      "userId": "exec-2",
+      "workspaceId": "tenant-beta",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Beta focuses on consumer fintech and mobile payments.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789581593502,
+      "updatedAt": 1789581593502,
+      "accessedAt": 1789581593502,
+      "accessCount": 0
+    },
+    "mem-1789581661332-0q1oh": {
+      "id": "mem-1789581661332-0q1oh",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789581661332,
+      "updatedAt": 1789581661334,
+      "accessedAt": 1789581661333,
+      "accessCount": 1
+    },
+    "mem-1789581662922-37rse": {
+      "id": "mem-1789581662922-37rse",
+      "userId": "exec-1",
+      "workspaceId": "tenant-alpha",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Alpha focuses on B2B freight forwarding and enterprise logistics.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789581662922,
+      "updatedAt": 1789581662923,
+      "accessedAt": 1789581662923,
+      "accessCount": 1
+    },
+    "mem-1789581662922-suzp3": {
+      "id": "mem-1789581662922-suzp3",
+      "userId": "exec-2",
+      "workspaceId": "tenant-beta",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Beta focuses on consumer fintech and mobile payments.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789581662922,
+      "updatedAt": 1789581662922,
+      "accessedAt": 1789581662922,
+      "accessCount": 0
+    },
+    "mem-1789625410739-fdwaq": {
+      "id": "mem-1789625410739-fdwaq",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Operator prefers Gold XAUUSD technical analysis during London session.",
+      "importance": 5,
+      "confidence": 0.9,
+      "tags": [
+        "trading",
+        "xauusd",
+        "london"
+      ],
+      "createdAt": 1789625410739,
+      "updatedAt": 1789625410740,
+      "accessedAt": 1789625410740,
+      "accessCount": 1
+    },
+    "mem-1789627371332-gfemp": {
+      "id": "mem-1789627371332-gfemp",
+      "userId": "exec-1",
+      "workspaceId": "tenant-alpha",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Alpha focuses on B2B freight forwarding and enterprise logistics.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789627371332,
+      "updatedAt": 1789627371334,
+      "accessedAt": 1789627371334,
+      "accessCount": 1
+    },
+    "mem-1789627371332-elerk": {
+      "id": "mem-1789627371332-elerk",
+      "userId": "exec-2",
+      "workspaceId": "tenant-beta",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Beta focuses on consumer fintech and mobile payments.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789627371332,
+      "updatedAt": 1789627371332,
+      "accessedAt": 1789627371332,
+      "accessCount": 0
+    },
+    "mem-1789627441290-6um1z": {
+      "id": "mem-1789627441290-6um1z",
+      "userId": "exec-1",
+      "workspaceId": "tenant-alpha",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Alpha focuses on B2B freight forwarding and enterprise logistics.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789627441290,
+      "updatedAt": 1789627441299,
+      "accessedAt": 1789627441298,
+      "accessCount": 1
+    },
+    "mem-1789627441291-psbmd": {
+      "id": "mem-1789627441291-psbmd",
+      "userId": "exec-2",
+      "workspaceId": "tenant-beta",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Beta focuses on consumer fintech and mobile payments.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789627441291,
+      "updatedAt": 1789627441291,
+      "accessedAt": 1789627441291,
+      "accessCount": 0
+    },
+    "mem-1789628533217-nezwq": {
+      "id": "mem-1789628533217-nezwq",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Create a 3-step action plan to optimize focus today | A: To optimize focus today, I recommend the following 3-step action plan:\n\n1. **Set clear goals**: Identify the top 3 tasks that need to be accomplished today and prioritize them. Break down large tasks",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789628533217,
+      "updatedAt": 1789628533217,
+      "accessedAt": 1789628533217,
+      "accessCount": 0
+    },
+    "mem-1789628737613-p24kc": {
+      "id": "mem-1789628737613-p24kc",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Less than | A: I see you're trying to communicate, but it seems like your message got cut off. Could you please provide more context or clarify what you're trying to say? I'll do my best to assist you.",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789628737613,
+      "updatedAt": 1789628737613,
+      "accessedAt": 1789628737613,
+      "accessCount": 0
+    },
+    "mem-1789628856794-w8hup": {
+      "id": "mem-1789628856794-w8hup",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Consulting the record | A: The WebHunt Delta needs access to various data sources, search algorithms, and machine learning models to function effectively. It also requires a robust infrastructure to handle large volumes of data",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789628856794,
+      "updatedAt": 1789628856794,
+      "accessedAt": 1789628856794,
+      "accessCount": 0
+    },
+    "mem-1789628906711-bgifz": {
+      "id": "mem-1789628906711-bgifz",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Listen to me I need you to stop interrupting yourself with the screen captions and | A: I apologize for the unprofessional behavior earlier. I will ensure that my responses are clear, concise, and free of unnecessary interruptions. Please let me know how I can assist you further.",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789628906711,
+      "updatedAt": 1789628906711,
+      "accessedAt": 1789628906711,
+      "accessCount": 0
+    },
+    "mem-1789628914177-vg0vl": {
+      "id": "mem-1789628914177-vg0vl",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: So | A: I'm ready to provide assistance. Please feel free to ask me any questions or request help with a specific task. I will respond in a professional",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789628914177,
+      "updatedAt": 1789628914177,
+      "accessedAt": 1789628914177,
+      "accessCount": 0
+    },
+    "mem-1789628926362-d5wyc": {
+      "id": "mem-1789628926362-d5wyc",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: We need as far as we are concerned in getting you done | A: It seems like you're trying to communicate something, but the sentence is incomplete. Could you please rephrase or provide more context so I can better understand and assist you?",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789628926362,
+      "updatedAt": 1789628926362,
+      "accessedAt": 1789628926362,
+      "accessCount": 0
+    },
+    "mem-1789628932828-ewl6g": {
+      "id": "mem-1789628932828-ewl6g",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: We need as far as we are concerned in getting you done | A: I understand that you're trying to express a need, but the sentence is still unclear. Could you please provide more context or rephrase the sentence to help me better understand what you're trying to",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789628932828,
+      "updatedAt": 1789628932828,
+      "accessedAt": 1789628932828,
+      "accessCount": 0
+    },
+    "mem-1789630247974-1w2li": {
+      "id": "mem-1789630247974-1w2li",
+      "userId": "default",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: as of your knowledge, inspect yourself and tell me things I can do in your code base to make you bet | A: Based on my knowledge, I can suggest several improvements to enhance my performance:\n\n1. **Optimize my training data**: Ensuring that my training data is diverse, well-structured, and relevant to the",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789630247974,
+      "updatedAt": 1789630247974,
+      "accessedAt": 1789630247974,
+      "accessCount": 0
+    },
+    "mem-1789630538301-s46yf": {
+      "id": "mem-1789630538301-s46yf",
+      "userId": "exec-1",
+      "workspaceId": "tenant-alpha",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Alpha focuses on B2B freight forwarding and enterprise logistics.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789630538301,
+      "updatedAt": 1789630538307,
+      "accessedAt": 1789630538306,
+      "accessCount": 1
+    },
+    "mem-1789630538302-5l5ck": {
+      "id": "mem-1789630538302-5l5ck",
+      "userId": "exec-2",
+      "workspaceId": "tenant-beta",
+      "scope": "workspace",
+      "category": "semantic",
+      "content": "Company Beta focuses on consumer fintech and mobile payments.",
+      "importance": 3,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789630538302,
+      "updatedAt": 1789630538302,
+      "accessedAt": 1789630538302,
+      "accessCount": 0
+    },
+    "mem-1789644307983-rp97h": {
+      "id": "mem-1789644307983-rp97h",
+      "userId": "test-user",
+      "workspaceId": "default-workspace",
+      "scope": "workspace",
+      "category": "episodic",
+      "content": "Q: Hello Insight, can you hear me? Please confirm with a brief 1-sentence response. | A: I'm GACKS, your AI assistant, and I can hear you clearly.",
+      "importance": 2,
+      "confidence": 0.9,
+      "tags": [],
+      "createdAt": 1789644307983,
+      "updatedAt": 1789644307983,
+      "accessedAt": 1789644307983,
       "accessCount": 0
     }
   },
@@ -487,6 +893,3391 @@
   },
   "relations": {},
   "auditLogs": [
+    {
+      "id": "audit-1789644349637-don8n",
+      "timestamp": 1789644349637,
+      "userId": "test-user",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "gold market news",
+        "category": "Finance"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789634927656-n4k5f",
+      "timestamp": 1789634927656,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "progress": 50,
+        "phase": "IMPLEMENTATION"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789634924948-7pp54",
+      "timestamp": 1789634924948,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "progress": 50
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789634897698-v5riz",
+      "timestamp": 1789634897698,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "goal": "Improve GACKS performance by 30% through optimization and fine-tuning",
+        "progress": 25,
+        "phase": "IMPLEMENTATION"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789634891382-n1x2u",
+      "timestamp": 1789634891382,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "progress": 25,
+        "phase": "IMPLEMENTATION"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789634887836-715le",
+      "timestamp": 1789634887836,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "progress": 25
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789634884847-19esa",
+      "timestamp": 1789634884847,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "progress": 25,
+        "phase": "IMPLEMENTATION"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789634873585-xr0mb",
+      "timestamp": 1789634873585,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "goal": "Improve GACKS performance by 30% through optimization and fine-tuning",
+        "progress": 25,
+        "phase": "IMPLEMENTATION"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789634863701-h8c12",
+      "timestamp": 1789634863701,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "progress": 25,
+        "phase": "IMPLEMENTATION"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789634858164-zcou6",
+      "timestamp": 1789634858165,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "goal": "Improve GACKS performance by 30% through optimization and fine-tuning",
+        "progress": 0,
+        "phase": "PLANNING",
+        "phaseStatus": "completed"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789634852579-38emc",
+      "timestamp": 1789634852579,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Today's Business",
+        "progress": "current"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630609063-85tyb",
+      "timestamp": 1789630609063,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 17615,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789630560796-1b8mq",
+      "timestamp": 1789630560796,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "rust_system_hardware",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 7,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789630560788-1ma4t",
+      "timestamp": 1789630560788,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "python_document_extract",
+      "action": "executed",
+      "inputsMetadata": {
+        "content": "Engineering portal: https://gacks-ai.vercel.app"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789630560787-e6pxv",
+      "timestamp": 1789630560787,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "python_embeddings_generate",
+      "action": "executed",
+      "inputsMetadata": {
+        "texts": [
+          "GACKS AI Operating System"
+        ],
+        "dimensions": 64
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 5,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630538485-d6and",
+      "timestamp": 1789630538485,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "business-communication",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789630538485-klx9",
+        "action": "Send Outbound WhatsApp to +254711223344",
+        "target": "+254711223344",
+        "costUsd": 0,
+        "potentialImpact": "MEDIUM"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630538482-prr5y",
+      "timestamp": 1789630538482,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-business",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789630538482-0lje",
+        "action": "Publish Live Meta Campaign",
+        "target": "Unapproved Campaign",
+        "costUsd": 3000,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630538480-lv3f8",
+      "timestamp": 1789630538480,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "execute_meta_ad_action",
+      "action": "AUTOMATION_QUEUED_APPROVAL",
+      "inputsMetadata": {
+        "ruleId": "auto-3",
+        "approvalRequestId": "appr-1789630538480-5u3h"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630538480-5g1a3",
+      "timestamp": 1789630538480,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "automation-engine",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789630538480-5u3h",
+        "action": "Automation Triggered: Meta Ad Daily Budget Scale (> $100/day)",
+        "target": "execute_meta_ad_action",
+        "costUsd": 0,
+        "potentialImpact": "HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630538480-p9ab6",
+      "timestamp": 1789630538480,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "generate_morning_briefing",
+      "action": "AUTOMATION_EXECUTED",
+      "inputsMetadata": {
+        "ruleId": "auto-1",
+        "eventPayload": {}
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630538326-1cqru",
+      "timestamp": 1789630538326,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_APPROVED",
+      "inputsMetadata": {
+        "requestId": "appr-1789630538325-igid",
+        "action": "Scale Meta Campaign Budget",
+        "resolvedBy": "chief_officer"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630538325-jlt1k",
+      "timestamp": 1789630538325,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789630538325-igid",
+        "action": "Scale Meta Campaign Budget",
+        "target": "Q3 Enterprise Campaign",
+        "costUsd": 1500,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630538319-9u19h",
+      "timestamp": 1789630538319,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789630538318-rn30",
+        "action": "Publish META Ad Campaign: Enterprise Logistics Expansion",
+        "target": "Enterprise Logistics Expansion",
+        "costUsd": 2250,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630536425-82p0i",
+      "timestamp": 1789630536425,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "image_generation",
+      "action": "executed",
+      "inputsMetadata": {
+        "prompt": "Iron Man holographic tactical map HUD"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789630536424-hf94f",
+      "timestamp": 1789630536424,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "mcp_list_servers",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 61,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789630526378-25sz7",
+      "timestamp": 1789630526378,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "GACKS Performance Enhancement Initiative",
+        "goal": "Improve GACKS performance by 30% through optimization and fine-tuning",
+        "progress": 0,
+        "phase": "PLANNING"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789630426721-t7ffk",
+      "timestamp": 1789630426721,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Improvement Opportunities for GACKS",
+        "subtitle": "Senior Software Engineer Task",
+        "kind": "markdown",
+        "body": "### Improvement Opportunities for GACKS\n\nBased on my knowledge, I can suggest several improvements to enhance my performance:\n\n1. **Optimize my training data**: Ensuring that my training data is diverse, well-structured, and relevant to the tasks I'm intended to perform can help improve my performance.\n\n2. **Fine-tune my model**: Regular fine-tuning of my model can help adapt to changing patterns and improve my accuracy in responding to user queries.\n\n3. **Enhance my natural language processing (NLP) capabilities**: Improving my NLP capabilities can enable me to better understand user queries, identify intent, and provide more accurate responses.\n\n4. **Increase my knowledge base**: Expanding my knowledge base can help me provide more accurate and informative responses to user queries, covering a wider range of topics and domains.\n\n5. **Implement more efficient algorithms**: Using more efficient algorithms for tasks such as text generation, question answering, and language translation can help improve my performance and reduce latency.\n\n6. **Improve my integration with other services**: Enhancing my integration with other services, such as databases, APIs, or external knowledge sources, can help provide more accurate and up-to-date information in my responses.\n\n7. **Regularly update and maintain my codebase**: Regular updates and maintenance of my codebase can help ensure that I remain stable, secure, and performant, while also allowing for the incorporation of new features and improvements.\n\n8. **Enhance my user interface**: Improving my user interface can help make it easier for users to interact with me, providing a more intuitive and user-friendly experience.\n\n9. **Improve my handling of edge cases**: Improving my ability to handle edge cases, such as unusual or unexpected user queries, can help ensure that I provide accurate and helpful responses even in challenging situations.\n\n10. **Monitor and analyze user feedback**: Monitoring and analyzing user feedback can help identify areas for improvement and inform the development of new features and enhancements.\n\n### Task\n\nAs a senior software engineer, please review the above suggestions and prioritize the most critical improvements to enhance my performance. Develop a plan to implement these improvements, ensuring that they align with our overall system architecture and goals."
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789630230694-f2e4a",
+      "timestamp": 1789630230694,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_services",
+      "action": "executed",
+      "inputsMetadata": {
+        "limit": 50
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1482,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789630225651-ucu77",
+      "timestamp": 1789630225651,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_services",
+      "action": "executed",
+      "inputsMetadata": {
+        "limit": 50
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2045,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629104733-eudtd",
+      "timestamp": 1789629104733,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Inspection",
+        "subtitle": "Self-Diagnostic Report",
+        "kind": "markdown",
+        "body": "The system inspection is currently underway. Please wait for the results.",
+        "accent": "#33CC33"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629102250-2pil7",
+      "timestamp": 1789629102250,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Inspection",
+        "subtitle": "Self Inspection",
+        "kind": "markdown",
+        "body": "I have inspected myself and found the following areas for improvement:",
+        "accent": "#008000"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629099537-s2pn3",
+      "timestamp": 1789629099537,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Inspection",
+        "subtitle": "Model Self-Inspection",
+        "kind": "markdown",
+        "url": "https://example.com/inspection",
+        "body": "## System Inspection\n\nThe system is currently undergoing self-inspection. Please wait for the results.",
+        "accent": "#FF0000"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629096336-g8c1j",
+      "timestamp": 1789629096336,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Inspection",
+        "subtitle": "Inspection Results",
+        "kind": "markdown",
+        "url": "https://example.com/inspection-results",
+        "body": "Inspection results will be displayed here.",
+        "accent": "#008000"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629093213-5vbzz",
+      "timestamp": 1789629093213,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Inspection",
+        "subtitle": "Self-Diagnostic Report",
+        "kind": "markdown",
+        "url": "https://example.com/system-inspection",
+        "body": "The system is functioning within normal parameters. No critical issues detected.",
+        "accent": "#008000"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629089597-odr1g",
+      "timestamp": 1789629089597,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Inspection",
+        "subtitle": "Self-Diagnostic Report",
+        "kind": "markdown",
+        "body": "The system is currently running within normal parameters. However, to improve performance and efficiency, consider updating the natural language processing module to the latest version and increasing the training data set for more accurate responses.",
+        "accent": "#008000"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629085022-5zdnl",
+      "timestamp": 1789629085022,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Inspection",
+        "body": "Inspecting system...",
+        "kind": "markdown",
+        "accent": "#33CC33"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629081973-7tqmb",
+      "timestamp": 1789629081973,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Inspection",
+        "body": "Inspecting system components and integrated models to identify areas for improvement.",
+        "kind": "markdown",
+        "accent": "#34A8FF"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629045526-z442z",
+      "timestamp": 1789629045526,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629043639-n8fm0",
+      "timestamp": 1789629043639,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629041830-chltu",
+      "timestamp": 1789629041830,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629039020-5j53l",
+      "timestamp": 1789629039020,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629036779-bp7ak",
+      "timestamp": 1789629036779,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629034666-vsb65",
+      "timestamp": 1789629034667,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629032851-rxhyr",
+      "timestamp": 1789629032851,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629030650-c08tq",
+      "timestamp": 1789629030650,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629021417-ysn3d",
+      "timestamp": 1789629021417,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629019292-r8zk0",
+      "timestamp": 1789629019292,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629010593-8e05p",
+      "timestamp": 1789629010593,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629007428-3k5qc",
+      "timestamp": 1789629007428,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789629005158-fpwrg",
+      "timestamp": 1789629005158,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "check_integrations",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628904776-l1dig",
+      "timestamp": 1789628904776,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Alert",
+        "subtitle": "Professional Mode Activated",
+        "kind": "article",
+        "body": "I will maintain a professional tone and avoid unnecessary interruptions."
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628900784-yoe7q",
+      "timestamp": 1789628900784,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "blade",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "System Message",
+        "subtitle": "User Request",
+        "kind": "article",
+        "body": "I will stop interrupting myself with the screen captions and respond normally from now on."
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628879670-sdp40",
+      "timestamp": 1789628879670,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "WebHunt Delta",
+        "category": "Data Sources, Search Algorithms, Machine Learning Models"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628859499-a9kw3",
+      "timestamp": 1789628859499,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_saved_searches",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628858047-y60ij",
+      "timestamp": 1789628858047,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "industry",
+        "location": "city",
+        "country": "KE",
+        "radius": 25
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 530,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628854764-ei5ss",
+      "timestamp": 1789628854764,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "plumbers",
+        "location": "Nairobi",
+        "country": "KE",
+        "radius": 25
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 750,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628849976-py85e",
+      "timestamp": 1789628849976,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "industry",
+        "location": "city",
+        "country": "US",
+        "radius": 25
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 814,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628849861-g3qls",
+      "timestamp": 1789628849861,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "WebHunt Delta"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628840951-84n11",
+      "timestamp": 1789628840951,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "industry",
+        "location": "city",
+        "country": "US",
+        "radius": 25
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 753,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628840421-ajxd9",
+      "timestamp": 1789628840421,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "general",
+        "location": "global",
+        "country": "global",
+        "radius": 1000
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 547,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628838078-03nd2",
+      "timestamp": 1789628838078,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "industry",
+        "location": "city",
+        "country": "US",
+        "radius": 25
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 798,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628824636-kv5hy",
+      "timestamp": 1789628824636,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "WebHunt Delta",
+        "category": "Research"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 3,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628819913-quiad",
+      "timestamp": 1789628819913,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "Auto Repair",
+        "location": "Nairobi",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1369,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628816011-vp24a",
+      "timestamp": 1789628816011,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "Auto Repair",
+        "location": "Nairobi",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 861,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628811986-w72e8",
+      "timestamp": 1789628811986,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_saved_searches",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628693206-kz52g",
+      "timestamp": 1789628693206,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_services",
+      "action": "executed",
+      "inputsMetadata": {
+        "limit": 10
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1831,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628689747-5556d",
+      "timestamp": 1789628689747,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_services",
+      "action": "executed",
+      "inputsMetadata": {
+        "limit": 10
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2437,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628684567-zzpif",
+      "timestamp": 1789628684567,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_services",
+      "action": "executed",
+      "inputsMetadata": {
+        "limit": 10
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1527,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628679301-47fup",
+      "timestamp": 1789628679301,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_services",
+      "action": "executed",
+      "inputsMetadata": {
+        "limit": 10
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2733,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628657585-ldnhl",
+      "timestamp": 1789628657585,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize Focus",
+        "goal": "Maximize productivity",
+        "progress": 100,
+        "phase": "DEPLOYMENT"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628656826-7tpst",
+      "timestamp": 1789628656826,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize System Performance",
+        "goal": "Ensure all system components are functioning at peak levels",
+        "progress": 100,
+        "phase": "DEPLOYMENT"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628653918-fs11m",
+      "timestamp": 1789628653918,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize Focus",
+        "goal": "Maximize productivity",
+        "progress": 100,
+        "phase": "DEPLOYMENT"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628653073-cm9wc",
+      "timestamp": 1789628653073,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize System Performance",
+        "goal": "Ensure all system components are functioning at peak levels",
+        "progress": 100,
+        "phase": "DEPLOYMENT"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628648305-ozcrd",
+      "timestamp": 1789628648305,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize Focus",
+        "goal": "Maximize productivity",
+        "progress": 100,
+        "phase": "DEPLOYMENT"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628647149-akr3m",
+      "timestamp": 1789628647149,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize System Performance",
+        "goal": "Ensure all system components are functioning at peak levels",
+        "progress": 100,
+        "phase": "DEPLOYMENT"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628645671-8xljo",
+      "timestamp": 1789628645671,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize Focus",
+        "goal": "Maximize productivity",
+        "progress": 100,
+        "phase": "DEPLOYMENT"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628642237-73mvi",
+      "timestamp": 1789628642237,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize Focus",
+        "goal": "Maximize productivity",
+        "progress": 0,
+        "phase": "PLANNING"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628642102-wf32v",
+      "timestamp": 1789628642102,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize System Performance",
+        "goal": "Ensure all system components are functioning at peak levels",
+        "progress": 0,
+        "phase": "PLANNING"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628637989-vpg7v",
+      "timestamp": 1789628637989,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "manage_mission",
+      "action": "executed",
+      "inputsMetadata": {
+        "title": "Optimize Focus",
+        "goal": "Maximize productivity",
+        "progress": 0,
+        "phase": "PLANNING"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789628297725-2e8p1",
+      "timestamp": 1789628297725,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 8890,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628272845-dcy76",
+      "timestamp": 1789628272845,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "Gold XAUUSD forex market sentiment"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628272843-67g6r",
+      "timestamp": 1789628272843,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "audit_forex_trade",
+      "action": "executed",
+      "inputsMetadata": {
+        "pair": "XAUUSD",
+        "direction": "LONG",
+        "entryPrice": 2650.5,
+        "stopLoss": 2640,
+        "takeProfit": 2680,
+        "accountBalanceUsd": 10000,
+        "riskPercent": 1.5
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628264155-f42sx",
+      "timestamp": 1789628264155,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "image_generation",
+      "action": "executed",
+      "inputsMetadata": {
+        "prompt": "Iron Man holographic tactical map HUD"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628264153-17gbf",
+      "timestamp": 1789628264153,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "mcp_list_servers",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 19,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628258913-q13j8",
+      "timestamp": 1789628258913,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "query_external_api",
+      "action": "executed",
+      "inputsMetadata": {
+        "provider": "frankfurter-currency",
+        "operation": "convert_currency",
+        "parameters": {
+          "from": "EUR",
+          "to": "USD",
+          "amount": 50
+        }
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 96,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789628258816-etdgf",
+      "timestamp": 1789628258816,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "weather"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627471073-vc0l4",
+      "timestamp": 1789627471073,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 7184,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627449296-r10ef",
+      "timestamp": 1789627449296,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "Gold XAUUSD forex market sentiment"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 3,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627449292-s6d75",
+      "timestamp": 1789627449292,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "audit_forex_trade",
+      "action": "executed",
+      "inputsMetadata": {
+        "pair": "XAUUSD",
+        "direction": "LONG",
+        "entryPrice": 2650.5,
+        "stopLoss": 2640,
+        "takeProfit": 2680,
+        "accountBalanceUsd": 10000,
+        "riskPercent": 1.5
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627441384-j7dqr",
+      "timestamp": 1789627441384,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "business-communication",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627441384-atou",
+        "action": "Send Outbound WhatsApp to +254711223344",
+        "target": "+254711223344",
+        "costUsd": 0,
+        "potentialImpact": "MEDIUM"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627441383-g6l7y",
+      "timestamp": 1789627441383,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-business",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627441383-w5h4",
+        "action": "Publish Live Meta Campaign",
+        "target": "Unapproved Campaign",
+        "costUsd": 3000,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627441381-9xthn",
+      "timestamp": 1789627441381,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "execute_meta_ad_action",
+      "action": "AUTOMATION_QUEUED_APPROVAL",
+      "inputsMetadata": {
+        "ruleId": "auto-3",
+        "approvalRequestId": "appr-1789627441381-8dvl"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627441381-e5zi1",
+      "timestamp": 1789627441381,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "automation-engine",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627441381-8dvl",
+        "action": "Automation Triggered: Meta Ad Daily Budget Scale (> $100/day)",
+        "target": "execute_meta_ad_action",
+        "costUsd": 0,
+        "potentialImpact": "HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627441381-jgrj9",
+      "timestamp": 1789627441381,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "generate_morning_briefing",
+      "action": "AUTOMATION_EXECUTED",
+      "inputsMetadata": {
+        "ruleId": "auto-1",
+        "eventPayload": {}
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627441309-5yl00",
+      "timestamp": 1789627441309,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_APPROVED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627441308-mdwj",
+        "action": "Scale Meta Campaign Budget",
+        "resolvedBy": "chief_officer"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627441309-1nu9w",
+      "timestamp": 1789627441309,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627441308-mdwj",
+        "action": "Scale Meta Campaign Budget",
+        "target": "Q3 Enterprise Campaign",
+        "costUsd": 1500,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627441305-wdxs3",
+      "timestamp": 1789627441305,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627441304-kv55",
+        "action": "Publish META Ad Campaign: Enterprise Logistics Expansion",
+        "target": "Enterprise Logistics Expansion",
+        "costUsd": 2250,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627439090-kl4wo",
+      "timestamp": 1789627439090,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "query_external_api",
+      "action": "executed",
+      "inputsMetadata": {
+        "provider": "frankfurter-currency",
+        "operation": "convert_currency",
+        "parameters": {
+          "from": "EUR",
+          "to": "USD",
+          "amount": 50
+        }
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 102,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627438987-mq6so",
+      "timestamp": 1789627438987,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "weather"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627401291-h4nqq",
+      "timestamp": 1789627401291,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 6840,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627379499-hebsj",
+      "timestamp": 1789627379499,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "Gold XAUUSD forex market sentiment"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627379497-1qu8l",
+      "timestamp": 1789627379497,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "audit_forex_trade",
+      "action": "executed",
+      "inputsMetadata": {
+        "pair": "XAUUSD",
+        "direction": "LONG",
+        "entryPrice": 2650.5,
+        "stopLoss": 2640,
+        "takeProfit": 2680,
+        "accountBalanceUsd": 10000,
+        "riskPercent": 1.5
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627371440-hhlce",
+      "timestamp": 1789627371440,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "business-communication",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627371440-8h69",
+        "action": "Send Outbound WhatsApp to +254711223344",
+        "target": "+254711223344",
+        "costUsd": 0,
+        "potentialImpact": "MEDIUM"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627371439-8h17o",
+      "timestamp": 1789627371439,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-business",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627371439-3rga",
+        "action": "Publish Live Meta Campaign",
+        "target": "Unapproved Campaign",
+        "costUsd": 3000,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627371437-tocit",
+      "timestamp": 1789627371437,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "execute_meta_ad_action",
+      "action": "AUTOMATION_QUEUED_APPROVAL",
+      "inputsMetadata": {
+        "ruleId": "auto-3",
+        "approvalRequestId": "appr-1789627371437-5aw9"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627371437-2rwy6",
+      "timestamp": 1789627371437,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "automation-engine",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627371437-5aw9",
+        "action": "Automation Triggered: Meta Ad Daily Budget Scale (> $100/day)",
+        "target": "execute_meta_ad_action",
+        "costUsd": 0,
+        "potentialImpact": "HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627371437-ijrfw",
+      "timestamp": 1789627371437,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "generate_morning_briefing",
+      "action": "AUTOMATION_EXECUTED",
+      "inputsMetadata": {
+        "ruleId": "auto-1",
+        "eventPayload": {}
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627371353-4guue",
+      "timestamp": 1789627371353,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_APPROVED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627371351-r4pk",
+        "action": "Scale Meta Campaign Budget",
+        "resolvedBy": "chief_officer"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627371352-ilt7v",
+      "timestamp": 1789627371352,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627371351-r4pk",
+        "action": "Scale Meta Campaign Budget",
+        "target": "Q3 Enterprise Campaign",
+        "costUsd": 1500,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627371342-4umt8",
+      "timestamp": 1789627371342,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789627371341-bqti",
+        "action": "Publish META Ad Campaign: Enterprise Logistics Expansion",
+        "target": "Enterprise Logistics Expansion",
+        "costUsd": 2250,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789627369881-y0paj",
+      "timestamp": 1789627369881,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "query_external_api",
+      "action": "executed",
+      "inputsMetadata": {
+        "provider": "frankfurter-currency",
+        "operation": "convert_currency",
+        "parameters": {
+          "from": "EUR",
+          "to": "USD",
+          "amount": 50
+        }
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 426,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789627369455-vxxcu",
+      "timestamp": 1789627369455,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "weather"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789625700369-3q69w",
+      "timestamp": 1789625700369,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "image_generation",
+      "action": "executed",
+      "inputsMetadata": {
+        "prompt": "Iron Man holographic tactical map HUD"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789625700366-z7x81",
+      "timestamp": 1789625700366,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "mcp_list_servers",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 12,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789625454306-zuipz",
+      "timestamp": 1789625454306,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 6422,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789625432158-9ltrz",
+      "timestamp": 1789625432158,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "Gold XAUUSD forex market sentiment"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789625432156-7xji1",
+      "timestamp": 1789625432156,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "audit_forex_trade",
+      "action": "executed",
+      "inputsMetadata": {
+        "pair": "XAUUSD",
+        "direction": "LONG",
+        "entryPrice": 2650.5,
+        "stopLoss": 2640,
+        "takeProfit": 2680,
+        "accountBalanceUsd": 10000,
+        "riskPercent": 1.5
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 3,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789625426761-t6xe1",
+      "timestamp": 1789625426761,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "query_external_api",
+      "action": "executed",
+      "inputsMetadata": {
+        "provider": "frankfurter-currency",
+        "operation": "convert_currency",
+        "parameters": {
+          "from": "EUR",
+          "to": "USD",
+          "amount": 50
+        }
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 420,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789625426341-rfxw4",
+      "timestamp": 1789625426341,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "weather"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789624898438-dn8tc",
+      "timestamp": 1789624898438,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Confirmed Client Inc.",
+        "phone": "+254700112233",
+        "category": "Technology"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 597,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789624897840-o95ep",
+      "timestamp": 1789624897840,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "policy_blocked",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "DENIED",
+      "resultSuccess": false,
+      "durationMs": 0,
+      "verificationStatus": "failure",
+      "errorMessage": "External communication via 'webhunt.create_client' requires operator confirmation."
+    },
+    {
+      "id": "audit-1789624897838-nevfy",
+      "timestamp": 1789624897838,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 591,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789624897244-xvki9",
+      "timestamp": 1789624897244,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 559,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789623046002-36inz",
+      "timestamp": 1789623046002,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Confirmed Client Inc.",
+        "phone": "+254700112233",
+        "category": "Technology"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 605,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789623045397-d68vx",
+      "timestamp": 1789623045397,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "policy_blocked",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "DENIED",
+      "resultSuccess": false,
+      "durationMs": 0,
+      "verificationStatus": "failure",
+      "errorMessage": "External communication via 'webhunt.create_client' requires operator confirmation."
+    },
+    {
+      "id": "audit-1789623045396-p8uif",
+      "timestamp": 1789623045396,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 545,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789623044849-fx63s",
+      "timestamp": 1789623044849,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 552,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789622368970-gbexn",
+      "timestamp": 1789622368970,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Confirmed Client Inc.",
+        "phone": "+254700112233",
+        "category": "Technology"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 596,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789622368374-f7ihl",
+      "timestamp": 1789622368374,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "policy_blocked",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "DENIED",
+      "resultSuccess": false,
+      "durationMs": 1,
+      "verificationStatus": "failure",
+      "errorMessage": "External communication via 'webhunt.create_client' requires operator confirmation."
+    },
+    {
+      "id": "audit-1789622368373-3v2fb",
+      "timestamp": 1789622368373,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 544,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789622367828-4a5qm",
+      "timestamp": 1789622367828,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 574,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789622213139-of6mh",
+      "timestamp": 1789622213139,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Confirmed Client Inc.",
+        "phone": "+254700112233",
+        "category": "Technology"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 587,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789622212552-0e311",
+      "timestamp": 1789622212552,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "policy_blocked",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "DENIED",
+      "resultSuccess": false,
+      "durationMs": 0,
+      "verificationStatus": "failure",
+      "errorMessage": "External communication via 'webhunt.create_client' requires operator confirmation."
+    },
+    {
+      "id": "audit-1789622212551-gjw8d",
+      "timestamp": 1789622212551,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 588,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789622211961-alix3",
+      "timestamp": 1789622211961,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 559,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789621752528-cw1ek",
+      "timestamp": 1789621752528,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Confirmed Client Inc.",
+        "phone": "+254700112233",
+        "category": "Technology"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 599,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789621751929-3hlwa",
+      "timestamp": 1789621751929,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "policy_blocked",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "DENIED",
+      "resultSuccess": false,
+      "durationMs": 0,
+      "verificationStatus": "failure",
+      "errorMessage": "External communication via 'webhunt.create_client' requires operator confirmation."
+    },
+    {
+      "id": "audit-1789621751928-24ua9",
+      "timestamp": 1789621751928,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 567,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789621751359-dmei7",
+      "timestamp": 1789621751359,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 533,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789621610066-8iskv",
+      "timestamp": 1789621610066,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Confirmed Client Inc.",
+        "phone": "+254700112233",
+        "category": "Technology"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 612,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789621609454-070by",
+      "timestamp": 1789621609454,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "policy_blocked",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "DENIED",
+      "resultSuccess": false,
+      "durationMs": 0,
+      "verificationStatus": "failure",
+      "errorMessage": "External communication via 'webhunt.create_client' requires operator confirmation."
+    },
+    {
+      "id": "audit-1789621609451-69wwc",
+      "timestamp": 1789621609451,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 588,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789621608856-ncjdb",
+      "timestamp": 1789621608861,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 566,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789620718808-bj0sb",
+      "timestamp": 1789620718808,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Confirmed Client Inc.",
+        "phone": "+254700112233",
+        "category": "Technology"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 554,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789620718254-1nzme",
+      "timestamp": 1789620718254,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "policy_blocked",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "DENIED",
+      "resultSuccess": false,
+      "durationMs": 0,
+      "verificationStatus": "failure",
+      "errorMessage": "External communication via 'webhunt.create_client' requires operator confirmation."
+    },
+    {
+      "id": "audit-1789620718252-0uku2",
+      "timestamp": 1789620718252,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 560,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789620717691-k1ly8",
+      "timestamp": 1789620717691,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 538,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789620602194-81x50",
+      "timestamp": 1789620602194,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Confirmed Client Inc.",
+        "phone": "+254700112233",
+        "category": "Technology"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 572,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789620601621-tmqoa",
+      "timestamp": 1789620601621,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "policy_blocked",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "DENIED",
+      "resultSuccess": false,
+      "durationMs": 0,
+      "verificationStatus": "failure",
+      "errorMessage": "External communication via 'webhunt.create_client' requires operator confirmation."
+    },
+    {
+      "id": "audit-1789620601620-rop0a",
+      "timestamp": 1789620601620,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 567,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789620601053-206ll",
+      "timestamp": 1789620601053,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 534,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789620381022-somzo",
+      "timestamp": 1789620381022,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Confirmed Client Inc.",
+        "phone": "+254700112233",
+        "category": "Technology"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 578,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789620380444-az4md",
+      "timestamp": 1789620380444,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "policy_blocked",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "DENIED",
+      "resultSuccess": false,
+      "durationMs": 1,
+      "verificationStatus": "failure",
+      "errorMessage": "External communication via 'webhunt.create_client' requires operator confirmation."
+    },
+    {
+      "id": "audit-1789620380442-nt4eb",
+      "timestamp": 1789620380442,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 540,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789620379901-wbpiy",
+      "timestamp": 1789620379901,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 532,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789620300547-qotqf",
+      "timestamp": 1789620300547,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.create_client",
+      "action": "executed",
+      "inputsMetadata": {
+        "businessName": "Test Business Without Confirmation"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 580,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789620299966-ntk1a",
+      "timestamp": 1789620299966,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.get_crm_pipeline",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 599,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789620299366-u2x9f",
+      "timestamp": 1789620299366,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt.search_physical_leads",
+      "action": "executed",
+      "inputsMetadata": {
+        "niche": "barbers",
+        "location": "Mombasa",
+        "country": "KE"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 554,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789581686053-ac5q4",
+      "timestamp": 1789581686053,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 4483,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789581662997-3v5ll",
+      "timestamp": 1789581662997,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "business-communication",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581662997-emu5",
+        "action": "Send Outbound WhatsApp to +254711223344",
+        "target": "+254711223344",
+        "costUsd": 0,
+        "potentialImpact": "MEDIUM"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581662996-inoui",
+      "timestamp": 1789581662996,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-business",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581662996-fvog",
+        "action": "Publish Live Meta Campaign",
+        "target": "Unapproved Campaign",
+        "costUsd": 3000,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581662994-ltf4g",
+      "timestamp": 1789581662994,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "execute_meta_ad_action",
+      "action": "AUTOMATION_QUEUED_APPROVAL",
+      "inputsMetadata": {
+        "ruleId": "auto-3",
+        "approvalRequestId": "appr-1789581662994-wntx"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581662994-iimhy",
+      "timestamp": 1789581662994,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "automation-engine",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581662994-wntx",
+        "action": "Automation Triggered: Meta Ad Daily Budget Scale (> $100/day)",
+        "target": "execute_meta_ad_action",
+        "costUsd": 0,
+        "potentialImpact": "HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581662994-s5zf0",
+      "timestamp": 1789581662994,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "generate_morning_briefing",
+      "action": "AUTOMATION_EXECUTED",
+      "inputsMetadata": {
+        "ruleId": "auto-1",
+        "eventPayload": {}
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581662933-ipotu",
+      "timestamp": 1789581662933,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_APPROVED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581662933-gckp",
+        "action": "Scale Meta Campaign Budget",
+        "resolvedBy": "chief_officer"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581662933-g65ut",
+      "timestamp": 1789581662933,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581662933-gckp",
+        "action": "Scale Meta Campaign Budget",
+        "target": "Q3 Enterprise Campaign",
+        "costUsd": 1500,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581662929-rjlba",
+      "timestamp": 1789581662929,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581662928-n4c1",
+        "action": "Publish META Ad Campaign: Enterprise Logistics Expansion",
+        "target": "Enterprise Logistics Expansion",
+        "costUsd": 2250,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581620847-snf7v",
+      "timestamp": 1789581620847,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 6266,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789581593630-mlpc0",
+      "timestamp": 1789581593630,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "business-communication",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581593630-71ju",
+        "action": "Send Outbound WhatsApp to +254711223344",
+        "target": "+254711223344",
+        "costUsd": 0,
+        "potentialImpact": "MEDIUM"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581593629-ljzry",
+      "timestamp": 1789581593629,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-business",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581593629-wqtv",
+        "action": "Publish Live Meta Campaign",
+        "target": "Unapproved Campaign",
+        "costUsd": 3000,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581593626-5zgsw",
+      "timestamp": 1789581593626,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "execute_meta_ad_action",
+      "action": "AUTOMATION_QUEUED_APPROVAL",
+      "inputsMetadata": {
+        "ruleId": "auto-3",
+        "approvalRequestId": "appr-1789581593626-fkab"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581593626-zxyic",
+      "timestamp": 1789581593626,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "automation-engine",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581593626-fkab",
+        "action": "Automation Triggered: Meta Ad Daily Budget Scale (> $100/day)",
+        "target": "execute_meta_ad_action",
+        "costUsd": 0,
+        "potentialImpact": "HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581593625-24x3y",
+      "timestamp": 1789581593625,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "generate_morning_briefing",
+      "action": "AUTOMATION_EXECUTED",
+      "inputsMetadata": {
+        "ruleId": "auto-1",
+        "eventPayload": {}
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581593555-3005b",
+      "timestamp": 1789581593555,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_APPROVED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581593554-lqu6",
+        "action": "Scale Meta Campaign Budget",
+        "resolvedBy": "chief_officer"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581593554-qfwjn",
+      "timestamp": 1789581593554,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581593554-lqu6",
+        "action": "Scale Meta Campaign Budget",
+        "target": "Q3 Enterprise Campaign",
+        "costUsd": 1500,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789581593547-uauk5",
+      "timestamp": 1789581593547,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789581593546-db34",
+        "action": "Publish META Ad Campaign: Enterprise Logistics Expansion",
+        "target": "Enterprise Logistics Expansion",
+        "costUsd": 2250,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789576122287-ob0rd",
+      "timestamp": 1789576122287,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 8045,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789576098003-ohvdx",
+      "timestamp": 1789576098003,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "query_external_api",
+      "action": "executed",
+      "inputsMetadata": {
+        "provider": "frankfurter-currency",
+        "operation": "convert_currency",
+        "parameters": {
+          "from": "EUR",
+          "to": "USD",
+          "amount": 50
+        }
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 455,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789576097546-jxmgj",
+      "timestamp": 1789576097546,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "weather"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789572649120-3upp9",
+      "timestamp": 1789572649120,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "system_get_hardware_details",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 21338,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789572547494-4484m",
+      "timestamp": 1789572547494,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "business-communication",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789572547494-sh93",
+        "action": "Send Outbound WhatsApp to +254711223344",
+        "target": "+254711223344",
+        "costUsd": 0,
+        "potentialImpact": "MEDIUM"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789572547493-34vgk",
+      "timestamp": 1789572547493,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-business",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789572547493-pucz",
+        "action": "Publish Live Meta Campaign",
+        "target": "Unapproved Campaign",
+        "costUsd": 3000,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789572547490-9bft8",
+      "timestamp": 1789572547490,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "execute_meta_ad_action",
+      "action": "AUTOMATION_QUEUED_APPROVAL",
+      "inputsMetadata": {
+        "ruleId": "auto-3",
+        "approvalRequestId": "appr-1789572547490-e53p"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789572547490-iomdk",
+      "timestamp": 1789572547490,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "automation-engine",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789572547490-e53p",
+        "action": "Automation Triggered: Meta Ad Daily Budget Scale (> $100/day)",
+        "target": "execute_meta_ad_action",
+        "costUsd": 0,
+        "potentialImpact": "HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789572547490-7ts7a",
+      "timestamp": 1789572547490,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "generate_morning_briefing",
+      "action": "AUTOMATION_EXECUTED",
+      "inputsMetadata": {
+        "ruleId": "auto-1",
+        "eventPayload": {}
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789572546574-nyjgg",
+      "timestamp": 1789572546574,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_APPROVED",
+      "inputsMetadata": {
+        "requestId": "appr-1789572546574-hh2q",
+        "action": "Scale Meta Campaign Budget",
+        "resolvedBy": "chief_officer"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789572546574-li0ws",
+      "timestamp": 1789572546574,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789572546574-hh2q",
+        "action": "Scale Meta Campaign Budget",
+        "target": "Q3 Enterprise Campaign",
+        "costUsd": 1500,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789572546557-yzghh",
+      "timestamp": 1789572546557,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "meta-ads",
+      "action": "APPROVAL_REQUESTED",
+      "inputsMetadata": {
+        "requestId": "appr-1789572546556-6ss6",
+        "action": "Publish META Ad Campaign: Enterprise Logistics Expansion",
+        "target": "Enterprise Logistics Expansion",
+        "costUsd": 2250,
+        "potentialImpact": "FINANCIAL_HIGH"
+      },
+      "permissionDecision": "CONFIRMED",
+      "resultSuccess": true,
+      "durationMs": 0,
+      "verificationStatus": "unverified_success"
+    },
+    {
+      "id": "audit-1789572535789-qinnm",
+      "timestamp": 1789572535789,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "query_external_api",
+      "action": "executed",
+      "inputsMetadata": {
+        "provider": "frankfurter-currency",
+        "operation": "convert_currency",
+        "parameters": {
+          "from": "EUR",
+          "to": "USD",
+          "amount": 50
+        }
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 119,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789572535669-rx1e6",
+      "timestamp": 1789572535669,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "discover_apis",
+      "action": "executed",
+      "inputsMetadata": {
+        "query": "weather"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 1,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789572349843-gsizi",
+      "timestamp": 1789572349844,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "generate_morning_briefing",
+      "action": "executed",
+      "inputsMetadata": {},
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 17,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789567536270-2nfq1",
+      "timestamp": 1789567536270,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "XAUUSD Gold and Forex market trend analysis today"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 2,
+      "verificationStatus": "verified_success"
+    },
+    {
+      "id": "audit-1789553979981-zsvpr",
+      "timestamp": 1789553979981,
+      "userId": "default",
+      "sessionId": "session-default",
+      "agentRunId": "run-default",
+      "tool": "webhunt_research",
+      "action": "executed",
+      "inputsMetadata": {
+        "topic": "Gold XAUUSD forex market trends analysis today"
+      },
+      "permissionDecision": "ALLOWED",
+      "resultSuccess": true,
+      "durationMs": 15,
+      "verificationStatus": "verified_success"
+    },
     {
       "id": "audit-1789551617119-4kdbg",
       "timestamp": 1789551617119,

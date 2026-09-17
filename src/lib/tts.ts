@@ -42,16 +42,38 @@ type Speaker = {
 }
 
 // ---------------------------------------------------------------------------
-// What he is saying right now
+// What he is saying right now (Echo Shield & Voice Output Tracker)
 // ---------------------------------------------------------------------------
 
 let speaking = ''
 let recent = ''
 let recentUntil = 0
+let speakingAt = 0
+
+/**
+ * Sliding history window of all sentences/phrases recently spoken by the assistant.
+ * Kept for 15 seconds so delayed speech recognition transcripts never trigger
+ * recursive echo turns.
+ */
+interface SpokenChunk {
+  text: string
+  spokenAt: number
+  expiry: number
+}
+
+const spokenHistory: SpokenChunk[] = []
+const MAX_HISTORY_AGE_MS = 15000
+
+function pruneHistory() {
+  const now = Date.now()
+  while (spokenHistory.length > 0 && spokenHistory[0].expiry <= now) {
+    spokenHistory.shift()
+  }
+}
 
 /** Recognition lags the speakers by a few hundred milliseconds, so a sentence
  *  keeps arriving at the microphone well after it has finished playing. */
-const ECHO_TAIL_MS = 1800
+const ECHO_TAIL_MS = 3500
 
 /**
  * Why you cannot hear him.
@@ -65,17 +87,6 @@ export const diag = {
   engine: 'system' as 'system' | 'kokoro' | 'elevenlabs',
   /** Utterances handed to an engine — the OS voice or an audio element. */
   spoken: 0,
-  /**
-   * Of those, how many actually began producing sound.
-   *
-   * Counted for EVERY engine, which it did not used to be: this was incremented
-   * only in speakNative's onstart, so on the ElevenLabs path — the good path,
-   * the one a configured machine actually uses — it stayed at zero forever.
-   * The diagnostics panel reads this to decide whether he is audible at all, so
-   * a working cloud voice reported "no sound produced", and the T self-test
-   * raised that as an error on screen. The verdict has to be about sound, not
-   * about which code path produced it.
-   */
   started: 0,
   /** Genuine engine failures, excluding deliberate cancels. */
   failures: 0,
@@ -95,47 +106,68 @@ if (typeof window !== 'undefined') {
 
 /**
  * Once the OS voice has failed, stop asking it.
- *
- * A broken system voice is not a transient condition — it fails identically on
- * every sentence — so retrying it per line would make the whole answer stutter
- * through the same dead path. After the first real failure everything routes to
- * the bridge's speech proxy instead, which holds an ElevenLabs key already.
  */
 let nativeBroken = false
 
-let speakingAt = 0
-
-/** When the current sentence started, or 0 if nothing is being spoken. The
- *  voice loop uses this to refuse to interrupt him in his own first syllable. */
+/** When the current sentence started, or 0 if nothing is being spoken. */
 export function speakingSince(): number {
   return speaking ? speakingAt : 0
 }
 
+/** Whether the assistant TTS is currently active and producing speech output. */
+export function isAssistantSpeaking(): boolean {
+  return Boolean(speaking)
+}
+
+/** Whether the assistant was speaking recently within the specified millisecond window. */
+export function wasAssistantSpeakingRecently(withinMs = 4000): boolean {
+  if (speaking) return true
+  const now = Date.now()
+  if (now < recentUntil) return true
+  pruneHistory()
+  return spokenHistory.some((chunk) => now - chunk.spokenAt < withinMs)
+}
+
+/**
+ * Retrieve full text of all recently spoken sentences within the active history window.
+ */
+export function getRecentSpokenText(): string {
+  pruneHistory()
+  const historyText = spokenHistory.map((s) => s.text).join(' ')
+  return `${speaking} ${recent} ${historyText}`.trim()
+}
+
 function setSpeaking(text: string) {
+  const now = Date.now()
   if (text) {
     speaking = text
-    speakingAt = Date.now()
+    speakingAt = now
+    spokenHistory.push({
+      text,
+      spokenAt: now,
+      expiry: now + MAX_HISTORY_AGE_MS,
+    })
     return
   }
   if (speaking) {
     recent = speaking
-    recentUntil = Date.now() + ECHO_TAIL_MS
+    recentUntil = now + ECHO_TAIL_MS
   }
   speaking = ''
+  pruneHistory()
 }
 
 /**
  * What the microphone is likely to be hearing from the speakers right now.
  *
- * The voice loop reads this to recognise itself: the mic stays open while he
- * talks, so it hears every word he says and would otherwise treat his own
- * answer as a barge-in. Includes a short tail of the previous sentence,
- * because the gap between two sentences is exactly when the echo of the first
- * one lands. See `isEcho` in voice.ts.
+ * Includes the active sentence, recent sentence tail, and historical buffer.
+ * See `isEcho` in voice.ts.
  */
 export function speakingNow(): string {
+  pruneHistory()
   const tail = Date.now() < recentUntil ? recent : ''
-  return `${speaking} ${tail}`.trim()
+  const historyParts = spokenHistory.map((h) => h.text).join(' ')
+  return `${speaking} ${tail} ${historyParts}`.trim()
 }
 
 // ---------------------------------------------------------------------------

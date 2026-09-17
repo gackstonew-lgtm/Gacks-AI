@@ -1,0 +1,75 @@
+# ==============================================================================
+# GACKS AI Operating System — LiteLLM Gateway Configuration
+# Official BerriAI/litellm Unified Model Gateway & Routing Proxy
+# Port: 4000
+# ==============================================================================
+
+model_list:
+  # --- Google Gemini ---
+  - model_name: gemini-2.5-flash
+    litellm_params:
+      model: gemini/gemini-2.5-flash
+      api_key: os.environ/GEMINI_API_KEY
+      rpm: 1000
+
+  - model_name: gemini-2.5-pro
+    litellm_params:
+      model: gemini/gemini-2.5-pro
+      api_key: os.environ/GEMINI_API_KEY
+      rpm: 500
+
+  # --- Anthropic Claude ---
+  - model_name: claude-3-5-sonnet
+    litellm_params:
+      model: anthropic/claude-3-5-sonnet-20241022
+      api_key: os.environ/ANTHROPIC_API_KEY
+      rpm: 600
+
+  - model_name: claude-3-5-haiku
+    litellm_params:
+      model: anthropic/claude-3-5-haiku-20241022
+      api_key: os.environ/ANTHROPIC_API_KEY
+      rpm: 1200
+
+  # --- OpenAI ---
+  - model_name: gpt-4o
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      rpm: 500
+
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+      rpm: 1500
+
+  # --- OpenRouter ---
+  - model_name: openrouter-sonar
+    litellm_params:
+      model: openrouter/perplexity/sonar-reasoning
+      api_key: os.environ/OPENROUTER_API_KEY
+
+  - model_name: openrouter-deepseek-r1
+    litellm_params:
+      model: openrouter/deepseek/deepseek-r1
+      api_key: os.environ/OPENROUTER_API_KEY
+
+# --- Gateway General Settings ---
+litellm_settings:
+  drop_params: true
+  set_verbose: false
+  telemetry: false
+  request_timeout: 60
+  cache: false
+
+# --- Router & Fallback Configuration ---
+router_settings:
+  routing_strategy: latency-based-routing
+  num_retries: 3
+  timeout: 30
+  allowed_fails: 2
+  cooldown_time: 30
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY

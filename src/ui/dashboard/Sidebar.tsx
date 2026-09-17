@@ -9,6 +9,7 @@ import {
   Cpu,
   Settings,
   Briefcase,
+  Radar,
   PanelLeftClose,
   PanelLeftOpen,
   X,
@@ -36,6 +37,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navItems: { id: NavRoute; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'business', label: 'Business Suite', icon: Briefcase },
+    { id: 'webhunt', label: 'WebHunt Delta', icon: Radar },
     { id: 'chat', label: 'Chat', icon: MessageSquare },
     { id: 'tasks', label: 'Tasks', icon: CheckSquare },
     { id: 'files', label: 'Files', icon: Folder },
