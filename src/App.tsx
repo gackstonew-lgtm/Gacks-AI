@@ -146,6 +146,7 @@ export default function App() {
 
     const mine = ++turn.current
     const stale = () => mine !== turn.current
+    const isVoiceTurn = origin === 'voice' || origin === 'wake'
 
     console.log(`[GACKS AI Turn] Initiating turn (origin=${origin}, turn=${mine}): "${clean.slice(0, 60)}"`)
 
@@ -182,7 +183,9 @@ export default function App() {
             store.getState().pushTurn({ id: turnId, role: 'jarvis', text: '' })
           }
           store.getState().appendToLastTurn(delta)
-          spk.push(delta)
+          if (isVoiceTurn) {
+            spk.push(delta)
+          }
         },
         onTool: (name) => {
           if (stale()) return
@@ -191,7 +194,7 @@ export default function App() {
           store.getState().setActiveTool(name)
           sfx.play('tool')
           music.working(true)
-          if (!filled && !started) {
+          if (!filled && !started && isVoiceTurn) {
             filled = true
             spk.say(forTool(name))
           }
@@ -210,7 +213,9 @@ export default function App() {
         }
       }
 
-      await spk.end()
+      if (isVoiceTurn) {
+        await spk.end()
+      }
       if (stale()) return
       sfx.play('done')
     } catch (err) {
@@ -224,8 +229,10 @@ export default function App() {
       } else {
         store.getState().pushTurn({ id: turnId, role: 'jarvis', text: msg })
       }
-      spk.say(msg)
-      await spk.end().catch(() => {})
+      if (isVoiceTurn) {
+        spk.say(msg)
+        await spk.end().catch(() => {})
+      }
     } finally {
       if (!stale()) {
         speaker.current = null
@@ -233,7 +240,11 @@ export default function App() {
         music.duck(false)
         store.getState().setActiveTool(null)
         music.working(false)
-        listen(FOLLOW_UP_MS)
+        if (isVoiceTurn) {
+          listen(FOLLOW_UP_MS)
+        } else {
+          store.getState().setPhase('dormant')
+        }
       }
     }
   }
@@ -273,9 +284,12 @@ export default function App() {
     const greeting = createSpeaker()
     speaker.current = greeting
     greeting.say(attention())
-    void greeting.end()
-
-    listen(AWAIT_SPEECH_MS)
+    void greeting.end().then(() => {
+      // Only open microphone after the greeting audio finishes playing
+      if (store.getState().phase === 'waking') {
+        listen(AWAIT_SPEECH_MS)
+      }
+    })
   }
 
   /**
@@ -832,15 +846,12 @@ export default function App() {
         return
       }
 
-      // Space starts a turn without the wake word. Worth using while filming so
-      // a missed wake word doesn't cost a take.
+      // Space starts a turn without the wake word.
       if (e.code !== 'Space' || e.repeat) return
       e.preventDefault()
 
       const phase = store.getState().phase
-      if (phase === 'offline') {
-        void powerOn()
-      } else if (phase === 'boot') {
+      if (phase === 'boot') {
         /* ignore — the boot sequence owns the phase until it finishes */
       } else if (
         phase === 'thinking' ||
@@ -849,8 +860,14 @@ export default function App() {
       ) {
         onSpeechStart()
         listen(AWAIT_SPEECH_MS)
+      } else if (phase === 'listening' || phase === 'waking') {
+        goDormant()
       } else {
-        onWake('')
+        void ensureVoice().then(() => {
+          store.getState().setError(null)
+          sfx.play('listen')
+          listen(AWAIT_SPEECH_MS)
+        })
       }
     }
     window.addEventListener('keydown', onKey)
@@ -868,6 +885,29 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const ensureVoice = async (): Promise<Voice | null> => {
+    if (voice.current) return voice.current
+    try {
+      await sfx.unlockAudio()
+      await startAnalyser().catch(() => {})
+      await probeCapabilities().catch(() => {})
+      const v = await startVoice({
+        mode,
+        onWake,
+        onSpeechStart,
+        onPartial,
+        onUtterance,
+        onError: onVoiceError,
+      })
+      voice.current = v
+      return v
+    } catch (err) {
+      console.error('[GACKS Voice] Failed to initialize voice loop:', err)
+      store.getState().setError('Microphone or speech initialization failed.')
+      return null
+    }
+  }
+
   const pendingQuery = useStore((s) => s.pendingQuery)
   useEffect(() => {
     if (!pendingQuery) return
@@ -877,29 +917,32 @@ export default function App() {
     const currentPhase = store.getState().phase
     if (currentPhase === 'offline') {
       void powerOn().then(() => {
-        void respond(text)
+        void respond(text, 'query')
       })
     } else {
-      void respond(text)
+      void respond(text, 'query')
     }
   }, [pendingQuery])
 
-  const handleToggleVoice = () => {
+  const handleToggleVoice = async () => {
     const currentPhase = store.getState().phase
-    if (currentPhase === 'offline' || !voice.current) {
-      void powerOn()
-    } else if (
+    if (
       currentPhase === 'thinking' ||
       currentPhase === 'tooling' ||
       currentPhase === 'speaking'
     ) {
       onSpeechStart()
       listen(AWAIT_SPEECH_MS)
-    } else if (currentPhase === 'listening' || currentPhase === 'waking') {
-      goDormant()
-    } else {
-      onWake('')
+      return
     }
+    if (currentPhase === 'listening' || currentPhase === 'waking') {
+      goDormant()
+      return
+    }
+    await ensureVoice()
+    store.getState().setError(null)
+    sfx.play('listen')
+    listen(AWAIT_SPEECH_MS)
   }
 
   return (

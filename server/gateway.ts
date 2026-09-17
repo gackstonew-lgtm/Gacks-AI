@@ -95,6 +95,24 @@ const IMAGE_TYPES: Record<string, string> = {
   '.gif': 'image/gif',
 }
 
+let elevenLabsVerified: boolean | null = null
+async function isElevenLabsWorking(): Promise<boolean> {
+  const key = process.env.ELEVENLABS_API_KEY
+  if (!key || key === 'placeholder' || key.startsWith('optional_')) return false
+  if (elevenLabsVerified !== null) return elevenLabsVerified
+  try {
+    const res = await fetch('https://api.elevenlabs.io/v1/user', {
+      headers: { 'xi-api-key': key },
+      signal: AbortSignal.timeout(2500),
+    })
+    elevenLabsVerified = res.ok
+    return elevenLabsVerified
+  } catch {
+    elevenLabsVerified = false
+    return false
+  }
+}
+
 export function createGatewayServer() {
   const server = http.createServer(async (req, res) => {
     const cors = corsFor(req)
@@ -113,7 +131,7 @@ export function createGatewayServer() {
         const hasGemini = Boolean(process.env.GEMINI_API_KEY)
         const hasOpenAI = Boolean(process.env.OPENAI_API_KEY)
         const hasAnthropic = Boolean(process.env.ANTHROPIC_API_KEY)
-        const hasEleven = Boolean(process.env.ELEVENLABS_API_KEY)
+        const hasEleven = await isElevenLabsWorking()
         const adbOk = await androidAdapter.isAdbAvailable().catch(() => false)
 
         const report: SystemHealthReport = {
@@ -123,8 +141,8 @@ export function createGatewayServer() {
           version: '2.0.0',
           environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
           ai: hasGemini || hasOpenAI || hasAnthropic || true,
-          stt: hasEleven || true,
-          tts: hasEleven || true,
+          stt: hasEleven,
+          tts: hasEleven,
           browser: true,
           filesystem: true,
           android: adbOk,
@@ -155,7 +173,7 @@ export function createGatewayServer() {
               status: 'ONLINE',
               tts: hasEleven,
               stt: hasEleven,
-              engine: hasEleven ? 'ElevenLabs Streaming' : 'Browser Neural/SpeechSynthesis',
+              engine: hasEleven ? 'ElevenLabs Streaming' : 'Browser Speech Recognition & Neural SpeechSynthesis',
             },
             vision: {
               status: 'ONLINE',

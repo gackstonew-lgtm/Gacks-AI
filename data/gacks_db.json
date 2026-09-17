@@ -860,19 +860,19 @@
       "accessedAt": 1789630538302,
       "accessCount": 0
     },
-    "mem-1789644307983-rp97h": {
-      "id": "mem-1789644307983-rp97h",
-      "userId": "test-user",
+    "mem-1789646101195-f2jo8": {
+      "id": "mem-1789646101195-f2jo8",
+      "userId": "default",
       "workspaceId": "default-workspace",
       "scope": "workspace",
       "category": "episodic",
-      "content": "Q: Hello Insight, can you hear me? Please confirm with a brief 1-sentence response. | A: I'm GACKS, your AI assistant, and I can hear you clearly.",
+      "content": "Q: Analyze gold (XAUUSD) and forex market trends today | A: Based on the analysis, the current trend for gold (XAUUSD) in the forex market is as follows:\n\n* The current price of gold is around $1850.\n* The recommended entry price for a long position is $1850,",
       "importance": 2,
       "confidence": 0.9,
       "tags": [],
-      "createdAt": 1789644307983,
-      "updatedAt": 1789644307983,
-      "accessedAt": 1789644307983,
+      "createdAt": 1789646101195,
+      "updatedAt": 1789646101196,
+      "accessedAt": 1789646101195,
       "accessCount": 0
     }
   },
@@ -894,20 +894,25 @@
   "relations": {},
   "auditLogs": [
     {
-      "id": "audit-1789644349637-don8n",
-      "timestamp": 1789644349637,
-      "userId": "test-user",
+      "id": "audit-1789646066518-z4p7g",
+      "timestamp": 1789646066518,
+      "userId": "default",
       "sessionId": "session-default",
       "agentRunId": "run-default",
-      "tool": "discover_apis",
+      "tool": "audit_forex_trade",
       "action": "executed",
       "inputsMetadata": {
-        "query": "gold market news",
-        "category": "Finance"
+        "pair": "XAUUSD",
+        "direction": "LONG",
+        "entryPrice": 1850,
+        "stopLoss": 1800,
+        "takeProfit": 1900,
+        "riskPercent": 1,
+        "accountBalanceUsd": 10000
       },
       "permissionDecision": "ALLOWED",
       "resultSuccess": true,
-      "durationMs": 1,
+      "durationMs": 29,
       "verificationStatus": "verified_success"
     },
     {

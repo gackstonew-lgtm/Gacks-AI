@@ -201,10 +201,10 @@ export class ModelRegistry {
     // --- Google Gemini (Cloud) ------------------------------------------------
     this.register({
       id: 'gemini-2.5-flash',
-      displayName: 'Gemini 2.5 Flash',
+      displayName: 'Gemini 3.6 Flash',
       provider: 'gemini',
-      modelName: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
-      roles: ['GENERAL', 'FAST', 'VISION'],
+      modelName: process.env.GEMINI_MODEL || 'gemini-3.6-flash',
+      roles: ['GENERAL', 'FAST', 'VISION', 'RESEARCH'],
       capabilities: ['text_generation', 'tool_calling', 'vision', 'streaming', 'long_context', 'multi_turn', 'json_mode'],
       contextWindow: 1_000_000,
       maxOutputTokens: 8192,
@@ -216,15 +216,16 @@ export class ModelRegistry {
       defaultTemperature: 0.7,
       defaultTopP: 0.95,
       defaultMaxTokens: 4096,
+      priority: 10,
       tags: ['google', 'multimodal', 'fast', 'cloud'],
-      description: 'Google Gemini 2.5 Flash — fast, multimodal cloud model with 1M context window',
+      description: 'Google Gemini 3.6 Flash — fast, multimodal cloud model with 1M context window',
     })
 
     this.register({
       id: 'gemini-2.5-pro',
-      displayName: 'Gemini 2.5 Pro',
+      displayName: 'Gemini 3.6 Flash (Reasoning)',
       provider: 'gemini',
-      modelName: process.env.GEMINI_REASONING_MODEL || 'gemini-2.5-pro',
+      modelName: process.env.GEMINI_REASONING_MODEL || 'gemini-3.6-flash',
       roles: ['REASONING', 'CODING', 'RESEARCH'],
       capabilities: ['text_generation', 'tool_calling', 'vision', 'streaming', 'long_context', 'reasoning', 'multi_turn', 'json_mode'],
       contextWindow: 2_000_000,
@@ -237,8 +238,9 @@ export class ModelRegistry {
       defaultTemperature: 0.5,
       defaultTopP: 0.95,
       defaultMaxTokens: 8192,
+      priority: 10,
       tags: ['google', 'reasoning', 'coding', 'cloud', 'frontier'],
-      description: 'Google Gemini 2.5 Pro — frontier reasoning and coding with 2M context window',
+      description: 'Google Gemini 3.6 Flash reasoning core with 2M context window',
     })
 
     // --- Anthropic Claude (Cloud) --------------------------------------------
@@ -437,9 +439,9 @@ export class ModelRegistry {
 
     this.register({
       id: 'openrouter-claude-3.5-sonnet',
-      displayName: 'Claude 3.5 Sonnet (OpenRouter)',
+      displayName: 'Claude 3.7 Sonnet (OpenRouter)',
       provider: 'openrouter',
-      modelName: 'anthropic/claude-3.5-sonnet',
+      modelName: 'anthropic/claude-3.7-sonnet',
       roles: ['CODING', 'REASONING', 'AGENT', 'GENERAL'],
       capabilities: ['text_generation', 'tool_calling', 'vision', 'streaming', 'multi_turn'],
       contextWindow: 200_000,
@@ -453,7 +455,7 @@ export class ModelRegistry {
       defaultTopP: 0.9,
       defaultMaxTokens: 4096,
       tags: ['openrouter', 'anthropic', 'claude', 'cloud'],
-      description: 'Anthropic Claude 3.5 Sonnet accessed via OpenRouter gateway',
+      description: 'Anthropic Claude 3.7 Sonnet accessed via OpenRouter gateway',
     })
 
     this.register({
@@ -461,7 +463,7 @@ export class ModelRegistry {
       displayName: 'Llama 3.3 70B (OpenRouter)',
       provider: 'openrouter',
       modelName: 'meta-llama/llama-3.3-70b-instruct',
-      roles: ['GENERAL', 'CODING', 'REASONING', 'FAST'],
+      roles: ['GENERAL', 'CODING', 'REASONING', 'FAST', 'RESEARCH'],
       capabilities: ['text_generation', 'tool_calling', 'streaming', 'multi_turn'],
       contextWindow: 131_072,
       maxOutputTokens: 8192,
@@ -473,6 +475,7 @@ export class ModelRegistry {
       defaultTemperature: 0.7,
       defaultTopP: 0.9,
       defaultMaxTokens: 4096,
+      priority: 10,
       tags: ['openrouter', 'llama', 'meta', 'cloud'],
       description: 'Meta Llama 3.3 70B Instruct via OpenRouter — fast and capable open model',
     })
